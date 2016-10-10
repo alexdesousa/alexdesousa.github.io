@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 AUTHOR = 'Alex de Sousa'
 SITENAME = 'The Broken Link'
 SITEURL = ''
+THEME = '../Flex'
 
 PATH = 'content'
 
