@@ -1,0 +1,28 @@
+<div class="header">
+  <div class="title">
+    <h1>{{ page.title }}</h1>
+  </div>
+  <div class="article">
+    <div class="avatar">
+      <img src="{{ "/assets/img/avatar.png" | prepend: site.baseurl }}"/>
+    </div>
+    <div class="description">
+      <div>
+        <div class="author">
+          {{ page.author }}
+        </div>
+      </div>
+      <div>
+        <div class="read_time">
+          {{ page.date | date_to_string }} &nbsp;&middot;&nbsp;
+          {% assign words = content | number_of_words %}
+          {% if words < 360 %}
+            1 min read
+          {% else %}
+            {{ words | divided_by:180 }} min read
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

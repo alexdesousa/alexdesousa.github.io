@@ -1,0 +1,98 @@
+@import url(pygments/monokai.css);
+
+code {
+  color: #FFFFFF;
+  background-color: #272822;
+  padding: 2px 3px 2px 3px;
+  border-radius: 3px;
+  font-size: 15px;
+}
+
+article {
+  display: grid;
+  grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+  font-family: Helvetica;
+}
+
+article > * {
+  grid-column: 4;
+}
+
+article > blockquote {
+  grid-column: 3 / 5;
+  padding-left: 10px;
+  border-left: 3px solid black;
+  align: left;
+  color: #666666;
+  font-size: 18px;
+}
+
+article > p {
+  font-size: 18px;
+}
+
+article > ul {
+  font-size: 18px;
+}
+
+.header {
+  grid-column: 3 / 5;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 760;
+}
+
+.title {
+  padding-top: 16px;
+}
+
+.title h1 {
+  font-size: 42px;
+  font-family: Helvetica;
+  margin: 6px 0px 0px 0px;
+}
+
+.article {
+  display: flex;
+  flex-direction: row;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.article .avatar {
+  margin: 0px;
+  padding-right: 10px;
+}
+
+.article .avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.article .description {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+}
+
+.article .author {
+  color: #999999;
+  font-size: 17px;
+  font-family: Helvetica;
+  height: 50%;
+  padding-bottom: 5px;
+}
+
+.article .read_time {
+  color: #666666;
+  font-size: 15px;
+  font-family: Helvetica;
+  height: 50%;
+  padding-top: 5px;
+}
