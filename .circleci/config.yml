@@ -34,12 +34,12 @@ workflows:
   blog:
     jobs:
       - build:
-        filters:
-          branches:
-            only: gh-pages
+          filters:
+            branches:
+              only: gh-pages
       - deploy:
-        requires:
-          - build
-        filters:
-          branches:
-            only: gh-pages
+          requires:
+            - build
+          filters:
+            branches:
+              only: gh-pages
