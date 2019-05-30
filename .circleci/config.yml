@@ -8,7 +8,7 @@ commands:
   commit:
     description: "Commits site"
     steps:
-      - run: git clone https://github.com/alexdesousa/alexdesousa.github.io.git .
+      - run: git clone "$PROJECT" .
       - run: git config --global user.email "$EMAIL"
       - run: git config --global user.name "$NAME"
       - run: cp -a /tmp/site/. .
