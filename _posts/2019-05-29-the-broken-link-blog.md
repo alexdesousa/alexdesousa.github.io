@@ -381,7 +381,6 @@ where:
 - `$EMAIL` is your Github primary e-mail address.
 - `$NAME` is your name.
 - `$PROJECT` is `https://github.com/<your user>/<your user>.github.io.git`.
-- `$GIT_REPO` is  `git@github.com:<your user>/<your user>.github.io.git`.
 - `$FINGERPRINT` is the SSH key with read/write permissions that you would need
   to create and set in your project (see next section).
 
