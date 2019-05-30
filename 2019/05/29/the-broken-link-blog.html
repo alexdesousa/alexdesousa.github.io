@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+  <head>
+  <title>The Broken Link Blog</title>
+  <link rel="stylesheet" href="/assets/css/main.css?version=20190530">
+</head>
+
+  <body>
+    <div class="page">
+      <div class="navigation">
+        <nav>
+  <a href="/2019/05/29/the-broken-link-blog.html"
+     class="active">
+    Home
+  </a>
+  
+    <a href="/about.html"
+       >
+      About
+    </a>
+  
+    <a href="/blog.html"
+       >
+      Blog
+    </a>
+  
+<nav>
+
+      </div>
+      <div class="content">
+        <article>
+          <div class="header">
+  <div class="title">
+    <h1>The Broken Link Blog</h1>
+  </div>
+  <div class="article">
+    <div class="avatar">
+      <img src="/assets/img/avatar.png"/>
+    </div>
+    <div class="description">
+      <div>
+        <div class="author">
+          Alex de Sousa
+        </div>
+      </div>
+      <div>
+        <div class="read_time">
+          29 May 2019 &nbsp;&middot;&nbsp;
+          
+          
+            6 min read
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+          <blockquote>
+<p>Broken or dead link, a link that, having suffered link rot, points to a
+webpage or server that is no longer available on the World Wide Web.</p>
+</blockquote>
+
+<p>Maintaining a blog should be simple: writing some content, adding some images
+if needed, save the changes and publish it. Services like
+<a href="https://medium.com">Medium</a> or <a href="https://dev.to">DEV Community</a> already solve
+this problem, so why reinventing the wheel?</p>
+
+<blockquote>
+<p><em>If a service is free, you&#39;re the product</em></p>
+</blockquote>
+
+<p>There&#39;s nothing wrong on using Medium or DEV Community for posting articles.
+Their business is to host blogs for free and then directly or indirectly
+monetize the contents others create. <a href="https://github.com">Github</a> does exactly
+the same.</p>
+
+<p>Though Medium and DEV are specialized in hosting blogs and give you visibility,
+I don&#39;t like their workflow for publishing articles. However, with Github
+Pages I would have some advantages:</p>
+
+<ul>
+<li>I can write a blog using the same tools I use for writing code: <code>vim</code>, <code>zsh</code>
+and <code>git</code>. I feel confortable and more creative in this cocoon I&#39;ve created.</li>
+<li>By default, I have a backup of all my articles in my computer. If somehow
+Github decides my ideas shouldn&#39;t be heard, then I would have the content
+I&#39;ve created. Censorship it&#39;s easier when there&#39;s centralization (Go
+Bitcoin!).</li>
+</ul>
+
+<h2>Why Ruby?</h2>
+
+<p>I don&#39;t love Ruby. I also don&#39;t hate it. Though, my professional experience
+does not include Ruby, Jekyll is written in Ruby. So, the real question is...
+Why Jekyll?</p>
+
+<ul>
+<li>Amazing documentation.</li>
+<li>Easy to use.</li>
+<li>Awesome plugins.</li>
+<li>No need of Ruby knowledge or, at least, not too much.</li>
+</ul>
+
+<blockquote>
+<p><strong>Note</strong>: There&#39;s a great
+<a href="https://jekyllrb.com/docs/step-by-step/01-setup/">step-by-step Jekyll tutorial</a>
+in their webpage. Everything said here only documents my experience following
+it plus some other useful tips.</p>
+</blockquote>
+
+<h2>Installing Ruby</h2>
+
+<p>Jekyll runs in Ruby, so we need Ruby. There are several methods for installing
+Ruby, but I really like <a href="https://github.com/asdf-vm/asdf">asdf</a> to install new
+languages in my machine (I use it for Elixir and Erlang).</p>
+
+<p>First, I installed the Ruby plugin and the latest version of the language for
+the project</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>asdf plugin-add ruby    <span class="c"># For installing the plugin for Ruby</span>
+<span class="nv">$ </span>asdf <span class="nb">install </span>ruby 2.6.3 <span class="c"># Installs the latest version for Ruby</span>
+<span class="nv">$ </span>asdf <span class="nb">local </span>ruby 2.6.3   <span class="c"># Sets the project's Ruby version in `tool-versions`</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: Ruby 2.6.3 is the latest stable version at the time of the writing.</p>
+</blockquote>
+
+<p>Then, I installed <code>bundler</code> gem:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>gem <span class="nb">install </span>bundler
+</code></pre></div>
+<p>Finally, having <code>bundler</code> installed, I can init a new Ruby project:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bundle init
+</code></pre></div>
+<h2>Installing Jekyll</h2>
+
+<p>This is a programming blog, so for me is very important to have great support
+for beautiful code blocks. Personally, I really like this
+<a href="https://raw.githubusercontent.com/jwarby/pygments-css/master/monokai.css">Monokai theme</a>
+that I picked up from
+<a href="http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html">jwarby Jekyll&#39;s pygments themes</a>.</p>
+
+<p>Having that in mind, let&#39;s install two gems:</p>
+
+<ul>
+<li><code>jekyll</code>, of course.</li>
+<li><code>redcarpet</code> for handling my markdown using pygments syntax highlight.</li>
+</ul>
+
+<p>Then our <code>Gemfile</code> should look like the following:</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">source</span> <span class="s2">"https://rubygems.org"</span>
+
+<span class="n">gem</span> <span class="s2">"jekyll"</span>
+<span class="n">gem</span> <span class="s2">"redcarpet"</span>
+</code></pre></div>
+<p>and we can now install our dependencies:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bundle <span class="nb">install</span>
+</code></pre></div>
+<h2>Getting Started</h2>
+
+<p>Jekyll has a specific way of dealing with templates and assets. The following
+is a general description of each file/folder:</p>
+
+<ul>
+<li><code>_config.yml</code>: Jekyll configuration.</li>
+<li><code>_layouts</code>: folder for HTML templates for every page.</li>
+<li><code>_includes</code>: folder for reusable HTML templates. Things like navigation bars,
+reading time widgets, among others should be placed here.</li>
+<li><code>_posts</code>: folder for the posts.</li>
+<li><code>assets/{css,js,img}</code>: folders for static assets like images, and CSS and
+Javascript files.</li>
+<li><code>index.html</code>: default entry point for your webpage.</li>
+</ul>
+
+<h2>Our First Layout</h2>
+
+<p>When building our static site with Jekyll, every markdown file will be
+converted to HTML. For that we would need a general layout for our page e.g
+let&#39;s start with <code>_layouts/default.html</code>:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>{{ page.title }}<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    {{ content }}
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>Now we could create a file called <code>index.md</code> with the following format:</p>
+<div class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
+<span class="na">layout</span><span class="pi">:</span> <span class="s">default</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">Hello World!</span>
+<span class="nn">---</span>
+
+<span class="gh"># Hello World!</span>
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua.
+</code></pre></div>
+<p>If we now run our testing server:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>bundle <span class="nb">exec </span>jekyll serve
+</code></pre></div>
+<p>and go to <a href="localhost:4000">localhost:4000</a> in our browser we could see the
+following HTML:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Hello World!<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>Hello World!<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;p&gt;</span>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua.
+    <span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<h2>Using Redcarpet</h2>
+
+<p>If we want to use syntax highlight, we should configure <code>redcarpet</code> markdown
+gem as follows:</p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">markdown</span><span class="pi">:</span> <span class="s">redcarpet</span>
+<span class="na">redcarpet</span><span class="pi">:</span>
+  <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span>
+    <span class="s2">"</span><span class="s">no_intra_emphasis"</span><span class="pi">,</span>
+    <span class="s2">"</span><span class="s">fenced_code_blocks"</span><span class="pi">,</span>
+    <span class="s2">"</span><span class="s">autolink"</span><span class="pi">,</span>
+    <span class="s2">"</span><span class="s">strikethrough"</span><span class="pi">,</span>
+    <span class="s2">"</span><span class="s">superscript"</span>
+  <span class="pi">]</span>
+</code></pre></div>
+<p>and copy our pygments CSS file to <code>assets/css/pygments</code> e.g. <code>monokai.css</code> and
+include it in our <code>assets/css/main.css</code>:</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="k">@import</span> <span class="sx">url(pygments/monokai.css)</span><span class="p">;</span>
+
+<span class="c">/* General Layout. */</span>
+
+<span class="nt">pre</span> <span class="p">{</span>
+  <span class="nl">white-space</span><span class="p">:</span> <span class="n">pre</span><span class="p">;</span>
+  <span class="nl">overflow-x</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">code</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="m">#FFFFFF</span><span class="p">;</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#272822</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">2px</span> <span class="m">3px</span> <span class="m">2px</span> <span class="m">3px</span><span class="p">;</span>
+  <span class="nl">border-radius</span><span class="p">:</span> <span class="m">3px</span><span class="p">;</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">15px</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c">/* ... more custom CSS ... */</span>
+</code></pre></div>
+<p>Finally, we need to include <code>assets/css/main.css</code> in any of our templates e.g:
+<code>_includes/head.html</code> for managing our <code>head</code> HTML tag:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;title&gt;</span>{{ page.title }}<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"{{ "</span><span class="err">/</span><span class="na">assets</span><span class="err">/</span><span class="na">css</span><span class="err">/</span><span class="na">main</span><span class="err">.</span><span class="na">css</span><span class="err">?</span><span class="na">version=</span><span class="s">20190529"</span> <span class="err">|</span> <span class="na">prepend:</span> <span class="na">site</span><span class="err">.</span><span class="na">baseurl</span> <span class="err">}}"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+</code></pre></div>
+<p>Now we can modify <code>_layouts/default.html</code> to include our
+<code>_includes/head.html</code> and our CSS with it:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  {% include head.html %}
+  <span class="nt">&lt;body&gt;</span>
+    {{ content }}
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>And we can now modify our <code>index.md</code> to add some code:</p>
+<div class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
+<span class="na">layout</span><span class="pi">:</span> <span class="s">default</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">Hello World!</span>
+<span class="nn">---</span>
+
+<span class="gh"># Hello World!</span>
+
+Hello from <span class="sb">`elixir`</span>:<span class="sb">
+
+    IO.inspect "Hello World!"
+</span></code></pre></div>
+<h2>First Post</h2>
+
+<p>Now that we have a good way of generating web pages, the same can be applied to
+blog posts. The markdown files should be in <code>_posts</code> folder and have a name
+with the following format:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">&lt;YYYY&gt;-&lt;MM&gt;-&lt;DD&gt;-&lt;name of the article&gt;.md
+</code></pre></div>
+<p>where:</p>
+
+<ul>
+<li><code>&lt;YYYY&gt;</code> is a four digit number representing the year.</li>
+<li><code>&lt;MM&gt;</code> is a two digit number representing the month.</li>
+<li><code>&lt;DD&gt;</code> is a two digit number representing the day.</li>
+</ul>
+
+<p>e.g. <code>_posts/2019-05-29-example.md</code>.</p>
+
+<p>For listing the posts, we could create an HTML file like  <code>blogs.html</code> with
+the following contents:</p>
+<div class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
+<span class="na">layout</span><span class="pi">:</span> <span class="s">default</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">Blog</span>
+<span class="nn">---</span>
+<span class="nt">&lt;h1&gt;</span>Latest Posts<span class="nt">&lt;/h1&gt;</span>
+
+<span class="nt">&lt;ul&gt;</span>
+  {% for post in site.posts %}
+    <span class="nt">&lt;li&gt;</span>
+      <span class="nt">&lt;h2&gt;&lt;a</span> <span class="na">href=</span><span class="s">"{{ post.url }}"</span><span class="nt">&gt;</span>{{ post.title }}<span class="nt">&lt;/a&gt;&lt;/h2&gt;</span>
+      <span class="nt">&lt;p&gt;</span>{{ post.description }}<span class="nt">&lt;/p&gt;</span>
+    <span class="nt">&lt;/li&gt;</span>
+  {% endfor %}
+<span class="nt">&lt;/ul&gt;</span>
+</code></pre></div>
+<h2> Deploy!</h2>
+
+<p>TODO</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
