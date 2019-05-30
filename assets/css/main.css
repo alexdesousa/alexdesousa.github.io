@@ -1,39 +1,75 @@
 @import url(pygments/monokai.css);
 
+/* Code layout */
+
+pre {
+  white-space: pre;
+  overflow-x: auto;
+}
+
 code {
   color: #FFFFFF;
   background-color: #272822;
-  padding: 2px 3px 2px 3px;
+  padding: 4px 5px 4px 5px;
   border-radius: 3px;
   font-size: 15px;
 }
 
-article {
+/* Page Layout. */
+
+.page {
   display: grid;
-  grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+  grid-template-rows: auto 1fr 50px;
+  line-height: 1.6;
   font-family: Helvetica;
+  font-size: 18px;
 }
 
-article > * {
-  grid-column: 4;
-}
-
-article > blockquote {
-  grid-column: 3 / 5;
-  padding-left: 10px;
-  border-left: 3px solid black;
-  align: left;
+.page a {
   color: #666666;
-  font-size: 18px;
 }
 
-article > p {
-  font-size: 18px;
+.page a:hover {
+  color: black;
 }
 
-article > ul {
-  font-size: 18px;
+/* Navigation layout */
+
+.navigation {
+  display: grid;
+  grid-template-columns: 1fr 760px 1fr;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #666666;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  background-color: white;
 }
+
+.navigation nav {
+  grid-column: 2;
+}
+
+.navigation .active {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.navigation a {
+  padding: 5px;
+  color: #666666;
+  text-decoration: none;
+}
+
+.navigation a:hover {
+  text-decoration: underline;
+}
+
+/* Header layout */
 
 .header {
   grid-column: 3 / 5;
@@ -43,7 +79,7 @@ article > ul {
 }
 
 .title {
-  padding-top: 16px;
+  padding-top: 70px;
 }
 
 .title h1 {
@@ -52,18 +88,41 @@ article > ul {
   margin: 6px 0px 0px 0px;
 }
 
+/* Content layout */
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+}
+
+.content > * {
+  grid-column: 4;
+}
+
+.content blockquote {
+  grid-column: 3 / 5;
+  padding-left: 10px;
+  border-left: 3px solid black;
+  align: left;
+  color: #666666;
+}
+
+/* Article info layout */
+
 .article {
-  display: flex;
-  flex-direction: row;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  grid-template-rows: 25px 25px;
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .article .avatar {
   margin: 0px;
-  padding-right: 10px;
+  width: 50px;
+  height: 50px;
 }
 
 .article .avatar img {
@@ -73,26 +132,25 @@ article > ul {
 }
 
 .article .description {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  justify-content: center;
+  align: left;
   width: 100%;
   height: 50px;
 }
 
 .article .author {
+  grid-row: 1;
+  grid-column: 2;
+  height: 50%;
   color: #999999;
   font-size: 17px;
   font-family: Helvetica;
-  height: 50%;
-  padding-bottom: 5px;
 }
 
 .article .read_time {
+  grid-row: 2;
+  grid-column: 2;
   color: #666666;
   font-size: 15px;
   font-family: Helvetica;
   height: 50%;
-  padding-top: 5px;
 }

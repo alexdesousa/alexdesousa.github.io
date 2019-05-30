@@ -1,0 +1,12 @@
+<nav>
+  <a href="{{ site.posts.first.url }}"
+     {% if page.url == site.posts.first.url %}class="active"{% endif %}>
+    Home
+  </a>
+  {% for item in site.data.navigation %}
+    <a href="{{ item.link | prepend: site.baseurl }}"
+       {% if page.url == item.link %}class="active"{% endif %}>
+      {{ item.name }}
+    </a>
+  {% endfor %}
+<nav>

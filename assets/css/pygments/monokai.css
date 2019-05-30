@@ -3,6 +3,7 @@
   border-radius: 5px;
   padding: 20px;
   color: #fff;
+  line-height: 1;
 }
 .highlight .hll { background-color: #272822; }
 .highlight .c { color: #75715e } /* Comment */
