@@ -380,7 +380,8 @@ where:
 
 - `$EMAIL` is your Github primary e-mail address.
 - `$NAME` is your name.
-- `$PROJECT` is `https://github.com/<your user>/<your user>.github.io.git`
+- `$PROJECT` is `https://github.com/<your user>/<your user>.github.io.git`.
+- `$GIT_REPO` is  `git@github.com:<your user>/<your user>.github.io.git`.
 - `$FINGERPRINT` is the SSH key with read/write permissions that you would need
   to create and set in your project (see next section).
 
@@ -417,7 +418,7 @@ the previous command will generate two files:
 - Public key `blog.pub`.
 - Private key `blog`.
 
-First, in Github:
+Having those two files, first, we need to do the following in Github:
 
 - Copy the contents of `blog.pub`.
 - Go to `https://github.com/<your user>/<your user>.github.io/settings/keys`
@@ -428,11 +429,16 @@ First, in Github:
 - Tick the `Allow write access` checkbox.
 - Click `Add key`.
 
-Then, in Circle CI:
+Then, we need to do the following in Circle CI:
 
 - Copy the contents of `blog`.
 - Go to `https://circleci.com/gh/<your user>/<your user>.github.io/edit#ssh`
 - Click in `Add SSH key`.
 - Write `github.com` in `Hostname` field.
 - Paste `blog`'s contents in `Private Key`.
-- Click `Add SSH Key`
+- Click `Add SSH Key`.
+
+## Conclusion
+
+The hardest part is setting up the project, but then it becomes very easy to
+maintain.
