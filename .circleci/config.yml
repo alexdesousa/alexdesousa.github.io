@@ -7,9 +7,6 @@ commands:
       - run: bundle install
 jobs:
   build:
-    branches:
-      only:
-        - gh-pages
     docker:
       - image: circleci/ruby:2.6
     working_directory: ~/repo
@@ -21,9 +18,6 @@ jobs:
           path: ~/repo/_site
           destination: ~/site
   deploy:
-    branches:
-      only:
-        - gh-pages
     docker:
       - image: circleci/ruby:2.6
     working_directory: ~/repo
@@ -39,4 +33,13 @@ workflows:
   version: 2
   blog:
     jobs:
-      - build
+      - build:
+        filters:
+          branches:
+            only: gh-pages
+      - deploy:
+        requires:
+          - build
+        filters:
+          branches:
+            only: gh-pages
