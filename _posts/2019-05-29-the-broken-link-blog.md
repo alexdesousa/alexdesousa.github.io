@@ -310,7 +310,40 @@ title: Blog
 
 ## Time to Deploy
 
-TODO
+Travis makes it very easy to deploy a Github Page with minimal configuration.
+Considering the source branch is `blog` and the target branch is `master`, then
+our configuration would be as follows:
+
+```yaml
+language: ruby
+rvm:
+  - 2.6
+install:
+  - gem install bundler
+  - bundle install
+script:
+  - bundle exec jekyll build
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  on:
+    branch: blog
+  local-dir: _site
+  target-branch: master
+```
+
+where `$GITHUB_TOKEN` is a Github personal access token with `repo` or
+`public_repo` permissions enabled (for information on how to generated it check
+the following
+[link](https://help.github.com/articles/creating-an-access-token-for-command-line-use/)).
+
+Then we should set this token in the repository settings in Travis.
+
+Now every time we push something in `blog` branch, we'll trigger the build and
+deploy of our webpage.
 
 ## Conclusion
 
