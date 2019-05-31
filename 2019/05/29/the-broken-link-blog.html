@@ -48,7 +48,7 @@
           29 May 2019 &nbsp;&middot;&nbsp;
           
           
-            6 min read
+            8 min read
           
         </div>
       </div>
@@ -61,23 +61,23 @@
 webpage or server that is no longer available on the World Wide Web.</p>
 </blockquote>
 
-<p>Maintaining a blog should be simple: writing some content, adding some images
-if needed, save the changes and publish it. Services like
+<p>Maintaining a blog should be simple: writing some content, adding some images,
+save the changes and publish it. Services like
 <a href="https://medium.com">Medium</a> or <a href="https://dev.to">DEV Community</a> already solve
-this problem, so why reinventing the wheel?</p>
+this problem, then... Why reinventing the wheel?</p>
 
 <blockquote>
 <p><em>If a service is free, you&#39;re the product</em></p>
 </blockquote>
 
 <p>There&#39;s nothing wrong on using Medium or DEV Community for posting articles.
-Their business is to host blogs for free and then directly or indirectly
+Their business is to host blogs for free and then, directly or indirectly,
 monetize the contents others create. <a href="https://github.com">Github</a> does exactly
 the same.</p>
 
 <p>Though Medium and DEV are specialized in hosting blogs and give you visibility,
-I don&#39;t like their workflow for publishing articles. However, with Github
-Pages I would have some advantages:</p>
+I don&#39;t like their workflow for publishing articles. However, I do like the
+workflow Github Pages gives me:</p>
 
 <ul>
 <li>I can write a blog using the same tools I use for writing code: <code>vim</code>, <code>zsh</code>
@@ -88,11 +88,16 @@ I&#39;ve created. Censorship it&#39;s easier when there&#39;s centralization (Go
 Bitcoin!).</li>
 </ul>
 
-<h2>Why Ruby?</h2>
+<blockquote>
+<p><strong>Important</strong>: For Github Pages you would need to create a new repository
+with the following name: <code>&lt;your username&gt;.github.io</code>.</p>
+</blockquote>
+
+<h2>Why Jekyll?</h2>
 
 <p>I don&#39;t love Ruby. I also don&#39;t hate it. Though, my professional experience
-does not include Ruby, Jekyll is written in Ruby. So, the real question is...
-Why Jekyll?</p>
+does not include Ruby, Jekyll is written in Ruby. The following are the reasons
+I chose Jekyll:</p>
 
 <ul>
 <li>Amazing documentation.</li>
@@ -110,12 +115,13 @@ it plus some other useful tips.</p>
 
 <h2>Installing Ruby</h2>
 
-<p>Jekyll runs in Ruby, so we need Ruby. There are several methods for installing
-Ruby, but I really like <a href="https://github.com/asdf-vm/asdf">asdf</a> to install new
-languages in my machine (I use it for Elixir and Erlang).</p>
+<p>Like I said before, Jekyll is written in Ruby, so we need Ruby. There are
+several methods for installing Ruby, but I really like
+<a href="https://github.com/asdf-vm/asdf">asdf</a> to install new languages in my machine
+(I use it for Elixir and Erlang).</p>
 
 <p>First, I installed the Ruby plugin and the latest version of the language for
-the project</p>
+the project:</p>
 <div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>asdf plugin-add ruby    <span class="c"># For installing the plugin for Ruby</span>
 <span class="nv">$ </span>asdf <span class="nb">install </span>ruby 2.6.3 <span class="c"># Installs the latest version for Ruby</span>
 <span class="nv">$ </span>asdf <span class="nb">local </span>ruby 2.6.3   <span class="c"># Sets the project's Ruby version in `tool-versions`</span>
@@ -313,9 +319,44 @@ the following contents:</p>
   {% endfor %}
 <span class="nt">&lt;/ul&gt;</span>
 </code></pre></div>
-<h2> Deploy!</h2>
+<h2> Time to Deploy</h2>
 
-<p>TODO</p>
+<p>Travis makes it very easy to deploy a Github Page with minimal configuration.
+Considering the source branch is <code>blog</code> and the target branch is <code>master</code>, then
+our configuration would be as follows:</p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">language</span><span class="pi">:</span> <span class="s">ruby</span>
+<span class="na">rvm</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">2.6</span>
+<span class="na">install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">gem install bundler</span>
+  <span class="pi">-</span> <span class="s">bundle install</span>
+<span class="na">script</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">bundle exec jekyll build</span>
+
+<span class="na">deploy</span><span class="pi">:</span>
+  <span class="na">provider</span><span class="pi">:</span> <span class="s">pages</span>
+  <span class="na">skip_cleanup</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">github_token</span><span class="pi">:</span> <span class="s">$GITHUB_TOKEN</span>
+  <span class="na">keep_history</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">on</span><span class="pi">:</span>
+    <span class="na">branch</span><span class="pi">:</span> <span class="s">blog</span>
+  <span class="na">local-dir</span><span class="pi">:</span> <span class="s">_site</span>
+  <span class="na">target-branch</span><span class="pi">:</span> <span class="s">master</span>
+</code></pre></div>
+<p>where <code>$GITHUB_TOKEN</code> is a Github personal access token with <code>repo</code> or
+<code>public_repo</code> permissions enabled (for information on how to generated it check
+the following
+<a href="https://help.github.com/articles/creating-an-access-token-for-command-line-use/">link</a>).</p>
+
+<p>Then we should set this token in the repository settings in Travis.</p>
+
+<p>Now every time we push something in <code>blog</code> branch, we&#39;ll trigger the build and
+deploy of our webpage.</p>
+
+<h2>Conclusion</h2>
+
+<p>The hardest part is setting up the project, but then it becomes very easy to
+maintain.</p>
 
         </article>
       </div>
