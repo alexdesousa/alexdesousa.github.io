@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+  <title>Syntax highlighting in Jekyll</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="/assets/css/main.css?version=20190601">
+</head>
+
+  <body>
+    <div class="page">
+      <div class="navigation">
+        <img class="logo" src="/assets/img/logo.png" alt="The Broken Link"/>
+<nav>
+  <a href="/2019/06/01/syntax-highlighting-in-jekyll.html"
+     class="active">
+    Home
+  </a>
+  
+    <a href="/articles.html"
+       >
+      Articles
+    </a>
+  
+    <a href="/blog.html"
+       >
+      Blog
+    </a>
+  
+    <a href="/about.html"
+       >
+      About
+    </a>
+  
+<nav>
+
+      </div>
+      <div class="content">
+        <article>
+          
+
+<div class="header">
+  <h1 class="title">Syntax highlighting in Jekyll</h1>
+  <div class="info">
+    <img class="avatar" src="/assets/img/alex.png" alt="alex"/>
+    <div class="author"> Alex de Sousa </div>
+    <div class="read_time">
+          01 Jun 2019 &nbsp;&middot;&nbsp;
+          
+            2 min read
+          
+    </div>
+  </div>
+</div>
+
+          <p>This is mainly a programming blog. Big part of picking a static site generator
+involved researching for code syntax highlighters. When I found these
+<a href="http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html">Pygments CSS themes</a>
+I knew I wanted Pygments support in my static site generator.</p>
+
+<p>Turns out Jekyll has amazing support for Pygments when used together with
+Redcarpet markdown parser.</p>
+
+<h1>Enter Redcarpet</h1>
+
+<p>Before using any of those CSS themes, first I needed to add <code>redcarpet</code> gem
+to my <code>Gemfile</code> e.g:</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">source</span> <span class="s2">"https://rubygems.org"</span>
+
+<span class="n">gem</span> <span class="s2">"jekyll"</span>
+<span class="n">gem</span> <span class="s2">"redcarpet"</span>
+</code></pre></div>
+<p>After running <code>bundle install</code>, I added the configuration for <code>redcarpet</code> in
+<code>_config.yml</code> e.g:</p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">markdown</span><span class="pi">:</span> <span class="s">redcarpet</span>
+<span class="na">redcarpet</span><span class="pi">:</span>
+  <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span>
+    <span class="s2">"</span><span class="s">no_intra_emphasis"</span><span class="pi">,</span>
+    <span class="s2">"</span><span class="s">superscript"</span>
+  <span class="pi">]</span>
+</code></pre></div>
+<p>where:</p>
+
+<ul>
+<li><code>&quot;no_intra_emphasis&quot;</code>: do not parse emphasis inside of words. Strings such as
+<code>foo_bar_baz</code> will not generate <code>&lt;em&gt;</code> tags.</li>
+<li><code>&quot;superscript&quot;</code>: parse superscripts after the <code>^</code> character; contiguous
+superscripts are nested together, and complex values can be enclosed in
+parenthesis, e.g. <code>this is the 2^(nd) time</code>.</li>
+</ul>
+
+<blockquote>
+<p><strong>Note</strong>: For more information about <code>redcarpet</code> you can go to the project&#39;s
+<a href="https://github.com/vmg/redcarpet">page</a>.</p>
+</blockquote>
+
+<h2>Adding CSS to Jekyll</h2>
+
+<p>For <a href="https://thebroken.link">thebroken.link</a> I downloaded the
+<a href="https://raw.githubusercontent.com/jwarby/pygments-css/master/monokai.css">Monokai theme</a>
+to <code>assets/css/pygments/monokai.css</code> and then imported it to my main CSS file
+<code>assets/css/main.css</code>:</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="k">@import</span> <span class="sx">url(pygments/monokai.css)</span><span class="p">;</span>
+
+<span class="nt">pre</span> <span class="p">{</span>
+  <span class="nl">white-space</span><span class="p">:</span> <span class="n">pre</span><span class="p">;</span>
+  <span class="nl">overflow-x</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">code</span> <span class="p">{</span>
+  <span class="nl">color</span><span class="p">:</span> <span class="m">#FFFFFF</span><span class="p">;</span>
+  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#272822</span><span class="p">;</span>
+  <span class="nl">padding</span><span class="p">:</span> <span class="m">4px</span> <span class="m">5px</span> <span class="m">4px</span> <span class="m">5px</span><span class="p">;</span>
+  <span class="nl">border-radius</span><span class="p">:</span> <span class="m">3px</span><span class="p">;</span>
+  <span class="nl">font-size</span><span class="p">:</span> <span class="m">15px</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>And then added it to <code>_includes/head.html</code> (which is the file that generates
+the <code>&lt;head&gt;</code> tag of my blog):</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;head&gt;</span>
+  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"{{ "</span><span class="err">/</span><span class="na">assets</span><span class="err">/</span><span class="na">css</span><span class="err">/</span><span class="na">main</span><span class="err">.</span><span class="na">css</span><span class="err">?</span><span class="na">version=</span><span class="s">20190601"</span> <span class="err">|</span> <span class="na">prepend:</span> <span class="na">site</span><span class="err">.</span><span class="na">baseurl</span> <span class="err">}}"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+</code></pre></div>
+<p>Finally, this include can be included in a layout e.g <code>_layouts/default.html</code>
+would look like:</p>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  {% include head.html %}
+  <span class="nt">&lt;body&gt;</span>
+    {{ content }}
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div>
+<p>And the layout now can be used as follows:</p>
+
+<figure class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
+<span class="s">layout:default</span>
+<span class="nn">---</span>
+
+<span class="gh"># Lorem Ipsum</span>
+
+<span class="p">```</span><span class="nl">elixir</span>
+<span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="sd">"</span><span class="s2">Lorem Ipsum"</span>
+<span class="p">```</span></code></pre></figure>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
