@@ -1,4 +1,7 @@
-# The Broken Link Blog
+---
+layout: default
+title: The Broken Link Blog
+---
 
 > Broken or dead link, a link that, having suffered link rot, points to a
 > webpage or server that is no longer available on the World Wide Web.

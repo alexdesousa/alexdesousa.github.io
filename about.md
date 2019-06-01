@@ -1,8 +1,6 @@
 ---
 layout: default
-title: About
+title: Alex de Sousa
 ---
-
-# About
 
 TODO
