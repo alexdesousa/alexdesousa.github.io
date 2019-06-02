@@ -23,7 +23,7 @@ code {
 
 .page {
   display: grid;
-  grid-template-rows: auto 1fr 50px;
+  grid-template-rows: auto 1fr auto;
   line-height: 1.6;
   font-family: Helvetica;
   font-size: 18px;
@@ -45,7 +45,7 @@ code {
   display: grid;
   grid-template-columns: 1fr 50px 710px 1fr;
   grid-column-gap: 15px;
-  border-bottom: 1px solid #666666;
+  border-bottom: 1px solid #999999;
   padding-top: 20px;
   padding-bottom: 20px;
   position: fixed;
@@ -151,6 +151,7 @@ code {
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+  padding-bottom: 90px;
 }
 
 .content > * {
@@ -185,4 +186,63 @@ code {
   width: 700px;
   height: 100%;
   padding: 20px;
+}
+
+/******************************************************************************
+ * Footer layout.
+ */
+
+.footer {
+  display: grid;
+  grid-template-columns: 1fr 380px 380px 1fr;
+  grid-row-gap: 10px;
+  border-top: 1px solid #999999;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
+  background-color: white;
+  font-size: 15px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.by {
+  grid-column: 2;
+  align-self: center;
+  justify-self: start;
+}
+
+.social {
+  grid-column: 3;
+  align-self: center;
+  justify-self: end;
+  display: grid;
+  grid-template-columns: 30px 30px 30px 30px;
+  grid-column-gap: 10px;
+}
+
+.github {
+  grid-column: 1;
+  width: 30px;
+  height: 30px;
+}
+
+.twitter {
+  grid-column: 2;
+  width: 30px;
+  height: 30px;
+}
+
+.stackoverflow {
+  grid-column: 3;
+  width: 30px;
+  height: 30px;
+}
+
+.linkedin {
+  grid-column: 4;
+  width: 30px;
+  height: 30px;
 }
