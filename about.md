@@ -1,6 +1,7 @@
 ---
 layout: default
 title: About
+description: About Alex
 ---
 
 I believe knowledge should be shared selflessly. I also believe knowledge

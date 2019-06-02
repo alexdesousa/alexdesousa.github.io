@@ -1,6 +1,7 @@
 ---
 layout: default
 title: The Broken Link Blog
+description: The Broken Link Blog
 ---
 
 > Broken or dead link, a link that, having suffered link rot, points to a
@@ -131,3 +132,11 @@ Jekyll comes with a testing server that runs in
 ```bash
 $ bundle exec jekyll serve
 ```
+
+## The Logo
+
+A broken link by a lightning:
+
+- Logo font: Neuropolitical.
+- Website font: Helvetica.
+- Brand colors: `#000000`, `#333333`, `#666666` and `#FFFFFF`.

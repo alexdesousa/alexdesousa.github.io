@@ -1,3 +1,4 @@
+url: "https://thebroken.link"
 markdown: redcarpet
 redcarpet:
   extensions: [
