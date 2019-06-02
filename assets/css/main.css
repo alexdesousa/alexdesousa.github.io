@@ -164,3 +164,25 @@ code {
   align: left;
   color: #666666;
 }
+
+/******************************************************************************
+ * Logo layout
+ */
+
+.brand .color {
+  line-height: 1.8;
+  font-weight: bold;
+}
+
+.brand .square {
+  margin: 0 auto;
+  height: 20px;
+  border-radius: 7%;
+  padding: 2px;
+}
+
+.brand .image {
+  width: 700px;
+  height: 100%;
+  padding: 20px;
+}

@@ -137,6 +137,4 @@ $ bundle exec jekyll serve
 
 A broken link by a lightning:
 
-- Logo font: Neuropolitical.
-- Website font: Helvetica.
-- Brand colors: `#000000`, `#333333`, `#666666` and `#FFFFFF`.
+{% include logo.html %}
