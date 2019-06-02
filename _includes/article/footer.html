@@ -1,0 +1,50 @@
+{% if !page.previous and !page.next %}
+<p>
+  More articles by Alex:
+</p>
+<div class="more">
+  {%if page.previous %}
+    <!-- Previous article -->
+    <div class="previous">
+      <img class="preview_image"
+          alt="{{ page.previous.title }}"
+          src="{{ "/assets/img/" | append: page.previous.image
+                                  | append: "/image.png"
+                                  | prepend: page.baseurl }}"/>
+      <div class="preview_title">
+        <a href="{{ page.previous.url }}">{{ page.previous.title }}</a>
+        <p class="read_time">
+          {% assign words = page.previous.content | number_of_words %}
+          {% if words < 360 %}
+            1 min read
+          {% else %}
+            {{ words | divided_by:180 }} min read
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+
+  {%if page.next %}
+    <!-- Next article -->
+    <div class="next">
+      <img class="preview_image"
+          alt="{{ page.next.title }}"
+          src="{{ "/assets/img/" | append: page.image
+                                  | append: "/image.png"
+                                  | prepend: page.baseurl }}"/>
+      <div class="preview_title">
+        <a href="{{ page.next.url }}">{{ page.title }}</a>
+        <p class="read_time">
+          {% assign words = page.content | number_of_words %}
+          {% if words < 360 %}
+            1 min read
+          {% else %}
+            {{ words | divided_by:180 }} min read
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endif %}
