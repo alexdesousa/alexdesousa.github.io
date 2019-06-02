@@ -54,6 +54,7 @@ code {
   z-index: 9999;
   width: 100%;
   background-color: white;
+  font-weight: bold;
 }
 
 .navigation .logo {
@@ -71,7 +72,6 @@ code {
 
 .navigation .active {
   color: black;
-  font-weight: bold;
   text-decoration: none;
 }
 
