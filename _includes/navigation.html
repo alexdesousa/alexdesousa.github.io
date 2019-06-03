@@ -1,12 +1,16 @@
-<img class="logo" src="{{ "/assets/img/logo.png" | prepend: site.baseurl }}" alt="The Broken Link"/>
-<nav>
+<a class="navchild" href="{{ "/index.html" | prepend: site.baseurl }}">
+  <img class="logo"
+       alt="The Broken Link"
+       src="{{ "/assets/img/logo.png" | prepend: site.baseurl }}"/>
+</a>
+<nav class="navchild">
   <a href="{{ site.posts.first.url }}"
-     {% if page.url == site.posts.first.url %}class="active"{% endif %}>
+     class="{% if page.url == item.link %}navactive{% else %}navlink{% endif %}">
     Home
   </a>
   {% for item in site.data.navigation %}
     <a href="{{ item.link | prepend: site.baseurl }}"
-       {% if page.url == item.link %}class="active"{% endif %}>
+       class="{% if page.url == item.link %}navactive{% else %}navlink{% endif %}">
       {{ item.name }}
     </a>
   {% endfor %}

@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
-  {% include head.html %}
+  <head>
+    {% include head.html %}
+  </head>
   <body>
     <div class="page">
       <div class="navigation">
@@ -8,7 +10,7 @@
       </div>
       <div class="content">
         <article>
-          {% include article/header.html %}
+          {% include header.html %}
           {{ content }}
         </article>
         {% include article/footer.html %}

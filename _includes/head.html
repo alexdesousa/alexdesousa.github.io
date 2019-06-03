@@ -1,25 +1,50 @@
-<head>
-  <title>{{ page.title }}</title>
+{% if page.image %}
+  {% assign preview_image = "/assets/img/preview-black-bg.jpg" %}
+{% else %}
+  {% assign preview_image = page.image %}
+{% endif %}
+<!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="{{ page.description }}" />
+<meta name="robots" content="index, follow">
+<meta name="author" content="{{ page.author }}" />
 
-  <!-- favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
+<!-- title -->
+<title>{{ page.title | append: "| The Broken Link" }}</title>
 
-  <!-- social media -->
-  <meta property="og:title" content="{{ page.title }}">
-  <meta property="og:description" content="{{ page.description }}">
-  <meta property="og:image" content="{{ "/assets/img/preview-black-bg.jpg" | prepend: site.url }}">
-  <meta property="og:url" content="{{ site.url }}">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:site_name" content="The Broken Link">
-  <meta name="twitter:image:alt" content="The Broken Link Blog">
-  <meta name="twitter:site" content="@thebroken_link">
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 
-  <!-- styles -->
-  <link rel="stylesheet" href="{{ "/assets/css/main.css?version=20190601" | prepend: site.baseurl }}">
-</head>
+<!-- Google card -->
+<meta itemprop="description" content="{{ page.description }}" />
+<meta itemprop="image" content="{{ preview_image | prepend: site.url }}" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="The Broken Link">
+<meta property="og:title" content="{{ page.title }}" />
+<meta property="og:image" content="{{ preview_image | prepend: site.url }}" />
+<meta property="og:url" content="{{ site.url }}" />
+<meta property="og:description" content="{{ page.description }}" />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="{{ page.title }}" />
+<meta name="twitter:description" content="{{ page.description }}" />
+<meta name="twitter:image" content="{{ preview_image | prepend: site.url }}" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="The Broken Link Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles -->
+<link rel="stylesheet" href="{{ "/assets/css/main.css?version=20190601" | prepend: site.baseurl }}">
+
+<!-- metadata -->
+{% include metadata.html %}
