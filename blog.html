@@ -1,0 +1,15 @@
+---
+layout: null
+author: Alex de Sousa
+title: The Broken Link Blog
+description: The Broken Link Blog
+---
+<html>
+  <head>
+    {% include head.html %}
+
+    <!-- redirect to lastest article -->
+    <meta http-equiv="refresh" content="0; url={{ site.posts.first.url }}">
+    <link rel="canonical" href="{{ site.posts.first.url }}" />
+  </head>
+</html>
