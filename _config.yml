@@ -1,4 +1,6 @@
 url: "https://thebroken.link"
+plugins:
+  - jekyll-sitemap
 markdown: redcarpet
 redcarpet:
   extensions: [
