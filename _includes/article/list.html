@@ -1,23 +1,6 @@
 <div class="boxes">
   {% for post in site.posts %}
-  <div class="box">
-    <img class="boximage"
-        alt="{{ post.title }}"
-        src="{{ "/assets/img/" | append: post.image
-        | append: "/image.png"
-        | prepend: page.baseurl }}"/>
-    <a class="boxchild navlink" href="{{ post.url }}">{{ post.title }}</a>
-    <span class="boxchild">{{ post.description }}</span>
-    <span class="boxchild read_time">
-      {{ post.date | date_to_string }}
-      &nbsp;&middot;&nbsp;
-      {% assign words = post.content | number_of_words %}
-      {% if words < 360 %}
-        1 min read
-      {% else %}
-        {{ words | divided_by:180 }} min read
-      {% endif %}
-    </span>
-  </div>
+    {% assign current = post %}
+    {% include box.html %}
   {% endfor %}
 </div>

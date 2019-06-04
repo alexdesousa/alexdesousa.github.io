@@ -5,52 +5,14 @@
 <div class="more">
   {%if page.previous %}
     <!-- Previous article -->
-    <div class="box">
-      <img class="boximage"
-          alt="{{ page.previous.title }}"
-          src="{{ "/assets/img/" | append: page.previous.image
-                                 | append: "/image.png"
-                                 | prepend: page.baseurl }}"/>
-      <a class="boxchild navlink" href="{{ page.previous.url }}">
-        {{ page.previous.title }}
-      </a>
-      <span class="boxchild">{{ page.previous.description }}</span>
-      <span class="boxchild read_time">
-        {{ page.previous.date | date_to_string }}
-        &nbsp;&middot;&nbsp;
-        {% assign words = page.previous.content | number_of_words %}
-        {% if words < 360 %}
-          1 min read
-        {% else %}
-          {{ words | divided_by:180 }} min read
-        {% endif %}
-      </span>
-    </div>
+    {% assign current = page.previous %}
+    {% include box.html %}
   {% endif %}
 
   {%if page.next %}
     <!-- Next article -->
-    <div class="box">
-      <img class="boximage"
-          alt="{{ page.next.title }}"
-          src="{{ "/assets/img/" | append: page.next.image
-                                 | append: "/image.png"
-                                 | prepend: page.baseurl }}"/>
-      <a class="boxchild navlink" href="{{ page.next.url }}">
-        {{ page.next.title }}
-      </a>
-      <span class="boxchild">{{ page.next.description }}</span>
-      <span class="boxchild read_time">
-        {{ page.next.date | date_to_string }}
-        &nbsp;&middot;&nbsp;
-        {% assign words = page.next.content | number_of_words %}
-        {% if words < 360 %}
-          1 min read
-        {% else %}
-          {{ words | divided_by:180 }} min read
-        {% endif %}
-      </span>
-    </div>
+    {% assign current = page.next %}
+    {% include box.html %}
   {% endif %}
 </div>
 {% endif %}
