@@ -64,6 +64,7 @@ code {
   text-decoration: none !important;
   font-weight: bold !important;
   font-size: 20px !important;
+  padding: 5px;
 }
 
 .navlink:hover {
@@ -75,6 +76,7 @@ code {
   text-decoration: none !important;
   font-weight: bold !important;
   font-size: 20px !important;
+  padding: 5px;
 }
 
 /* Layout */
@@ -254,6 +256,11 @@ code {
 /* Layout */
 
 .boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  width: 760px;
   padding-top: 30px;
 }
 
