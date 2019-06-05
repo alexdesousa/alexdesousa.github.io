@@ -15,7 +15,7 @@ I knew I wanted Pygments support in my static site generator.
 Turns out Jekyll has amazing support for Pygments when used together with
 Redcarpet markdown parser.
 
-# Enter Redcarpet
+## Enter Redcarpet
 
 Before using any of those CSS themes, first I needed to add `redcarpet` gem
 to my `Gemfile` e.g:

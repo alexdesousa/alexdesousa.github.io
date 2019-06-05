@@ -1,6 +1,6 @@
 ---
 layout: default
-title: The Broken Link Blog
+title: About
 description: The Broken Link Blog
 ---
 
