@@ -292,6 +292,8 @@ code {
 
   padding-right: 20px;
   padding-left: 20px;
+
+  font-size: 18px !important;
 }
 
 .boxchild:nth-child(3) {
@@ -383,6 +385,7 @@ code {
 
   position: absolute;
   bottom: 0;
+  left: 0;
 
   background-color: #333333;
 }
@@ -392,10 +395,6 @@ code {
   align-self: center;
   justify-self: start;
   font-size: 15px;
-  color: #999999;
-}
-
-.by .alex {
   color: #FFFFFF;
 }
 
