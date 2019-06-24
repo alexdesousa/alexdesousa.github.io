@@ -1,7 +1,6 @@
+{% assign preview_image = "/assets/img/preview-black-bg.jpg" | prepend: site.url %}
 {% if page.image %}
-  {% assign preview_image = "/assets/img/preview-black-bg.jpg" %}
-{% else %}
-  {% assign preview_image = page.image %}
+  {% assign preview_image = page.image | prepend: "/assets/img/" | append: "/image.png" | prepend: site.url %}
 {% endif %}
 <!-- general -->
 <meta charset="utf-8">
@@ -12,7 +11,7 @@
 <meta name="author" content="{{ page.author }}" />
 
 <!-- title -->
-<title>{{ page.title | append: "| The Broken Link" }}</title>
+<title>{{ page.title | append: " | The Broken Link" }}</title>
 
 <!-- favicon -->
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -25,20 +24,20 @@
 
 <!-- Google card -->
 <meta itemprop="description" content="{{ page.description }}" />
-<meta itemprop="image" content="{{ preview_image | prepend: site.url }}" />
+<meta itemprop="image" content="{{ preview_image }}" />
 
 <!-- Facebook card -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="The Broken Link">
 <meta property="og:title" content="{{ page.title }}" />
-<meta property="og:image" content="{{ preview_image | prepend: site.url }}" />
+<meta property="og:image" content="{{ preview_image }}" />
 <meta property="og:url" content="{{ site.url }}" />
 <meta property="og:description" content="{{ page.description }}" />
 
 <!-- Twitter card -->
 <meta name="twitter:title" content="{{ page.title }}" />
 <meta name="twitter:description" content="{{ page.description }}" />
-<meta name="twitter:image" content="{{ preview_image | prepend: site.url }}" />
+<meta name="twitter:image" content="{{ preview_image }}" />
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="The Broken Link Blog">
 <meta name="twitter:site" content="@thebroken_link">
