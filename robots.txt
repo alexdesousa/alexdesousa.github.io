@@ -1,1 +1,3 @@
 Sitemap: https://thebroken.link/sitemap.xml
+User-agent: *
+Allow: /
