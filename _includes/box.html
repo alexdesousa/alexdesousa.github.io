@@ -1,12 +1,12 @@
 <div class="box">
-  <img class="boximage"
+  <img class="box-child box-image"
        alt="{{ current.title }}"
        src="{{ "/assets/img/" | append: current.image
        | append: "/image.png"
        | prepend: current.baseurl }}"/>
-  <a class="boxchild navlink" href="{{ current.url }}">{{ current.title }}</a>
-  <span class="boxchild">{{ current.description }}</span>
-  <span class="boxchild read_time">
+  <a class="box-child box-title nav-link-inactive" href="{{ current.url }}">{{ current.title }}</a>
+  <span class="box-child box-description">{{ current.description }}</span>
+  <span class="box-child box-read-time read-time">
     {{ current.date | date_to_string }}
     &nbsp;&middot;&nbsp;
     {% include/read_time.html %}
