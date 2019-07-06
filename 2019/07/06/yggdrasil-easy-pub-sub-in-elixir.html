@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    
+
+<!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="An overview of Yggdrasil capabilities" />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa" />
+
+<!-- title -->
+<title>Yggdrasil: Easy Pub-Sub in Elixir | The Broken Link</title>
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Google card -->
+<meta itemprop="description" content="An overview of Yggdrasil capabilities" />
+<meta itemprop="image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="The Broken Link">
+<meta property="og:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
+<meta property="og:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
+<meta property="og:url" content="https://thebroken.link" />
+<meta property="og:description" content="An overview of Yggdrasil capabilities" />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
+<meta name="twitter:description" content="An overview of Yggdrasil capabilities" />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="The Broken Link Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles -->
+<link rel="stylesheet" href="/assets/css/pygments/monokai.css?version=20190624">
+<link rel="stylesheet" href="/assets/css/main.css?version=20190624">
+
+<!-- metadata -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/2019/07/06/yggdrasil-easy-pub-sub-in-elixir.html"
+  },
+  "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
+  "image": [
+    "https://example.com/photos/1x1/photo.jpg",
+    "https://example.com/photos/4x3/photo.jpg",
+    "https://example.com/photos/16x9/photo.jpg"
+   ],
+  "datePublished": "2019-07-06T00:00:00+00:00",
+  "dateModified": "2019-07-06T00:00:00+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Broken Link"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebroken.link/assets/img/logo.png"
+    }
+  },
+  "description": "An overview of Yggdrasil capabilities
+}
+</script>
+
+
+  </head>
+  <body>
+    <div class="page">
+      <div class="navigation">
+        <a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="The Broken Link"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar">
+  
+    <a href="/"
+       class="nav-link-inactive">
+      Home
+    </a>
+  
+    <a href="/blog.html"
+       class="nav-link-inactive">
+      Blog
+    </a>
+  
+    <a href="/about.html"
+       class="nav-link-inactive">
+      About
+    </a>
+  
+</nav>
+
+      </div>
+      <div class="content">
+        <article>
+          <div class="header">
+  <h1 class="title">Yggdrasil: Easy Pub-Sub in Elixir</h1>
+  
+
+
+  <div class="header-info">
+    <img class="header-info-child avatar" src="/assets/img/alex.png" alt="alex"/>
+    <div class="header-info-child author"> Alex de Sousa </div>
+    <div class="header-info-child read-time">
+      06 Jul 2019 &nbsp;&middot;&nbsp; 
+
+3 min read
+
+
+    </div>
+  </div>
+
+
+</div>
+
+          <p>When I started coding in Elixir, I was working for a financial company. Our
+product automatically invested money in the Forex market by copying traders&#39;
+actions in real time. We had:</p>
+
+<ul>
+<li>Market prices coming from a Redis channel.</li>
+<li>Market action updates coming from a PostgreSQL notification channel.</li>
+<li>And consumed in order from several RabbitMQ queues.</li>
+</ul>
+
+<p>We needed three different adapters, but only three possible actions for each:</p>
+
+<ul>
+<li>Subscribe to a channel.</li>
+<li>Unsubscribe from a channel</li>
+<li>Publish a message in a channel.</li>
+</ul>
+
+<h2>Enter Yggdrasil</h2>
+
+<blockquote>
+<p><em>Yggdrasil</em> is an immense mythical tree that connects the nine worlds in
+Norse cosmology.</p>
+</blockquote>
+
+<p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> was our pub-sub
+generalization. Using the strong foundations of Phoenix pub-sub application, we
+built an agnostic publisher/subscriber application that has:</p>
+
+<ul>
+<li>Multi node support.</li>
+<li>Simple API: <code>subscribe/1</code>, <code>unsubscribe/1</code> and <code>publish/2</code>.</li>
+<li>A <code>GenServer</code> wrapper for handling subscriber events easily.</li>
+<li>A basic adapter for using Elixir message distribution.</li>
+<li>Fault-tolerant adapters for
+<a href="https://github.com/gmtprime/yggdrasil_redis">Redis</a>,
+<a href="https://github.com/gmtprime/yggdrasil_postgres">PostgreSQL</a> and
+<a href="https://github.com/gmtprime/yggdrasil_rabbitmq">RabbitMQ</a>.</li>
+</ul>
+
+<h2>An API to Rule Them All</h2>
+
+<p>As I wrote before, Yggdrasil&#39;s API is very simple e.g:</p>
+
+<ul>
+<li>The process subscribes to <code>&quot;my_channel&quot;</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+</code></pre></div>
+<ul>
+<li>A process (in this case the same process) publishes the message <code>&quot;my message&quot;</code>
+in <code>&quot;my_channel&quot;</code>.</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>The message should be in the mailbox of the subscriber process:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>The subscriber can unsubscribe from the channel to stop receiving messages:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_DISCONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+</code></pre></div>
+<blockquote>
+<p><code>flush()</code> cleans the IEx process mailbox. In general, receiving Yggdrasil
+messages should be the same as receiving messages when the sender uses
+<code>send/2</code>.</p>
+</blockquote>
+
+<h3>Yggdrasil Behaviour</h3>
+
+<p>Yggdrasil provides a <code>behaviour</code> for writing subscribers easily. Following the
+previous example, the subscriber could be written as follows:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Subscriber</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Yggdrasil</span>
+
+  <span class="k">def</span> <span class="n">start_link</span> <span class="k">do</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">]</span>
+    <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">])</span>
+  <span class="k">end</span>
+
+  <span class="nv">@impl</span> <span class="no">true</span>
+  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
+    <span class="no">IO</span><span class="o">.</span><span class="n">inspect</span> <span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="n">message</span><span class="p">}</span>
+    <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This subscriber will print the message as it receives it:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">_pid</span><span class="p">}</span> <span class="o">=</span> <span class="no">Subscriber</span><span class="o">.</span><span class="n">start_link</span><span class="p">()</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publisher</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>An interesting side-effect is that now we can send messages to any process as
+long as they are subscribed to the right channel without needing to know the
+process PID or name.</p>
+</blockquote>
+
+<h2>Conclusion</h2>
+
+<p>Yggdrasil hides the complexity of a pub/sub while giving you the opportunity of
+focusing on the things that really matter: messages.</p>
+
+        </article>
+        
+<div style="margin: 40px 75px 10px 75px; border: 1px solid #CCCCCC;"></div>
+<div class="boxes">
+  
+    <!-- Previous article -->
+    
+    <div class="box">
+  <img class="box-child box-image"
+       alt="Syntax highlighting in Jekyll"
+       src="/assets/img/syntax-highlighting-in-jekyll/image.png"/>
+  <a class="box-child box-title nav-link-inactive" href="/2019/06/01/syntax-highlighting-in-jekyll.html">Syntax highlighting in Jekyll</a>
+  <span class="box-child box-description">Using Redcarpet markdown generator to add pygments to Jekyll</span>
+  <span class="box-child box-read-time read-time">
+    01 Jun 2019
+    &nbsp;&middot;&nbsp;
+    
+
+2 min read
+
+
+  </span>
+</div>
+
+  
+
+  
+</div>
+
+
+      </div>
+      <div class="footer">
+        <div class="footer-copyright">
+  <span class="by-alex"> Copyright 2019 Alexander de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/github.png"
+        alt="Github"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/twitter.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://stackoverflow.com/users/4776680/alexander-de-sousa?tab=topactivity">
+    <img class="social-media stackoverflow"
+        src="/assets/img/stackoverflow.png"
+        alt="Stack Overflow"/>
+  </a>
+  <a href="https://www.linkedin.com/in/ajdesousa/">
+    <img class="social-media linkedin"
+        src="/assets/img/linkedin.png"
+        alt="Linked In"/>
+  </a>
+</div>
+
+      </div>
+    </div>
+  </body>
+</html>
