@@ -1,4 +1,4 @@
-{% if !page.previous and !page.next %}
+{% if page.previous or page.next %}
 <div style="margin: 40px 75px 10px 75px; border: 1px solid #CCCCCC;"></div>
 <div class="boxes">
   {%if page.previous %}
