@@ -488,7 +488,7 @@ html, body {
 .box-image {
   width: 300px;
   height: 120px;
-  background: #999999;
+  background: rgb(235, 235, 235);
   object-fit: cover;
   border-radius: 3px;
   margin: 0;
