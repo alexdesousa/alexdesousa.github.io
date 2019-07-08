@@ -1,15 +1,15 @@
 {% if page.previous or page.next %}
 <div style="margin: 40px 75px 10px 75px; border: 1px solid #CCCCCC;"></div>
 <div class="boxes">
-  {%if page.previous %}
-    <!-- Previous article -->
-    {% assign current = page.previous %}
-    {% include box.html %}
-  {% endif %}
-
   {%if page.next %}
     <!-- Next article -->
     {% assign current = page.next %}
+    {% include box.html %}
+  {% endif %}
+
+  {%if page.previous %}
+    <!-- Previous article -->
+    {% assign current = page.previous %}
     {% include box.html %}
   {% endif %}
 </div>
