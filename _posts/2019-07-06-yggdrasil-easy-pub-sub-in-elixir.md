@@ -23,6 +23,11 @@ We needed three different adapters, but only three possible actions for each:
 
 ## Enter Yggdrasil
 
+Handling subscriptions should be easy and, in an ideal world, we would only
+need to know _where_ to connect and _start receiving_ messages right away, not
+worrying about secondary (yet relevant) things like disconnections, failures
+and managing resources.
+
 > _Yggdrasil_ is an immense mythical tree that connects the nine worlds in
 > Norse cosmology.
 
@@ -113,5 +118,5 @@ iex> :ok = Yggdrasil.publisher([name: "my_channel"], "my message")
 
 ## Conclusion
 
-Yggdrasil hides the complexity of a pub/sub while giving you the opportunity of
-focusing on the things that really matter: messages.
+[Yggdrasil](https://github.com/gmtprime/yggdrasil) hides the complexity of a
+pub/sub and let's you focus in what really matters: **messages**.
