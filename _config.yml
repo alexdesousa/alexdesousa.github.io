@@ -1,7 +1,7 @@
 url: "https://thebroken.link"
 permalink: /:title/
 plugins:
-  - jekyll-sitemap
+  - jekyll-last-modified-at
 markdown: redcarpet
 exclude: [
   "Gemfile",
