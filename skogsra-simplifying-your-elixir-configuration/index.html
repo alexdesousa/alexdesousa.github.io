@@ -107,11 +107,14 @@
 
 <p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="madness"></p>
 
-<p>Ideally though, configurations should be:
-- Documented.
-- Easy to find.
-- Easy to read.
-- Declarative.</p>
+<p>Ideally though, configurations should be:</p>
+
+<ul>
+<li>Documented.</li>
+<li>Easy to find.</li>
+<li>Easy to read.</li>
+<li>Declarative.</li>
+</ul>
 
 <p>In summary: <strong>easy to maintain</strong>.</p>
 
@@ -131,7 +134,7 @@
 <li>Not declarative: we&#39;re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> it&#39;s the desired result</strong>.</li>
 </ul>
 
-<p>Conclusion: it&#39;s <strong>hard to maintain</strong>.</p>
+<p>Conclusion: <strong>it&#39;s hard to maintain</strong>.</p>
 
 <h2 id="writing-a-config-module">Writing a config module</h2>
 
@@ -241,7 +244,7 @@
 <li><p>From the default value if it exists (In this case, it would return the integer <code>80</code>).</p></li>
 </ol>
 
-<p>The values will be casted as the default values&#39; type unless the option <code>type</code> is provided (see [Explicit type casting] section).</p>
+<p>The values will be casted as the default values&#39; type unless the option <code>type</code> is provided (see <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
 
 <p>Though Skogsrå has <a href="https://hexdocs.pm/skogsra/readme.html">many options and features</a>, we will just explore the ones I use the most:</p>
 
@@ -371,7 +374,7 @@ the application configuration is not found:</p>
 "/>
     <div class="bio-info-child author">Alex de Sousa
 </div>
-    <div class="bio-info-child bio-description">Refill Aqua co-founder. Elixir alchemist. Tech enthusiast.
+    <div class="bio-info-child bio-description"><a href="https://refillaqua.com">Refill Aqua</a> co-founder. Elixir alchemist. Tech enthusiast.
 </div>
   </div><div class="boxes"><!-- Previous article --><div class="box">
   <img class="box-child box-image"
