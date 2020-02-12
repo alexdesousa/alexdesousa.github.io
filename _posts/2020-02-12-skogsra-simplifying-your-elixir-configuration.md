@@ -136,6 +136,7 @@ Calling `Myapp.Config.port()` will retrieve the value for the port in the follow
 
 1. From the OS environment variable `$PORT`.
 2. From the configuration file e.g. our test config file might look like:
+
     ```elixir
     # file config/test.exs
     use Mix.Config
@@ -143,6 +144,7 @@ Calling `Myapp.Config.port()` will retrieve the value for the port in the follow
     config :myapp,
       port: 4000
     ```
+
 3. From the default value if it exists (In this case, it would return the integer `80`).
 
 The values will be casted as the default values' type unless the option `type` is provided (see [Explicit type casting] section).
