@@ -1,0 +1,17 @@
+{%- comment -%}
+  Receives the link to the image relative to the article.
+{%- endcomment -%}
+{%- assign article_image = include.src
+    | prepend: "/"
+    | prepend: page.id
+    | prepend: "/assets/img"
+-%}
+
+<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="{{- article_image -}}"
+         alt="{{- include.alt -}}"/>
+    {{- include.caption -}}
+  </p>
+</span>

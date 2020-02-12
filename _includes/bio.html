@@ -1,0 +1,19 @@
+{%- if page.handle -%}
+  {%- capture avatar -%}
+    {%- include article/avatar.html -%}
+  {%- endcapture -%}
+  {%- capture author -%}
+    {%- include bio/author.html page = page -%}
+  {%- endcapture -%}
+  <div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="{{- avatar -}}"
+         alt="{{- author -}}"/>
+    <div class="bio-info-child author">
+      {{- author -}}
+    </div>
+    <div class="bio-info-child bio-description">
+      {%- include bio/{{ page.handle }}.html -%}
+    </div>
+  </div>
+{%- endif -%}

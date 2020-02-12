@@ -3,7 +3,7 @@ layout: article
 title: Syntax highlighting in Jekyll
 description: Using Redcarpet markdown generator to add pygments to Jekyll
 handle: alex
-image: syntax-highlighting-in-jekyll
+image: jekyll.png
 author: Alex de Sousa
 ---
 

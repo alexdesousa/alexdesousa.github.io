@@ -1,0 +1,25 @@
+{%- comment -%}
+  Shows the link to an article preview image.
+{%- endcomment -%}
+{%- assign article = page -%}
+{%- if include.article -%}
+  {%- assign article = include.article -%}
+{%- endif -%}
+{%- assign default_image = "/assets/img"
+   | append: article.id
+   | append: "/image.png"
+-%}
+{%- if article.image -%}
+  {%- assign default_image = "/assets/img"
+    | append: article.id
+    | append: "/"
+    | append: article.image
+  -%}
+{%- endif -%}
+{%- assign preview_image = "/assets/img/preview.jpg" | prepend: site.url -%}
+{%- for static_file in site.static_files -%}
+  {%- if static_file.path == default_image -%}
+    {%- assign preview_image = default_image | prepend: site.url -%}
+  {%- endif -%}
+{%- endfor -%}
+{{- preview_image -}}

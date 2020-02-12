@@ -1,0 +1,46 @@
+{%- if include.number -%}
+  {%- assign chapter = toc_chapter[include.number] -%}
+  {%- assign number = toc_number[include.number] -%}
+  {%- assign title = toc_title[include.number] -%}
+  {%- assign image = toc_image[include.number] -%}
+  {%- assign background_color = toc_background_color[include.number] -%}
+  {%- assign color = toc_color[include.number] -%}
+  <div class="chapter" style="background-color: {{ background_color }};">
+    <div class="chapter-content">
+      <strong style="color: {{ color }};">
+        {{- chapter -}}
+      </strong>
+      <h2 id="{{- number -}}"
+          class="chapter-title"
+          style="color: {{ color }};">
+        {{- title -}}
+      </h2>
+      <img src="{{- image -}}"
+           alt="{{- chapter }} {{ title -}}"/>
+    </div>
+  </div>
+{%- endif -%}
+
+{%- if include.background_color -%}
+  {%- assign background_color = include.background_color -%}
+{%- else -%}
+  {%- assign background_color = "var(--deep-blue)" -%}
+{%- endif -%}
+{%- if include.color -%}
+  {%- assign color = include.color -%}
+{%- else -%}
+  {%- assign color = "white" -%}
+{%- endif -%}
+{%- if include.number -%}
+  {%- assign chapter = "CHAPTER "
+      | append: include.number
+      | append: ":"
+  -%}
+{%- endif -%}
+{%- if include.image -%}
+  {%- assign image = "/assets/img"
+    | append: page.id
+    | append: "/"
+    | append: include.image
+  -%}
+{%- endif -%}

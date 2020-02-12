@@ -1,0 +1,123 @@
+{%- comment -%}
+  Default initialization.
+{%- endcomment -%}
+{%- if include.background_color -%}
+  {%- assign background_color = include.background_color -%}
+{%- else -%}
+  {%- assign background_color = "var(--deep-blue)" -%}
+{%- endif -%}
+{%- if include.color -%}
+  {%- assign color = include.color -%}
+{%- else -%}
+  {%- assign color = "white" -%}
+{%- endif -%}
+{%- comment -%}
+  Mandatory arguments.
+{%- endcomment -%}
+{%- if include.number -%}
+  {%- assign number = include.number -%}
+  {%- assign chapter = "Chapter "
+      | append: include.number
+      | append: ":"
+      | upcase
+  -%}
+{%- endif -%}
+{%- if include.chapter -%}
+  {%- assign chapter = include.chapter
+      | append: ":"
+      | upcase
+  -%}
+{%- endif -%}
+{%- if include.image -%}
+  {%- assign image = "/assets/img"
+    | append: page.id
+    | append: "/"
+    | append: include.image
+  -%}
+{%- endif -%}
+{%- comment -%}
+  Table of Contents initializations.
+{%- endcomment -%}
+{%- if toc_title -%}
+  {%- assign toc_title = toc_title
+      | join: "|"
+      | append: "|"
+      | append: include.title
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_title = "|"
+      | append: include.title
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if toc_background_color -%}
+  {%- assign toc_background_color = toc_background_color
+      | join: "|"
+      | append: "|"
+      | append: background_color
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_background_color = "|"
+      | append: background_color
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if toc_color -%}
+  {%- assign toc_color = toc_color
+      | join: "|"
+      | append: "|"
+      | append: color
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_color = "|"
+      | append: color
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if toc_number -%}
+  {%- assign toc_number = toc_number
+      | join: "|"
+      | append: "|"
+      | append: number
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_number = "|"
+      | append: number
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if toc_chapter -%}
+  {%- assign toc_chapter = toc_chapter
+      | join: "|"
+      | append: "|"
+      | append: chapter
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_chapter = "|"
+      | append: chapter
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if toc_image -%}
+  {%- assign toc_image = toc_image
+      | join: "|"
+      | append: "|"
+      | append: image
+      | split: "|"
+  -%}
+{%- else -%}
+  {%- assign toc_image = "|"
+      | append: image
+      | split: "|"
+  -%}
+{%- endif -%}
+{%- if include.chapter -%}
+- [{{ include.chapter }}: {{ include.title }}](#{{ number }})
+{%- else -%}
+- [Chapter {{ number }}: {{ include.title }}](#{{ number }})
+{%- endif -%}

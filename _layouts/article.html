@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="{%- include language.html -%}">
   <head>
-    {% include head.html %}
+    {%- include head.html -%}
   </head>
   <body>
     <div class="page">
       <div class="navigation">
-        {% include navigation.html %}
+        {%- include navigation.html -%}
       </div>
       <div class="content">
-        <article>
-          {% include header.html %}
-          {{ content }}
+        <article class="article">
+          {%- include header.html -%}
+          {%- include soundcloud.html -%}
+          {{- content -}}
         </article>
-        {% include article/footer.html %}
+        {%- include article/footer.html -%}
       </div>
       <div class="footer">
-        {% include footer.html %}
+        {%- include footer.html -%}
       </div>
     </div>
   </body>

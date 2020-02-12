@@ -3,7 +3,7 @@ layout: article
 title: "Yggdrasil: Easy Pub-Sub in Elixir"
 description: An overview of Yggdrasil capabilities
 handle: alex
-image: yggdrasil-easy-pub-sub-in-elixir
+image: yggdrasil.png
 author: Alex de Sousa
 ---
 

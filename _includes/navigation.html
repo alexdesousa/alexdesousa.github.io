@@ -1,13 +1,13 @@
-<a class="navigation-logo" href="{{ "/" | prepend: site.baseurl }}">
+<a class="navigation-logo" href="{{- "/" | prepend: site.baseurl -}}">
   <img class="logo-image"
-       alt="The Broken Link"
-       src="{{ "/assets/img/logo.png" | prepend: site.baseurl }}"/>
+       alt="Alex de Sousa Blog"
+       src="{{- "/assets/img/logo.png" | prepend: site.baseurl -}}"/>
 </a>
 <nav class="navigation-bar">
-  {% for item in site.data.navigation %}
-    <a href="{{ item.link | prepend: site.baseurl }}"
-       class="{% if page.url == item.link %}nav-link-active{% else %}nav-link-inactive{% endif %}">
-      {{ item.name }}
+  {%- for item in site.data.navigation -%}
+    <a href="{{- item.link | prepend: site.baseurl -}}"
+       class="nav-link-inactive">
+      {{- item.name -}}
     </a>
-  {% endfor %}
+  {%- endfor -%}
 </nav>

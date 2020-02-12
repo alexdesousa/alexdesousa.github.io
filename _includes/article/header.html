@@ -1,11 +1,26 @@
-{% assign avatar = "/assets/img/" | append: page.handle | append: ".png" %}
-{% assign current = page %}
-{% if page.handle %}
+{%- if page.handle -%}
+  {%- capture avatar -%}
+    {%- include article/avatar.html -%}
+  {%- endcapture -%}
+  {%- capture tweet -%}
+    {%- include tweet.html page = page -%}
+  {%- endcapture -%}
+  {%- capture author -%}
+    {%- include bio/author.html page = page -%}
+  {%- endcapture -%}
   <div class="header-info">
-    <img class="header-info-child avatar" src="{{ avatar | prepend: site.baseurl }}" alt="{{ page.handle }}"/>
-    <div class="header-info-child author"> {{ page.author }} </div>
-    <div class="header-info-child read-time">
-      {{ page.date | date_to_string }} &nbsp;&middot;&nbsp; {% include read_time.html %}
+    <img class="header-info-child avatar"
+         src="{{- avatar -}}"
+         alt="{{- author -}}"/>
+    <div class="header-info-child author">
+      {{- author -}}
     </div>
+    <div class="header-info-child read-time">
+      {%- include read_time.html -%}
+    </div>
+    <a class="header-info-child share-button share-twitter"
+       href="{{- tweet -}}"
+       target="_blank">
+    </a>
   </div>
-{% endif %}
+{%- endif -%}

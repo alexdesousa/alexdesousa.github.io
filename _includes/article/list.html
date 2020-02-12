@@ -1,6 +1,5 @@
 <div class="boxes">
   {% for post in site.posts %}
-    {% assign current = post %}
-    {% include box.html %}
+    {% include box.html article = post %}
   {% endfor %}
 </div>

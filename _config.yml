@@ -1,9 +1,16 @@
 url: "https://thebroken.link"
+permalink: /:title/
 plugins:
   - jekyll-sitemap
 markdown: redcarpet
+exclude: [
+  "Gemfile",
+  "Gemfile.lock",
+  "README.md"
+]
 redcarpet:
   extensions: [
+    "strikethrough",
     "no_intra_emphasis",
     "superscript"
   ]

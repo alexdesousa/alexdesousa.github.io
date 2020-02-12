@@ -1,50 +1,61 @@
-{% assign preview_image = "/assets/img/preview-black-bg.jpg" | prepend: site.url %}
-{% if page.image %}
-  {% assign preview_image = page.image | prepend: "/assets/img/" | append: "/image.png" | prepend: site.url %}
-{% endif %}
+{%- capture preview_image -%}
+  {%- include preview_image.html -%}
+{%- endcapture -%}
+{%- capture author -%}
+  {%- include bio/author.html page = page -%}
+{%- endcapture -%}
 <!-- general -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="description" content="{{ page.description }}" />
+<meta name="description" content="{{- page.description -}}" />
 <meta name="robots" content="index, follow">
-<meta name="author" content="{{ page.author }}" />
+<meta name="author" content="{{- author -}}" />
 
 <!-- title -->
-<title>{{ page.title | append: " | The Broken Link" }}</title>
+<title>{{- page.title | append: " | Alex de Sousa Blog" -}}</title>
 
 <!-- favicon -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
 
 <!-- Google card -->
-<meta itemprop="description" content="{{ page.description }}" />
-<meta itemprop="image" content="{{ preview_image }}" />
+<meta itemprop="description" content="{{- page.description -}}" />
+<meta itemprop="image" content="{{- preview_image -}}" />
 
 <!-- Facebook card -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="The Broken Link">
-<meta property="og:title" content="{{ page.title }}" />
-<meta property="og:image" content="{{ preview_image }}" />
-<meta property="og:url" content="{{ site.url }}" />
-<meta property="og:description" content="{{ page.description }}" />
+<meta property="og:site_name" content="Alex de Sousa Blog" />
+<meta property="og:title" content="{{- page.title -}}" />
+<meta property="og:image" content="{{- preview_image -}}" />
+<meta property="og:url" content="{{- site.url | append: page.id | append: "/" -}}" />
+<meta property="og:description" content="{{- page.description -}}" />
 
 <!-- Twitter card -->
-<meta name="twitter:title" content="{{ page.title }}" />
-<meta name="twitter:description" content="{{ page.description }}" />
-<meta name="twitter:image" content="{{ preview_image }}" />
+<meta name="twitter:title" content="{{- page.title -}}" />
+<meta name="twitter:description" content="{{- page.description -}}" />
+<meta name="twitter:image" content="{{- preview_image -}}" />
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image:alt" content="The Broken Link Blog">
-<meta name="twitter:site" content="@thebroken_link">
+<meta name="twitter:image:alt" content="Alex de Sousa Blog">
+<meta name="twitter:site" content="@etadel2">
 
 <!-- styles -->
-<link rel="stylesheet" href="{{ "/assets/css/pygments/monokai.css?version=20190624" | prepend: site.baseurl }}">
-<link rel="stylesheet" href="{{ "/assets/css/main.css?version=20190624" | prepend: site.baseurl }}">
+{%- if page.handle -%}
+<link rel="stylesheet"
+      href="{{- "/assets/css/article.css?version=20191116"
+                | prepend: site.baseurl -}}">
+{%- else -%}
+<link rel="stylesheet"
+      href="{{- "/assets/css/default.css?version=20191116"
+                | prepend: site.baseurl -}}">
+{%- endif -%}
 
 <!-- metadata -->
-{% include metadata.html %}
+{%- include metadata.html -%}
+<script type="text/javascript" src="/assets/js/app.js"></script>

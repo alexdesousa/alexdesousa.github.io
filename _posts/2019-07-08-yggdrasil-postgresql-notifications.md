@@ -3,7 +3,7 @@ layout: article
 title: "Yggdrasil: PostgreSQL Notifications"
 description: "Yggdrasil adapter for handling pg_notify notifications from PostgreSQL"
 handle: alex
-image: yggdrasil-postgresql-notifications
+image: postgres.png
 author: Alex de Sousa
 ---
 
