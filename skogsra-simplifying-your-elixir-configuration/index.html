@@ -231,16 +231,13 @@
 
 <ol>
 <li>From the OS environment variable <code>$PORT</code>.</li>
-<li><p>From the configuration file e.g. our test config file might look like:
-```elixir</p>
+<li><p>From the configuration file e.g. our test config file might look like:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># file config/test.exs</span>
+<span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Config</span>
 
-<h1 id="file-config-test-exs">file config/test.exs</h1>
-
-<p>use Mix.Config</p>
-
-<p>config :myapp,
-  port: 4000
-```</p></li>
+<span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
+  <span class="ss">port:</span> <span class="m">4000</span>
+</code></pre></div></li>
 <li><p>From the default value if it exists (In this case, it would return the integer <code>80</code>).</p></li>
 </ol>
 
