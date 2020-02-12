@@ -10,10 +10,10 @@
 " />
 
 <!-- title -->
-<title>Skogsrå: Simplifying Elixir Configuration | Alex de Sousa Blog</title>
+<title>Skogsrå: Simplifying Your Elixir Configuration | Alex de Sousa Blog</title>
 
 <!--  canonical -->
-<link rel="canonical" href="https://thebroken.link/skogsra-simplifying-elixir-configuration/"/>
+<link rel="canonical" href="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/"/>
 
 <!-- favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -27,20 +27,20 @@
 
 <!-- Google card -->
 <meta itemprop="description" content="Improving Elixir configurations for small and large projects." />
-<meta itemprop="image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
+<meta itemprop="image" content="https://thebroken.link/assets/img/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
 
 <!-- Facebook card -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Alex de Sousa Blog" />
-<meta property="og:title" content="Skogsrå: Simplifying Elixir Configuration" />
-<meta property="og:image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
-<meta property="og:url" content="https://thebroken.link/skogsra-simplifying-elixir-configuration/" />
+<meta property="og:title" content="Skogsrå: Simplifying Your Elixir Configuration" />
+<meta property="og:image" content="https://thebroken.link/assets/img/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
+<meta property="og:url" content="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/" />
 <meta property="og:description" content="Improving Elixir configurations for small and large projects." />
 
 <!-- Twitter card -->
-<meta name="twitter:title" content="Skogsrå: Simplifying Elixir Configuration" />
+<meta name="twitter:title" content="Skogsrå: Simplifying Your Elixir Configuration" />
 <meta name="twitter:description" content="Improving Elixir configurations for small and large projects." />
-<meta name="twitter:image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="Alex de Sousa Blog">
 <meta name="twitter:site" content="@etadel2">
@@ -52,9 +52,9 @@
   "@type": "NewsArticle",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://thebroken.link/skogsra-simplifying-elixir-configuration/"
+    "@id": "https://thebroken.link/skogsra-simplifying-your-elixir-configuration/"
   },
-  "headline": "Skogsrå: Simplifying Elixir Configuration",
+  "headline": "Skogsrå: Simplifying Your Elixir Configuration",
   "image": [
     "https://thebroken.link/assets/img/logo.png"
    ],
@@ -82,7 +82,7 @@
 </div>
       <div class="content">
         <article class="article"><div class="header">
-  <h1 class="title">Skogsrå: Simplifying Elixir Configuration</h1><div class="header-info">
+  <h1 class="title">Skogsrå: Simplifying Your Elixir Configuration</h1><div class="header-info">
     <img class="header-info-child avatar"
          src="/assets/img/handle/alex.jpg"
          alt="Alex de Sousa
@@ -91,7 +91,7 @@
 </div>
     <div class="header-info-child read-time">5 min read</div>
     <a class="header-info-child share-button share-twitter"
-       href="https://twitter.com/intent/tweet?text=Improving+Elixir+configurations+for+small+and+large+projects.&url=https://thebroken.link/skogsra-simplifying-elixir-configuration/&via=thebroken_link"
+       href="https://twitter.com/intent/tweet?text=Improving+Elixir+configurations+for+small+and+large+projects.&url=https://thebroken.link/skogsra-simplifying-your-elixir-configuration/&via=thebroken_link"
        target="_blank">
     </a>
   </div></div>
@@ -107,7 +107,7 @@
 
 <p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="madness"></p>
 
-<p>Configurations ideally should be:
+<p>Ideally though, configurations should be:
 - Documented.
 - Easy to find.
 - Easy to read.
@@ -128,10 +128,10 @@
 <li>Undocumented: <code>hostname</code> and <code>port</code> of what?</li>
 <li>Hard to read: Too many concerns in a single line.</li>
 <li>Hard to find: where are these <code>hostname</code> and <code>port</code> used?</li>
-<li>Not declarative: we&#39;re telling Elixir <em>how to retrieve the values</em> instead of <em>what it&#39;s the desired result</em>.</li>
+<li>Not declarative: we&#39;re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> it&#39;s the desired result</strong>.</li>
 </ul>
 
-<p>Conclusion: <strong>hard to maintain</strong>.</p>
+<p>Conclusion: it&#39;s <strong>hard to maintain</strong>.</p>
 
 <h2 id="writing-a-config-module">Writing a config module</h2>
 
@@ -164,7 +164,7 @@
 <li>Easy to find: We just need to to look for calls to functions defined in this module.</li>
 </ul>
 
-<p>However we still have essentially the same code we had before:</p>
+<p>However, we still have essentially the same code we had before, which is:</p>
 
 <ul>
 <li>Hard to read.</li>
