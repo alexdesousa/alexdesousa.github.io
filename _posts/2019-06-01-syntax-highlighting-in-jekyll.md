@@ -1,7 +1,7 @@
 ---
 layout: article
 title: Syntax highlighting in Jekyll
-description: Using Redcarpet markdown generator to add pygments to Jekyll
+description: Using Redcarpet markdown renderer to add pygments to Jekyll
 handle: alex
 image: jekyll.png
 author: Alex de Sousa
@@ -28,79 +28,47 @@ gem "redcarpet"
 ```
 
 After running `bundle install`, I added the configuration for `redcarpet` in
-`_config.yml` e.g:
+your `_config.yml`
 
 ```yaml
+# _config.yml
 markdown: redcarpet
-redcarpet:
-  extensions: [
-    "no_intra_emphasis",
-    "superscript"
-  ]
+
+... rest of the config ...
 ```
 
-where:
+> Redcarpet has many useful extensions and you can find out more about them
+> [here](https://github.com/vmg/redcarpet).
 
-- `"no_intra_emphasis"`: do not parse emphasis inside of words. Strings such as
-  `foo_bar_baz` will not generate `<em>` tags.
-- `"superscript"`: parse superscripts after the `^` character; contiguous
-  superscripts are nested together, and complex values can be enclosed in
-  parenthesis, e.g. `this is the 2^(nd) time`.
-
-> **Note**: For more information about `redcarpet` you can go to the project's
-> [page](https://github.com/vmg/redcarpet).
-
-## Adding CSS to Jekyll
+## Adding syntax highlighting theme to Jekyll
 
 For [thebroken.link](https://thebroken.link) I downloaded the
 [Monokai theme](https://raw.githubusercontent.com/jwarby/pygments-css/master/monokai.css)
-to `assets/css/pygments/monokai.css` and then imported it to my main CSS file
-`assets/css/main.css`:
+for syntax highlighting.
 
+I only needed to modify two files:
+
+- `assets/css/main.css`: my main CSS file included in all my layouts, including
+  `default`.
+- `_includes/css/pygments/monokai.css`: Monokai theme I downloaded.
+
+In order to include Monokai theme into into `assets/css/main.css`, I used
+Liquid  directives:
+{% raw %}
 ```css
-@import url(pygments/monokai.css);
+---
+---
+{%- comment -%} File: assets/css/main.css {%- endcomment -%}
 
-pre {
-  white-space: pre;
-  overflow-x: auto;
-}
+{%- include css/pygments/monokai.css -%}
 
-code {
-  color: #FFFFFF;
-  background-color: #272822;
-  padding: 4px 5px 4px 5px;
-  border-radius: 3px;
-  font-size: 15px;
-}
-```
+... more styles ...
 
-And then added it to `_includes/head.html` (which is the file that generates
-the `<head>` tag of my blog):
-
-{% raw %}
-```html
-<head>
-  <link rel="stylesheet" href="{{ "/assets/css/main.css?version=20190601" | prepend: site.baseurl }}">
-</head>
 ```
 {% endraw %}
 
-Finally, this include can be included in a layout e.g `_layouts/default.html`
-would look like:
-
-{% raw %}
-```html
-<!doctype html>
-<html>
-  {% include head.html %}
-  <body>
-    {{ content }}
-  </body>
-</html>
-```
-{% endraw %}
-
-And the layout now can be used as follows:
+Having already included the file `assets/css/main.css` in my `default` layout,
+I can do the following:
 
 {% highlight markdown %}
 {% raw %}
@@ -115,3 +83,10 @@ IO.puts "Lorem Ipsum"
 ```
 {% endraw %}
 {% endhighlight %}
+
+## Conclusion
+
+Now you can have beautiful code in your programming posts!
+
+![B-e-a-utiful!](https://media.giphy.com/media/i5wNCqyMzY2Oc/giphy.gif)
+
