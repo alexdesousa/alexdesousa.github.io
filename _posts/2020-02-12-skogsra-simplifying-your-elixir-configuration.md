@@ -18,6 +18,7 @@ Once an Elixir project is large enough, maintaining config files and configurati
 ![madness](https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif)
 
 Ideally though, configurations should be:
+
 - Documented.
 - Easy to find.
 - Easy to read.
@@ -42,7 +43,7 @@ The previous code is:
 - Hard to find: where are these `hostname` and `port` used?
 - Not declarative: we're telling Elixir **_how_ to retrieve the values** instead of **_what_ it's the desired result**.
 
-Conclusion: it's __hard to maintain__.
+Conclusion: __it's hard to maintain__.
 
 ## Writing a config module
 
@@ -147,7 +148,7 @@ Calling `Myapp.Config.port()` will retrieve the value for the port in the follow
 
 3. From the default value if it exists (In this case, it would return the integer `80`).
 
-The values will be casted as the default values' type unless the option `type` is provided (see [Explicit type casting] section).
+The values will be casted as the default values' type unless the option `type` is provided (see [Explicit type casting](#explicit-type-casting) section).
 
 Though Skogsrå has [many options and features](https://hexdocs.pm/skogsra/readme.html), we will just explore the ones I use the most:
 
