@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="description" content="Using Redcarpet markdown generator to add pygments to Jekyll" />
+<meta name="description" content="Using Redcarpet markdown renderer to add pygments to Jekyll" />
 <meta name="robots" content="index, follow">
 <meta name="author" content="Alex de Sousa
 " />
@@ -26,7 +26,7 @@
 <meta name="theme-color" content="#FFFFFF">
 
 <!-- Google card -->
-<meta itemprop="description" content="Using Redcarpet markdown generator to add pygments to Jekyll" />
+<meta itemprop="description" content="Using Redcarpet markdown renderer to add pygments to Jekyll" />
 <meta itemprop="image" content="https://thebroken.link/assets/img/syntax-highlighting-in-jekyll/jekyll.png" />
 
 <!-- Facebook card -->
@@ -35,11 +35,11 @@
 <meta property="og:title" content="Syntax highlighting in Jekyll" />
 <meta property="og:image" content="https://thebroken.link/assets/img/syntax-highlighting-in-jekyll/jekyll.png" />
 <meta property="og:url" content="https://thebroken.link/syntax-highlighting-in-jekyll/" />
-<meta property="og:description" content="Using Redcarpet markdown generator to add pygments to Jekyll" />
+<meta property="og:description" content="Using Redcarpet markdown renderer to add pygments to Jekyll" />
 
 <!-- Twitter card -->
 <meta name="twitter:title" content="Syntax highlighting in Jekyll" />
-<meta name="twitter:description" content="Using Redcarpet markdown generator to add pygments to Jekyll" />
+<meta name="twitter:description" content="Using Redcarpet markdown renderer to add pygments to Jekyll" />
 <meta name="twitter:image" content="https://thebroken.link/assets/img/syntax-highlighting-in-jekyll/jekyll.png" />
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="Alex de Sousa Blog">
@@ -65,7 +65,7 @@
     "name": "Alex de Sousa
 "
   },
-  "description": "Using Redcarpet markdown generator to add pygments to Jekyll"
+  "description": "Using Redcarpet markdown renderer to add pygments to Jekyll"
 }
 </script>
 <script type="text/javascript" src="/assets/js/app.js"></script>
@@ -91,7 +91,7 @@
 </div>
     <div class="header-info-child read-time">1 min read</div>
     <a class="header-info-child share-button share-twitter"
-       href="https://twitter.com/intent/tweet?text=Using+Redcarpet+markdown+generator+to+add+pygments+to+Jekyll&url=https://thebroken.link/syntax-highlighting-in-jekyll/&via=thebroken_link"
+       href="https://twitter.com/intent/tweet?text=Using+Redcarpet+markdown+renderer+to+add+pygments+to+Jekyll&url=https://thebroken.link/syntax-highlighting-in-jekyll/&via=thebroken_link"
        target="_blank">
     </a>
   </div></div>
@@ -113,67 +113,44 @@ to my <code>Gemfile</code> e.g:</p>
 <span class="n">gem</span> <span class="s2">"redcarpet"</span>
 </code></pre></div>
 <p>After running <code>bundle install</code>, I added the configuration for <code>redcarpet</code> in
-<code>_config.yml</code> e.g:</p>
-<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="na">markdown</span><span class="pi">:</span> <span class="s">redcarpet</span>
-<span class="na">redcarpet</span><span class="pi">:</span>
-  <span class="na">extensions</span><span class="pi">:</span> <span class="pi">[</span>
-    <span class="s2">"</span><span class="s">no_intra_emphasis"</span><span class="pi">,</span>
-    <span class="s2">"</span><span class="s">superscript"</span>
-  <span class="pi">]</span>
+your <code>_config.yml</code></p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># _config.yml</span>
+<span class="na">markdown</span><span class="pi">:</span> <span class="s">redcarpet</span>
+
+<span class="nn">...</span> <span class="s">rest of the config ...</span>
 </code></pre></div>
-<p>where:</p>
-
-<ul>
-<li><code>&quot;no_intra_emphasis&quot;</code>: do not parse emphasis inside of words. Strings such as
-<code>foo_bar_baz</code> will not generate <code>&lt;em&gt;</code> tags.</li>
-<li><code>&quot;superscript&quot;</code>: parse superscripts after the <code>^</code> character; contiguous
-superscripts are nested together, and complex values can be enclosed in
-parenthesis, e.g. <code>this is the 2^(nd) time</code>.</li>
-</ul>
-
 <blockquote>
-<p><strong>Note</strong>: For more information about <code>redcarpet</code> you can go to the project&#39;s
-<a href="https://github.com/vmg/redcarpet">page</a>.</p>
+<p>Redcarpet has many useful extensions and you can find out more about them
+<a href="https://github.com/vmg/redcarpet">here</a>.</p>
 </blockquote>
 
-<h2 id="adding-css-to-jekyll">Adding CSS to Jekyll</h2>
+<h2 id="adding-syntax-highlighting-theme-to-jekyll">Adding syntax highlighting theme to Jekyll</h2>
 
 <p>For <a href="https://thebroken.link">thebroken.link</a> I downloaded the
 <a href="https://raw.githubusercontent.com/jwarby/pygments-css/master/monokai.css">Monokai theme</a>
-to <code>assets/css/pygments/monokai.css</code> and then imported it to my main CSS file
-<code>assets/css/main.css</code>:</p>
-<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="k">@import</span> <span class="sx">url(pygments/monokai.css)</span><span class="p">;</span>
+for syntax highlighting.</p>
 
-<span class="nt">pre</span> <span class="p">{</span>
-  <span class="nl">white-space</span><span class="p">:</span> <span class="n">pre</span><span class="p">;</span>
-  <span class="nl">overflow-x</span><span class="p">:</span> <span class="nb">auto</span><span class="p">;</span>
-<span class="p">}</span>
+<p>I only needed to modify two files:</p>
 
-<span class="nt">code</span> <span class="p">{</span>
-  <span class="nl">color</span><span class="p">:</span> <span class="m">#FFFFFF</span><span class="p">;</span>
-  <span class="nl">background-color</span><span class="p">:</span> <span class="m">#272822</span><span class="p">;</span>
-  <span class="nl">padding</span><span class="p">:</span> <span class="m">4px</span> <span class="m">5px</span> <span class="m">4px</span> <span class="m">5px</span><span class="p">;</span>
-  <span class="nl">border-radius</span><span class="p">:</span> <span class="m">3px</span><span class="p">;</span>
-  <span class="nl">font-size</span><span class="p">:</span> <span class="m">15px</span><span class="p">;</span>
-<span class="p">}</span>
+<ul>
+<li><code>assets/css/main.css</code>: my main CSS file included in all my layouts, including
+<code>default</code>.</li>
+<li><code>_includes/css/pygments/monokai.css</code>: Monokai theme I downloaded.</li>
+</ul>
+
+<p>In order to include Monokai theme into into <code>assets/css/main.css</code>, I used
+Liquid  directives:</p>
+<div class="highlight"><pre><code class="language-css" data-lang="css"><span class="nt">---</span>
+<span class="nt">---</span>
+<span class="p">{</span><span class="err">%-</span> <span class="err">comment</span> <span class="err">-%</span><span class="p">}</span> <span class="nt">File</span><span class="o">:</span> <span class="nt">assets</span><span class="o">/</span><span class="nt">css</span><span class="o">/</span><span class="nt">main</span><span class="nc">.css</span> <span class="p">{</span><span class="err">%-</span> <span class="err">endcomment</span> <span class="err">-%</span><span class="p">}</span>
+
+<span class="p">{</span><span class="err">%-</span> <span class="err">include</span> <span class="err">css/pygments/monokai.css</span> <span class="err">-%</span><span class="p">}</span>
+
+<span class="o">...</span> <span class="nt">more</span> <span class="nt">styles</span> <span class="o">...</span>
+
 </code></pre></div>
-<p>And then added it to <code>_includes/head.html</code> (which is the file that generates
-the <code>&lt;head&gt;</code> tag of my blog):</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;head&gt;</span>
-  <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">href=</span><span class="s">"{{ "</span><span class="err">/</span><span class="na">assets</span><span class="err">/</span><span class="na">css</span><span class="err">/</span><span class="na">main</span><span class="err">.</span><span class="na">css</span><span class="err">?</span><span class="na">version=</span><span class="s">20190601"</span> <span class="err">|</span> <span class="na">prepend:</span> <span class="na">site</span><span class="err">.</span><span class="na">baseurl</span> <span class="err">}}"</span><span class="nt">&gt;</span>
-<span class="nt">&lt;/head&gt;</span>
-</code></pre></div>
-<p>Finally, this include can be included in a layout e.g <code>_layouts/default.html</code>
-would look like:</p>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!doctype html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
-  {% include head.html %}
-  <span class="nt">&lt;body&gt;</span>
-    {{ content }}
-  <span class="nt">&lt;/body&gt;</span>
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div>
-<p>And the layout now can be used as follows:</p>
+<p>Having already included the file <code>assets/css/main.css</code> in my <code>default</code> layout,
+I can do the following:</p>
 
 <figure class="highlight"><pre><code class="language-markdown" data-lang="markdown"><span class="nn">---</span>
 <span class="s">layout:default</span>
@@ -184,6 +161,12 @@ would look like:</p>
 <span class="p">```</span><span class="nl">elixir</span>
 <span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="sd">"</span><span class="s2">Lorem Ipsum"</span>
 <span class="p">```</span></code></pre></figure>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Now you can have beautiful code in your programming posts!</p>
+
+<p><img src="https://media.giphy.com/media/i5wNCqyMzY2Oc/giphy.gif" alt="B-e-a-utiful!"></p>
 </article><hr><div class="bio-info">
     <img class="bio-info-child bio-avatar"
          src="/assets/img/handle/alex.jpg"
