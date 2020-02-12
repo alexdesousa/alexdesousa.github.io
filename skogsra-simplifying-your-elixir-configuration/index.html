@@ -209,14 +209,14 @@
     <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span>
 <span class="k">end</span>
 </code></pre></div>
-<p>This module will have the functions:</p>
+<p>This module will have these functions:</p>
 
 <ul>
 <li><code>Myapp.Config.hostname/0</code> for retrieving the hostname.</li>
 <li><code>Myapp.Config.port/0</code> for retrieving the port.</li>
 </ul>
 
-<p>With this implementation, we ended up with:</p>
+<p>With this implementation, we end up with:</p>
 
 <ul>
 <li>Documented configuration variables: Via <code>@envdoc</code> module attribute.</li>
@@ -241,7 +241,7 @@
 <span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
   <span class="ss">port:</span> <span class="m">4000</span>
 </code></pre></div></li>
-<li><p>From the default value if it exists (In this case, it would return the integer <code>80</code>).</p></li>
+<li><p>From the default value, if it exists (In this case, it would return the integer <code>80</code>).</p></li>
 </ol>
 
 <p>The values will be casted as the default values&#39; type unless the option <code>type</code> is provided (see <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
