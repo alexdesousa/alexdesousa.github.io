@@ -12,5 +12,6 @@ redcarpet:
   extensions: [
     "strikethrough",
     "no_intra_emphasis",
-    "superscript"
+    "superscript",
+    "with_toc_data"
   ]
