@@ -1,138 +1,98 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    
-
-<!-- general -->
+  <head><!-- general -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="An overview of Yggdrasil capabilities" />
 <meta name="robots" content="index, follow">
-<meta name="author" content="Alex de Sousa" />
+<meta name="author" content="Alex de Sousa
+" />
 
 <!-- title -->
-<title>Yggdrasil: Easy Pub-Sub in Elixir | The Broken Link</title>
+<title>Yggdrasil: Easy Pub-Sub in Elixir | Alex de Sousa Blog</title>
 
 <!-- favicon -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
 
 <!-- Google card -->
 <meta itemprop="description" content="An overview of Yggdrasil capabilities" />
-<meta itemprop="image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
+<meta itemprop="image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
 
 <!-- Facebook card -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="The Broken Link">
+<meta property="og:site_name" content="Alex de Sousa Blog" />
 <meta property="og:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
-<meta property="og:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
-<meta property="og:url" content="https://thebroken.link" />
+<meta property="og:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
+<meta property="og:url" content="https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/" />
 <meta property="og:description" content="An overview of Yggdrasil capabilities" />
 
 <!-- Twitter card -->
 <meta name="twitter:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
 <meta name="twitter:description" content="An overview of Yggdrasil capabilities" />
-<meta name="twitter:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image:alt" content="The Broken Link Blog">
-<meta name="twitter:site" content="@thebroken_link">
+<meta name="twitter:image:alt" content="Alex de Sousa Blog">
+<meta name="twitter:site" content="@etadel2">
 
-<!-- styles -->
-<link rel="stylesheet" href="/assets/css/pygments/monokai.css?version=20190624">
-<link rel="stylesheet" href="/assets/css/main.css?version=20190624">
-
-<!-- metadata -->
-<script type="application/ld+json">
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://thebroken.link/2019/07/06/yggdrasil-easy-pub-sub-in-elixir.html"
+    "@id": "https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/"
   },
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": [
-    "https://example.com/photos/1x1/photo.jpg",
-    "https://example.com/photos/4x3/photo.jpg",
-    "https://example.com/photos/16x9/photo.jpg"
+    "https://thebroken.link/assets/img/logo.png"
    ],
   "datePublished": "2019-07-06T00:00:00+00:00",
   "dateModified": "2019-07-06T00:00:00+00:00",
   "author": {
     "@type": "Person",
-    "name": "Alex de Sousa"
+    "name": "Alex de Sousa
+"
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": "The Broken Link"
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://thebroken.link/assets/img/logo.png"
-    }
-  },
-  "description": "An overview of Yggdrasil capabilities
+  "description": "An overview of Yggdrasil capabilities"
 }
 </script>
-
-
-  </head>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
   <body>
     <div class="page">
-      <div class="navigation">
-        <a class="navigation-logo" href="/">
+      <div class="navigation"><a class="navigation-logo" href="/">
   <img class="logo-image"
-       alt="The Broken Link"
+       alt="Alex de Sousa Blog"
        src="/assets/img/logo.png"/>
 </a>
-<nav class="navigation-bar">
-  
-    <a href="/"
-       class="nav-link-inactive">
-      Home
-    </a>
-  
-    <a href="/blog.html"
-       class="nav-link-inactive">
-      Blog
-    </a>
-  
-    <a href="/about.html"
-       class="nav-link-inactive">
-      About
-    </a>
-  
-</nav>
-
-      </div>
-      <div class="content">
-        <article>
-          <div class="header">
-  <h1 class="title">Yggdrasil: Easy Pub-Sub in Elixir</h1>
-  
-
-
-  <div class="header-info">
-    <img class="header-info-child avatar" src="/assets/img/alex.png" alt="alex"/>
-    <div class="header-info-child author"> Alex de Sousa </div>
-    <div class="header-info-child read-time">
-      06 Jul 2019 &nbsp;&middot;&nbsp; 
-
-3 min read
-
-
-    </div>
-  </div>
-
-
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a></nav>
 </div>
-
-          <p>When I started coding in Elixir, I was working for a financial company. Our
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">Yggdrasil: Easy Pub-Sub in Elixir</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">2 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=An+overview+of+Yggdrasil+capabilities&url=https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p>When I started coding in Elixir, I was working for a financial company. Our
 product automatically invested money in the Forex market by copying traders&#39;
 actions in real time. We had:</p>
 
@@ -150,7 +110,7 @@ actions in real time. We had:</p>
 <li>Publish a message in a channel.</li>
 </ul>
 
-<h2>Enter Yggdrasil</h2>
+<h2 id="enter-yggdrasil">Enter Yggdrasil</h2>
 
 <p>Handling subscriptions should be easy and, in an ideal world, we would only
 need to know <em>where</em> to connect and <em>start receiving</em> messages right away, not
@@ -177,7 +137,7 @@ built an agnostic publisher/subscriber application that has:</p>
 <a href="https://github.com/gmtprime/yggdrasil_rabbitmq">RabbitMQ</a>.</li>
 </ul>
 
-<h2>An API to Rule Them All</h2>
+<h2 id="an-api-to-rule-them-all">An API to Rule Them All</h2>
 
 <p>As I wrote before, Yggdrasil&#39;s API is very simple e.g:</p>
 
@@ -213,7 +173,7 @@ messages should be the same as receiving messages when the sender uses
 <code>send/2</code>.</p>
 </blockquote>
 
-<h3>Yggdrasil Behaviour</h3>
+<h3 id="yggdrasil-behaviour">Yggdrasil Behaviour</h3>
 
 <p>Yggdrasil provides a <code>behaviour</code> for writing subscribers easily. Following the
 previous example, the subscriber could be written as follows:</p>
@@ -243,90 +203,54 @@ long as they are subscribed to the right channel without needing to know the
 process PID or name.</p>
 </blockquote>
 
-<h2>Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> hides the complexity of a
 pub/sub and let&#39;s you focus in what really matters: <strong>messages</strong>.</p>
-
-        </article>
-        
-<div style="margin: 40px 75px 10px 75px; border: 1px solid #CCCCCC;"></div>
-<div class="boxes">
-  
-    <!-- Next article -->
-    
-    <div class="box">
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description">Refill Aqua co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Next article --><div class="box">
   <img class="box-child box-image"
        alt="Yggdrasil: PostgreSQL Notifications"
-       src="/assets/img/yggdrasil-postgresql-notifications/image.png"/>
-  <a class="box-child box-title nav-link-inactive" href="/2019/07/08/yggdrasil-postgresql-notifications.html">Yggdrasil: PostgreSQL Notifications</a>
+       src="https://thebroken.link/assets/img/yggdrasil-postgresql-notifications/postgres.png"/>
+  <span class="box-child box-read-time">1 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/yggdrasil-postgresql-notifications/">Yggdrasil: PostgreSQL Notifications</a>
   <span class="box-child box-description">Yggdrasil adapter for handling pg_notify notifications from PostgreSQL</span>
-  <span class="box-child box-read-time read-time">
-    08 Jul 2019
-    &nbsp;&middot;&nbsp;
-    
-
-2 min read
-
-
-  </span>
 </div>
-
-  
-
-  
-    <!-- Previous article -->
-    
-    <div class="box">
+<!-- Previous article --><div class="box">
   <img class="box-child box-image"
        alt="Syntax highlighting in Jekyll"
-       src="/assets/img/syntax-highlighting-in-jekyll/image.png"/>
-  <a class="box-child box-title nav-link-inactive" href="/2019/06/01/syntax-highlighting-in-jekyll.html">Syntax highlighting in Jekyll</a>
+       src="https://thebroken.link/assets/img/syntax-highlighting-in-jekyll/jekyll.png"/>
+  <span class="box-child box-read-time">1 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/syntax-highlighting-in-jekyll/">Syntax highlighting in Jekyll</a>
   <span class="box-child box-description">Using Redcarpet markdown generator to add pygments to Jekyll</span>
-  <span class="box-child box-read-time read-time">
-    01 Jun 2019
-    &nbsp;&middot;&nbsp;
-    
-
-2 min read
-
-
-  </span>
 </div>
-
-  
-</div>
-
-
-      </div>
-      <div class="footer">
-        <div class="footer-copyright">
-  <span class="by-alex"> Copyright 2019 Alexander de Sousa</span>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
 </div>
 <div class="footer-social-media">
   <a href="https://github.com/alexdesousa">
     <img class="social-media github"
-        src="/assets/img/github.png"
-        alt="Github"/>
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
   </a>
   <a href="https://twitter.com/thebroken_link">
     <img class="social-media twitter"
-        src="/assets/img/twitter.png"
+        src="/assets/img/social/twitter.png"
         alt="Twitter"/>
   </a>
-  <a href="https://stackoverflow.com/users/4776680/alexander-de-sousa?tab=topactivity">
-    <img class="social-media stackoverflow"
-        src="/assets/img/stackoverflow.png"
-        alt="Stack Overflow"/>
-  </a>
-  <a href="https://www.linkedin.com/in/ajdesousa/">
-    <img class="social-media linkedin"
-        src="/assets/img/linkedin.png"
-        alt="Linked In"/>
-  </a>
 </div>
-
-      </div>
+</div>
     </div>
   </body>
 </html>

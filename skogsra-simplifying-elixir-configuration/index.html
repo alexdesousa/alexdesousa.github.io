@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head><!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Improving Elixir configurations for small and large projects." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa
+" />
+
+<!-- title -->
+<title>Skogsrå: Simplifying Elixir Configuration | Alex de Sousa Blog</title>
+
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+
+<!-- Google card -->
+<meta itemprop="description" content="Improving Elixir configurations for small and large projects." />
+<meta itemprop="image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Alex de Sousa Blog" />
+<meta property="og:title" content="Skogsrå: Simplifying Elixir Configuration" />
+<meta property="og:image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
+<meta property="og:url" content="https://thebroken.link/skogsra-simplifying-elixir-configuration/" />
+<meta property="og:description" content="Improving Elixir configurations for small and large projects." />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="Skogsrå: Simplifying Elixir Configuration" />
+<meta name="twitter:description" content="Improving Elixir configurations for small and large projects." />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/skogsra-simplifying-elixir-configuration/skogsra.jpg" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Alex de Sousa Blog">
+<meta name="twitter:site" content="@etadel2">
+
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/skogsra-simplifying-elixir-configuration/"
+  },
+  "headline": "Skogsrå: Simplifying Elixir Configuration",
+  "image": [
+    "https://thebroken.link/assets/img/logo.png"
+   ],
+  "datePublished": "2020-02-12T00:00:00+00:00",
+  "dateModified": "2020-02-12T00:00:00+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa
+"
+  },
+  "description": "Improving Elixir configurations for small and large projects."
+}
+</script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body>
+    <div class="page">
+      <div class="navigation"><a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="Alex de Sousa Blog"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a></nav>
+</div>
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">Skogsrå: Simplifying Elixir Configuration</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">5 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=Improving+Elixir+configurations+for+small+and+large+projects.&url=https://thebroken.link/skogsra-simplifying-elixir-configuration/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p>Once an Elixir project is large enough, maintaining config files and configuration variables becomes a nightmare:</p>
+
+<ul>
+<li>Configuration variables are scattered throughout the code so it&#39;s very easy to forget a configuration setting.</li>
+<li>OS environment variables must be casted to the correct type as they are always strings.</li>
+<li>Required variables must be checked by hand.</li>
+<li>Setting defaults can sometimes be a bit cumbersome.</li>
+<li>No type safety.</li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="madness"></p>
+
+<p>Configurations ideally should be:
+- Documented.
+- Easy to find.
+- Easy to read.
+- Declarative.</p>
+
+<p>In summary: <strong>easy to maintain</strong>.</p>
+
+<h2 id="the-problem">The problem</h2>
+
+<p>We&#39;ll elaborate using the the following example:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
+  <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
+  <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+</code></pre></div>
+<p>The previous code is:</p>
+
+<ul>
+<li>Undocumented: <code>hostname</code> and <code>port</code> of what?</li>
+<li>Hard to read: Too many concerns in a single line.</li>
+<li>Hard to find: where are these <code>hostname</code> and <code>port</code> used?</li>
+<li>Not declarative: we&#39;re telling Elixir <em>how to retrieve the values</em> instead of <em>what it&#39;s the desired result</em>.</li>
+</ul>
+
+<p>Conclusion: <strong>hard to maintain</strong>.</p>
+
+<h2 id="writing-a-config-module">Writing a config module</h2>
+
+<p>We could mitigate some of these problems with one simple approach:</p>
+
+<ul>
+<li>Create a module for your configs.</li>
+<li>Create a function for every single configuration parameter you app has.</li>
+</ul>
+
+<p>The following, though a bit more verbose, would be the equivalent to the previous config:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+
+  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="k">def</span> <span class="n">hostname</span> <span class="k">do</span>
+    <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span>
+  <span class="k">end</span>
+
+  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="k">def</span> <span class="n">port</span> <span class="k">do</span>
+    <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Unlike our original code, this one is:</p>
+
+<ul>
+<li>Documented: Every function has <code>@doc</code> attribute.</li>
+<li>Easy to find: We just need to to look for calls to functions defined in this module.</li>
+</ul>
+
+<p>However we still have essentially the same code we had before:</p>
+
+<ul>
+<li>Hard to read.</li>
+<li>Not declarative.</li>
+</ul>
+
+<p>There&#39;s gotta be a better way!</p>
+
+<p><img src="https://media.giphy.com/media/WTdg5GBR45X6NbxqJK/giphy.gif" alt="almost"></p>
+
+<h2 id="there-is-a-better-way-meet-skogsr">There is a better way - Meet Skogsrå</h2>
+
+<p><a href="https://hexdocs.pm/skogsra/readme.html">Skogsrå</a> is a library for loading configuration variables with ease, providing:</p>
+
+<ul>
+<li>Variable defaults.</li>
+<li>Automatic type casting of values.</li>
+<li>Automatic docs and spec generation.</li>
+<li>OS environment template generation.</li>
+<li>Run-time reloading.</li>
+<li>Setting variable&#39;s values at run-time.</li>
+<li>Fast cached values access by using <code>:persistent_term</code> as temporal storage.</li>
+<li>YAML configuration provider for Elixir releases.</li>
+</ul>
+
+<p>The previous example can be re-written as follows:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+  <span class="kn">use</span> <span class="no">Skogsra</span>
+
+  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="n">app_env</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:hostname</span><span class="p">,</span>
+    <span class="ss">default:</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HOSTNAME"</span>
+
+  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
+    <span class="ss">default:</span> <span class="m">80</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>This module will have the functions:</p>
+
+<ul>
+<li><code>Myapp.Config.hostname/0</code> for retrieving the hostname.</li>
+<li><code>Myapp.Config.port/0</code> for retrieving the port.</li>
+</ul>
+
+<p>With this implementation, we ended up with:</p>
+
+<ul>
+<li>Documented configuration variables: Via <code>@envdoc</code> module attribute.</li>
+<li>Easy to find: Every configuration variable will be in <code>Myapp.Config</code> module.</li>
+<li>Easy to read: <code>app_env</code> options are self explanatory.</li>
+<li>Declarative.</li>
+<li><strong>Bonus</strong>: Type-safe (see <a href="#strong-typing">Strong typing</a> section).</li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif" alt="dance"></p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<p>Calling <code>Myapp.Config.port()</code> will retrieve the value for the port in the following order:</p>
+
+<ol>
+<li>From the OS environment variable <code>$PORT</code>.</li>
+<li><p>From the configuration file e.g. our test config file might look like:
+```elixir</p>
+
+<h1 id="file-config-test-exs">file config/test.exs</h1>
+
+<p>use Mix.Config</p>
+
+<p>config :myapp,
+  port: 4000
+```</p></li>
+<li><p>From the default value if it exists (In this case, it would return the integer <code>80</code>).</p></li>
+</ol>
+
+<p>The values will be casted as the default values&#39; type unless the option <code>type</code> is provided (see [Explicit type casting] section).</p>
+
+<p>Though Skogsrå has <a href="https://hexdocs.pm/skogsra/readme.html">many options and features</a>, we will just explore the ones I use the most:</p>
+
+<ul>
+<li><a href="#explicit-type-casting">Explicit type casting</a>.</li>
+<li><a href="#defining-custom-types">Defining custom types</a>.</li>
+<li><a href="#required-variables">Required variables</a>.</li>
+<li><a href="#strong-typing">Strong typing</a>.</li>
+</ul>
+
+<h2 id="explicit-type-casting">Explicit type casting</h2>
+
+<p>When the types are not <code>binary</code>, <code>integer</code>, <code>float</code>, <code>boolean</code> or <code>atom</code>,
+Skogsrå cannot automatically cast values solely by the default value&#39;s type. Types then need to be specified explicitly using the option <code>type</code>. The available types are:</p>
+
+<ul>
+<li><code>:binary</code> (default).</li>
+<li><code>:integer</code>.</li>
+<li><code>:float</code>.</li>
+<li><code>:boolean</code>.</li>
+<li><code>:atom</code>.</li>
+<li><code>:module</code>: for modules loaded in the system.</li>
+<li><code>:unsafe_module</code>: for modules that might or might not be loaded in the system.</li>
+<li><code>Skogsra.Type</code> implementation: a <code>behaviour</code> for defining custom types.</li>
+</ul>
+
+<h2 id="defining-custom-types">Defining custom types</h2>
+
+<p>Let&#39;s say we need to read an OS environment variable called <code>HISTOGRAM_BUCKETS</code> as a list of integers:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">HISTOGRAM_BUCKETS</span><span class="o">=</span><span class="s2">"1, 10, 30, 60"</span>
+</code></pre></div>
+<p>We could then implement <code>Skogsra.Type</code> behaviour to parse the string correctly:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Skogsra</span><span class="o">.</span><span class="no">Type</span>
+
+  <span class="nv">@impl</span> <span class="no">Skogsra</span><span class="o">.</span><span class="no">Type</span>
+  <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+  <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">when</span> <span class="n">is_binary</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">list</span> <span class="o">=</span>
+      <span class="n">value</span>
+      <span class="o">|&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">~r/,/</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">trim</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
+    <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">list</span><span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">when</span> <span class="n">is_list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">do</span>
+    <span class="k">if</span> <span class="no">Enum</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">is_integer</span><span class="o">/</span><span class="m">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">value</span><span class="p">},</span> <span class="k">else</span><span class="p">:</span> <span class="ss">:error</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">do</span>
+    <span class="ss">:error</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>And finally use <code>Myapp.Type.IntegerList</code> in our Skogsrå configuration:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Skogsra</span>
+
+  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Histogram buckets"</span>
+  <span class="n">app_env</span> <span class="ss">:buckets</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">,</span>
+    <span class="ss">type:</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HISTOGRAM_BUCKETS"</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>Then it should be easy to retrieve our <code>buckets</code> from an OS environment variable:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">BUCKETS"</span><span class="p">)</span>
+<span class="sd">"</span><span class="s2">1, 10, 30, 60"</span>
+<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+</code></pre></div>
+<p>or if the variable is not defined, from our application configuration:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+</code></pre></div>
+<h2 id="required-variables">Required variables</h2>
+
+<p>Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it&#39;s expected to find a value in an OS environment variable or the application configuration e.g. given the following config module:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Skogsra</span>
+
+  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Server port."</span>
+  <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span><span class="p">,</span>
+    <span class="ss">required:</span> <span class="no">true</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The function <code>Myapp.Config.port()</code> will error if <code>PORT</code> is undefined and
+the application configuration is not found:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span>
+<span class="no">nil</span>
+<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
+<span class="no">nil</span>
+<span class="n">iex</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Variable port in app myapp is undefined"</span><span class="p">}</span>
+</code></pre></div>
+<h2 id="strong-typing">Strong typing</h2>
+
+<p>All the configuration variables will have the correct function <code>@spec</code> definition e.g. given the following definition:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Skogsra</span>
+
+  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">PostgreSQL hostname"</span>
+  <span class="n">app_env</span> <span class="ss">:db_port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="p">[</span><span class="ss">:postgres</span><span class="p">,</span> <span class="ss">:port</span><span class="p">],</span>
+    <span class="ss">default:</span> <span class="m">5432</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>The generated function <code>Myapp.Config.db_port/0</code> will have the following <code>@spec</code>:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="nv">@spec</span> <span class="n">db_port</span><span class="p">()</span> <span class="p">::</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">integer</span><span class="p">()}</span> <span class="o">|</span> <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="n">binary</span><span class="p">()}</span>
+</code></pre></div>
+<p>The type is derived from the default value (in this case the integer <code>5432</code>) or the type configuration value (see the previous <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p><a href="https://hexdocs.pm/skogsra/readme.html">Skogsra</a> provides a way to handle your Elixir application configurations in a type-safe and organized way. Big projects can certainly benefit from using it.</p>
+
+<p>Hope you found this article useful. Happy coding!</p>
+
+<p><img src="https://media.giphy.com/media/PiQejEf31116URju4V/giphy.gif" alt="coding"></p>
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description">Refill Aqua co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Previous article --><div class="box">
+  <img class="box-child box-image"
+       alt="Yggdrasil: PostgreSQL Notifications"
+       src="https://thebroken.link/assets/img/yggdrasil-postgresql-notifications/postgres.png"/>
+  <span class="box-child box-read-time">2 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/yggdrasil-postgresql-notifications/">Yggdrasil: PostgreSQL Notifications</a>
+  <span class="box-child box-description">Yggdrasil adapter for handling pg_notify notifications from PostgreSQL</span>
+</div>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/social/twitter.png"
+        alt="Twitter"/>
+  </a>
+</div>
+</div>
+    </div>
+  </body>
+</html>

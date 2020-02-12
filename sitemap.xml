@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://thebroken.link/2019/06/01/syntax-highlighting-in-jekyll.html</loc>
+<loc>https://thebroken.link/syntax-highlighting-in-jekyll/</loc>
 <lastmod>2019-06-01T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://thebroken.link/2019/07/06/yggdrasil-easy-pub-sub-in-elixir.html</loc>
+<loc>https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/</loc>
 <lastmod>2019-07-06T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://thebroken.link/2019/07/08/yggdrasil-postgresql-notifications.html</loc>
+<loc>https://thebroken.link/yggdrasil-postgresql-notifications/</loc>
 <lastmod>2019-07-08T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>https://thebroken.link/about.html</loc>
-</url>
-<url>
-<loc>https://thebroken.link/blog.html</loc>
+<loc>https://thebroken.link/skogsra-simplifying-elixir-configuration/</loc>
+<lastmod>2020-02-12T00:00:00+00:00</lastmod>
 </url>
 <url>
 <loc>https://thebroken.link/</loc>
