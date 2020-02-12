@@ -12,21 +12,27 @@ product automatically invested money in the Forex market by copying traders'
 actions in real time. We had:
 
 - Market prices coming from a Redis channel.
-- Market action updates coming from a PostgreSQL notification channel.
-- And consumed in order from several RabbitMQ queues.
+- Market action updates coming from a PostgreSQL notification channel and
+  written in RabbitMQ queues.
+- Market actions consumed in order from those RabbitMQ queues.
 
 We needed three different adapters, but only three possible actions for each:
 
-- Subscribe to a channel.
-- Unsubscribe from a channel
-- Publish a message in a channel.
+- `subscribe/1` to a channel.
+- `unsubscribe/1` from a channel.
+- `publish/2` a message in a channel.
 
-## Enter Yggdrasil
+![hard](https://media.giphy.com/media/aih5IZkussTiE/giphy.gif)
+
+## Meet Yggdrasil
 
 Handling subscriptions should be easy and, in an ideal world, we would only
-need to know _where_ to connect and _start receiving_ messages right away, not
-worrying about secondary (yet relevant) things like disconnections, failures
-and managing resources.
+need to know _where_ to connect and _start receiving_ messages right away.
+
+We shouldn't need to worry about secondary (yet relevant) things like
+disconnections, failures and managing resources.
+
+![Yggdrasil](https://raw.githubusercontent.com/gmtprime/yggdrasil/master/priv/static/yggdrasil.png)
 
 > _Yggdrasil_ is an immense mythical tree that connects the nine worlds in
 > Norse cosmology.
@@ -39,16 +45,16 @@ built an agnostic publisher/subscriber application that has:
 - Simple API: `subscribe/1`, `unsubscribe/1` and `publish/2`.
 - A `GenServer` wrapper for handling subscriber events easily.
 - A basic adapter for using Elixir message distribution.
-- Fault-tolerant adapters for
-  [Redis](https://github.com/gmtprime/yggdrasil_redis),
-  [PostgreSQL](https://github.com/gmtprime/yggdrasil_postgres) and
-  [RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
+- Fault-tolerant adapters for:
+  - [Redis](https://github.com/gmtprime/yggdrasil_redis).
+  - [PostgreSQL](https://github.com/gmtprime/yggdrasil_postgres).
+  - [RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
 
-## An API to Rule Them All
+## One API to rule them all
 
-As I wrote before, Yggdrasil's API is very simple e.g:
+Yggdrasil's API is very simple:
 
-- The process subscribes to `"my_channel"`:
+- A process subscribes to `"my_channel"`:
 
 ```elixir
 iex> :ok = Yggdrasil.subscribe(name: "my_channel")
@@ -82,7 +88,9 @@ iex> flush()
 > messages should be the same as receiving messages when the sender uses
 > `send/2`.
 
-### Yggdrasil Behaviour
+![So easy!](https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif)
+
+### Yggdrasil behaviour
 
 Yggdrasil provides a `behaviour` for writing subscribers easily. Following the
 previous example, the subscriber could be written as follows:
@@ -108,7 +116,7 @@ This subscriber will print the message as it receives it:
 
 ```elixir
 iex> {:ok, _pid} = Subscriber.start_link()
-iex> :ok = Yggdrasil.publisher([name: "my_channel"], "my message")
+iex> :ok = Yggdrasil.publishe([name: "my_channel"], "my message")
 {:mailbox, "my_message"}
 ```
 
@@ -120,3 +128,5 @@ iex> :ok = Yggdrasil.publisher([name: "my_channel"], "my message")
 
 [Yggdrasil](https://github.com/gmtprime/yggdrasil) hides the complexity of a
 pub/sub and let's you focus in what really matters: **messages**.
+
+![Hell yeah!](https://media.giphy.com/media/dkGhBWE3SyzXW/giphy.gif)

@@ -9,9 +9,9 @@ author: Alex de Sousa
 
 One thing I really like about PostgreSQL is its notifications via `pg_notify`.
 This feature is very useful when trying to get real-time notifications for
-certain changes in our databases.
+certain changes in databases.
 
-## PostgreSQL Notifications
+## PostgreSQL notifications
 
 Creating notifications in PostgreSQL is very easy e.g:
 
@@ -42,12 +42,12 @@ The trigger could be implemented as follows:
 CREATE OR REPLACE FUNCTION trigger_new_book()
   RETURNS TRIGGER AS $$
   DECLARE
-    payload TEXT;
+    payload JSON;
   BEGIN
-    payload := '{'
-            || '"id":'     || NEW.id    || ','
-            || '"title":"' || NEW.title || '"'
-            || '}';
+    payload := json_build_object(
+      'id', NEW.id,
+      'title', NEw.title
+    );
 
     PERFORM pg_notify('new_books', payload);
     RETURN NEW;
@@ -80,6 +80,8 @@ connections to the database is a bit of a hassle. We need to ensure:
   disconnection.
 - Reconnection backoff time (preferrably an exponential) for reconnectiong to
   avoid overloading the database.
+
+![problem](https://media.giphy.com/media/FrLKYbLI0djKU/giphy.gif)
 
 ## The Solution
 
@@ -133,8 +135,12 @@ defmodule Books.Subscriber do
 end
 ```
 
+![Too easy!](https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif)
+
 ## Conclusion
 
 [Yggdrasil for PostgreSQL](https://github.com/gmtprime/yggdrasil_postgres)
 simplifies subscriptions to PostgreSQL notifications and let's you focus in
 what really matters: **messages**.
+
+![message](https://media.giphy.com/media/QmYosM4PO08FO/giphy.gif)
