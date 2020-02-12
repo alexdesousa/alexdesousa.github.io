@@ -1,6 +1,6 @@
 ---
 layout: article
-title: "Skogsrå: Simplifying Elixir Configuration"
+title: "Skogsrå: Simplifying Your Elixir Configuration"
 description: Improving Elixir configurations for small and large projects.
 handle: alex
 image: skogsra.jpg
@@ -17,7 +17,7 @@ Once an Elixir project is large enough, maintaining config files and configurati
 
 ![madness](https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif)
 
-Configurations ideally should be:
+Ideally though, configurations should be:
 - Documented.
 - Easy to find.
 - Easy to read.
@@ -40,9 +40,9 @@ The previous code is:
 - Undocumented: `hostname` and `port` of what?
 - Hard to read: Too many concerns in a single line.
 - Hard to find: where are these `hostname` and `port` used?
-- Not declarative: we're telling Elixir _how to retrieve the values_ instead of _what it's the desired result_.
+- Not declarative: we're telling Elixir **_how_ to retrieve the values** instead of **_what_ it's the desired result**.
 
-Conclusion: __hard to maintain__.
+Conclusion: it's __hard to maintain__.
 
 ## Writing a config module
 
@@ -74,7 +74,7 @@ Unlike our original code, this one is:
 - Documented: Every function has `@doc` attribute.
 - Easy to find: We just need to to look for calls to functions defined in this module.
 
-However we still have essentially the same code we had before:
+However, we still have essentially the same code we had before, which is:
 
 - Hard to read.
 - Not declarative.
