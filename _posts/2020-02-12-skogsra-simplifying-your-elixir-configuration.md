@@ -116,12 +116,12 @@ defmodule Myapp.Config do
 end
 ```
 
-This module will have the functions:
+This module will have these functions:
 
 - `Myapp.Config.hostname/0` for retrieving the hostname.
 - `Myapp.Config.port/0` for retrieving the port.
 
-With this implementation, we ended up with:
+With this implementation, we end up with:
 
 - Documented configuration variables: Via `@envdoc` module attribute.
 - Easy to find: Every configuration variable will be in `Myapp.Config` module.
@@ -146,7 +146,7 @@ Calling `Myapp.Config.port()` will retrieve the value for the port in the follow
       port: 4000
     ```
 
-3. From the default value if it exists (In this case, it would return the integer `80`).
+3. From the default value, if it exists (In this case, it would return the integer `80`).
 
 The values will be casted as the default values' type unless the option `type` is provided (see [Explicit type casting](#explicit-type-casting) section).
 
