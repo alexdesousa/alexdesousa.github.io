@@ -101,24 +101,30 @@ actions in real time. We had:</p>
 
 <ul>
 <li>Market prices coming from a Redis channel.</li>
-<li>Market action updates coming from a PostgreSQL notification channel.</li>
-<li>And consumed in order from several RabbitMQ queues.</li>
+<li>Market action updates coming from a PostgreSQL notification channel and
+written in RabbitMQ queues.</li>
+<li>Market actions consumed in order from those RabbitMQ queues.</li>
 </ul>
 
 <p>We needed three different adapters, but only three possible actions for each:</p>
 
 <ul>
-<li>Subscribe to a channel.</li>
-<li>Unsubscribe from a channel</li>
-<li>Publish a message in a channel.</li>
+<li><code>subscribe/1</code> to a channel.</li>
+<li><code>unsubscribe/1</code> from a channel.</li>
+<li><code>publish/2</code> a message in a channel.</li>
 </ul>
 
-<h2 id="enter-yggdrasil">Enter Yggdrasil</h2>
+<p><img src="https://media.giphy.com/media/aih5IZkussTiE/giphy.gif" alt="hard"></p>
+
+<h2 id="meet-yggdrasil">Meet Yggdrasil</h2>
 
 <p>Handling subscriptions should be easy and, in an ideal world, we would only
-need to know <em>where</em> to connect and <em>start receiving</em> messages right away, not
-worrying about secondary (yet relevant) things like disconnections, failures
-and managing resources.</p>
+need to know <em>where</em> to connect and <em>start receiving</em> messages right away.</p>
+
+<p>We shouldn&#39;t need to worry about secondary (yet relevant) things like
+disconnections, failures and managing resources.</p>
+
+<p><img src="https://raw.githubusercontent.com/gmtprime/yggdrasil/master/priv/static/yggdrasil.png" alt="Yggdrasil"></p>
 
 <blockquote>
 <p><em>Yggdrasil</em> is an immense mythical tree that connects the nine worlds in
@@ -134,18 +140,21 @@ built an agnostic publisher/subscriber application that has:</p>
 <li>Simple API: <code>subscribe/1</code>, <code>unsubscribe/1</code> and <code>publish/2</code>.</li>
 <li>A <code>GenServer</code> wrapper for handling subscriber events easily.</li>
 <li>A basic adapter for using Elixir message distribution.</li>
-<li>Fault-tolerant adapters for
-<a href="https://github.com/gmtprime/yggdrasil_redis">Redis</a>,
-<a href="https://github.com/gmtprime/yggdrasil_postgres">PostgreSQL</a> and
-<a href="https://github.com/gmtprime/yggdrasil_rabbitmq">RabbitMQ</a>.</li>
-</ul>
-
-<h2 id="an-api-to-rule-them-all">An API to Rule Them All</h2>
-
-<p>As I wrote before, Yggdrasil&#39;s API is very simple e.g:</p>
+<li>Fault-tolerant adapters for:
 
 <ul>
-<li>The process subscribes to <code>&quot;my_channel&quot;</code>:</li>
+<li><a href="https://github.com/gmtprime/yggdrasil_redis">Redis</a>.</li>
+<li><a href="https://github.com/gmtprime/yggdrasil_postgres">PostgreSQL</a>.</li>
+<li><a href="https://github.com/gmtprime/yggdrasil_rabbitmq">RabbitMQ</a>.</li>
+</ul></li>
+</ul>
+
+<h2 id="one-api-to-rule-them-all">One API to rule them all</h2>
+
+<p>Yggdrasil&#39;s API is very simple:</p>
+
+<ul>
+<li>A process subscribes to <code>&quot;my_channel&quot;</code>:</li>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
 <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
@@ -176,7 +185,9 @@ messages should be the same as receiving messages when the sender uses
 <code>send/2</code>.</p>
 </blockquote>
 
-<h3 id="yggdrasil-behaviour">Yggdrasil Behaviour</h3>
+<p><img src="https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif" alt="So easy!"></p>
+
+<h3 id="yggdrasil-behaviour">Yggdrasil behaviour</h3>
 
 <p>Yggdrasil provides a <code>behaviour</code> for writing subscribers easily. Following the
 previous example, the subscriber could be written as follows:</p>
@@ -197,7 +208,7 @@ previous example, the subscriber could be written as follows:</p>
 </code></pre></div>
 <p>This subscriber will print the message as it receives it:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">_pid</span><span class="p">}</span> <span class="o">=</span> <span class="no">Subscriber</span><span class="o">.</span><span class="n">start_link</span><span class="p">()</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publisher</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publishe</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
 <span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
 </code></pre></div>
 <blockquote>
@@ -210,6 +221,8 @@ process PID or name.</p>
 
 <p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> hides the complexity of a
 pub/sub and let&#39;s you focus in what really matters: <strong>messages</strong>.</p>
+
+<p><img src="https://media.giphy.com/media/dkGhBWE3SyzXW/giphy.gif" alt="Hell yeah!"></p>
 </article><hr><div class="bio-info">
     <img class="bio-info-child bio-avatar"
          src="/assets/img/handle/alex.jpg"

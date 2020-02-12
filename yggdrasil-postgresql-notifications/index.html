@@ -97,9 +97,9 @@
   </div></div>
 <p>One thing I really like about PostgreSQL is its notifications via <code>pg_notify</code>.
 This feature is very useful when trying to get real-time notifications for
-certain changes in our databases.</p>
+certain changes in databases.</p>
 
-<h2 id="postgresql-notifications">PostgreSQL Notifications</h2>
+<h2 id="postgresql-notifications">PostgreSQL notifications</h2>
 
 <p>Creating notifications in PostgreSQL is very easy e.g:</p>
 
@@ -122,12 +122,12 @@ new book is created in our database e.g:</p>
 <span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">trigger_new_book</span><span class="p">()</span>
   <span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> <span class="err">$$</span>
   <span class="k">DECLARE</span>
-    <span class="n">payload</span> <span class="n">TEXT</span><span class="p">;</span>
+    <span class="n">payload</span> <span class="n">JSON</span><span class="p">;</span>
   <span class="k">BEGIN</span>
-    <span class="n">payload</span> <span class="p">:</span><span class="o">=</span> <span class="s1">'{'</span>
-            <span class="o">||</span> <span class="s1">'"id":'</span>     <span class="o">||</span> <span class="k">NEW</span><span class="p">.</span><span class="n">id</span>    <span class="o">||</span> <span class="s1">','</span>
-            <span class="o">||</span> <span class="s1">'"title":"'</span> <span class="o">||</span> <span class="k">NEW</span><span class="p">.</span><span class="n">title</span> <span class="o">||</span> <span class="s1">'"'</span>
-            <span class="o">||</span> <span class="s1">'}'</span><span class="p">;</span>
+    <span class="n">payload</span> <span class="p">:</span><span class="o">=</span> <span class="n">json_build_object</span><span class="p">(</span>
+      <span class="s1">'id'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+      <span class="s1">'title'</span><span class="p">,</span> <span class="k">NEw</span><span class="p">.</span><span class="n">title</span>
+    <span class="p">);</span>
 
     <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
     <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
@@ -158,6 +158,8 @@ disconnection.</li>
 <li>Reconnection backoff time (preferrably an exponential) for reconnectiong to
 avoid overloading the database.</li>
 </ul>
+
+<p><img src="https://media.giphy.com/media/FrLKYbLI0djKU/giphy.gif" alt="problem"></p>
 
 <h2 id="the-solution">The Solution</h2>
 
@@ -199,11 +201,15 @@ following:</p>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
+<p><img src="https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif" alt="Too easy!"></p>
+
 <h2 id="conclusion">Conclusion</h2>
 
 <p><a href="https://github.com/gmtprime/yggdrasil_postgres">Yggdrasil for PostgreSQL</a>
 simplifies subscriptions to PostgreSQL notifications and let&#39;s you focus in
 what really matters: <strong>messages</strong>.</p>
+
+<p><img src="https://media.giphy.com/media/QmYosM4PO08FO/giphy.gif" alt="message"></p>
 </article><hr><div class="bio-info">
     <img class="bio-info-child bio-avatar"
          src="/assets/img/handle/alex.jpg"
