@@ -1,7 +1,7 @@
 ---
 layout: default
 title: The Broken Link
-description: Alex de Sousa Blog
+description: Alex de Sousa's Blog
 ---
 
 I believe knowledge should be shared selflessly. I also believe knowledge
