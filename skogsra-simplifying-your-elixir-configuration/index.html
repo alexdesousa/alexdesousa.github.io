@@ -139,7 +139,7 @@
 <li>Undocumented: <code>hostname</code> and <code>port</code> of what?</li>
 <li>Hard to read: Too many concerns in a single line.</li>
 <li>Hard to find: where are these <code>hostname</code> and <code>port</code> used?</li>
-<li>Not declarative: we&#39;re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> it&#39;s the desired result</strong>.</li>
+<li>Not declarative: we&#39;re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> are the values we want</strong>.</li>
 </ul>
 
 <p>Conclusion: <strong>it&#39;s hard to maintain</strong>.</p>
@@ -230,8 +230,8 @@
 <li>Documented configuration variables: Via <code>@envdoc</code> module attribute.</li>
 <li>Easy to find: Every configuration variable will be in <code>Myapp.Config</code> module.</li>
 <li>Easy to read: <code>app_env</code> options are self explanatory.</li>
-<li>Declarative.</li>
-<li><strong>Bonus</strong>: Type-safe (see <a href="#strong-typing">Strong typing</a> section).</li>
+<li>Declarative: we&#39;re telling Skogsrå <em>what we want</em>.</li>
+<li><strong>Bonus</strong>: Type-safety (see <a href="#strong-typing">Strong typing</a> section).</li>
 </ul>
 
 <p><img src="https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif" alt="dance"></p>
@@ -333,7 +333,7 @@ Skogsrå cannot automatically cast values solely by the default value&#39;s type
 </code></pre></div>
 <h2 id="required-variables">Required variables</h2>
 
-<p>Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it&#39;s expected to find a value in an OS environment variable or the application configuration e.g. given the following config module:</p>
+<p>Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it&#39;s expected to find a value in either an OS environment variable or the application configuration e.g. given the following config module:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
@@ -366,11 +366,16 @@ the application configuration is not found:</p>
 <p>The generated function <code>Myapp.Config.db_port/0</code> will have the following <code>@spec</code>:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="nv">@spec</span> <span class="n">db_port</span><span class="p">()</span> <span class="p">::</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">integer</span><span class="p">()}</span> <span class="o">|</span> <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="n">binary</span><span class="p">()}</span>
 </code></pre></div>
-<p>The type is derived from the default value (in this case the integer <code>5432</code>) or the type configuration value (see the previous <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
+<p>The type is derived from:</p>
+
+<ul>
+<li>The <code>default</code> value (in this case the integer <code>5432</code>)</li>
+<li>The <code>type</code> configuration value (see the previous <a href="#explicit-type-casting">Explicit type casting</a> section).</li>
+</ul>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p><a href="https://hexdocs.pm/skogsra/readme.html">Skogsra</a> provides a way to handle your Elixir application configurations in a type-safe and organized way. Big projects can certainly benefit from using it.</p>
+<p><a href="https://hexdocs.pm/skogsra/readme.html">Skogsra</a> provides a simple way to handle your Elixir application configurations in a type-safe and organized way. Big projects can certainly benefit from using it.</p>
 
 <p>Hope you found this article useful. Happy coding!</p>
 
