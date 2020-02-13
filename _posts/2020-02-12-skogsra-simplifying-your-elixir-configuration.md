@@ -41,7 +41,7 @@ The previous code is:
 - Undocumented: `hostname` and `port` of what?
 - Hard to read: Too many concerns in a single line.
 - Hard to find: where are these `hostname` and `port` used?
-- Not declarative: we're telling Elixir **_how_ to retrieve the values** instead of **_what_ it's the desired result**.
+- Not declarative: we're telling Elixir **_how_ to retrieve the values** instead of **_what_ are the values we want**.
 
 Conclusion: __it's hard to maintain__.
 
@@ -126,8 +126,8 @@ With this implementation, we end up with:
 - Documented configuration variables: Via `@envdoc` module attribute.
 - Easy to find: Every configuration variable will be in `Myapp.Config` module.
 - Easy to read: `app_env` options are self explanatory.
-- Declarative.
-- **Bonus**: Type-safe (see [Strong typing](#strong-typing) section).
+- Declarative: we're telling Skogsrå _what we want_.
+- **Bonus**: Type-safety (see [Strong typing](#strong-typing) section).
 
 ![dance](https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif)
 
@@ -240,7 +240,7 @@ iex(2)> Myapp.Config.buckets()
 
 ## Required variables
 
-Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it's expected to find a value in an OS environment variable or the application configuration e.g. given the following config module:
+Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it's expected to find a value in either an OS environment variable or the application configuration e.g. given the following config module:
 
 ```elixir
 defmodule MyApp.Config do
@@ -285,11 +285,14 @@ The generated function `Myapp.Config.db_port/0` will have the following `@spec`:
 @spec db_port() :: {:ok, integer()} | {:error, binary()}
 ```
 
-The type is derived from the default value (in this case the integer `5432`) or the type configuration value (see the previous [Explicit type casting](#explicit-type-casting) section).
+The type is derived from:
+
+- The `default` value (in this case the integer `5432`)
+- The `type` configuration value (see the previous [Explicit type casting](#explicit-type-casting) section).
 
 ## Conclusion
 
-[Skogsra](https://hexdocs.pm/skogsra/readme.html) provides a way to handle your Elixir application configurations in a type-safe and organized way. Big projects can certainly benefit from using it.
+[Skogsra](https://hexdocs.pm/skogsra/readme.html) provides a simple way to handle your Elixir application configurations in a type-safe and organized way. Big projects can certainly benefit from using it.
 
 Hope you found this article useful. Happy coding!
 
