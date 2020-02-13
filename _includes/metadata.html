@@ -1,34 +1,35 @@
 {%- capture author -%}
   {%- include bio/author.html page = page -%}
 {%- endcapture -%}
+{%- if !author -%}
+  {%- capture author -%}
+    {%- include bio/alex_name.html -%}
+  {%- endcapture -%}
+{%- endif -%}
+{%- assign modified = page.last_modified_at -%}
+{%- assign published = modified -%}
+{%- if page.date -%}
+  {%- assign published = page.date -%}
+{%- endif -%}
+{%- assign url = site.url
+               | append: page.id
+               | append: '/'
+-%}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "NewsArticle",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "{{- page.url
-                | replace: 'index.html', ''
-                | prepend: site.baseurl
-                | prepend: site.url -}}"
+    "@id": "{{- url -}}"
   },
   "headline": "{{- page.title -}}",
-  "image": [
-    "{{- site.url | append: "/assets/img/logo.png" -}}"
-   ],
-  "datePublished": "{%- if page.date -%}
-    {{- page.date | date_to_xmlschema -}}
-  {%- else -%}
-    {{- site.time | date_to_xmlschema -}}
-  {%- endif -%}",
-  "dateModified": "{%- if page.date -%}
-    {{- page.date | date_to_xmlschema -}}
-  {%- else -%}
-    {{- site.time | date_to_xmlschema -}}
-  {%- endif -%}",
+  "image": ["{{- site.url | append: "/assets/img/logo.png" -}}"],
+  "datePublished": "{{- published | date_to_xmlschema -}}",
+  "dateModified": "{{- modified | date_to_xmlschema -}}",
   "author": {
     "@type": "Person",
-    "name": "{{- author -}}"
+    "name": "{{- author | strip -}}"
   },
   "description": "{{- page.description -}}"
 }
