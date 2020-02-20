@@ -57,7 +57,7 @@
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2019-07-06T00:00:00+00:00",
-  "dateModified": "2020-02-12T12:49:40+00:00",
+  "dateModified": "2020-02-20T08:22:47+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -100,24 +100,46 @@
        target="_blank">
     </a>
   </div></div>
-<p>When I started coding in Elixir, I was working for a financial company. Our
-product automatically invested money in the Forex market by copying traders&#39;
-actions in real time. We had:</p>
+<p>When I started coding in Elixir (around 2016), I was working for a financial
+company. Our product automatically invested money in the Forex market by
+copying traders&#39; actions (<em>market orders</em>) in real time. We had the following:<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/system.png"
+         alt="Our System"/></p>
+</span>
+In words, our system:</p>
+
+<ol>
+<li><strong>Subscribed</strong> to PostgreSQL for receiving <em>trader actions</em>.</li>
+<li><strong>Published</strong> to RabbitMQ for:
 
 <ul>
-<li>Market prices coming from a Redis channel.</li>
-<li>Market action updates coming from a PostgreSQL notification channel and
-written in RabbitMQ queues.</li>
-<li>Market actions consumed in order from those RabbitMQ queues.</li>
-</ul>
+<li>Categorizing <em>trader actions</em>.</li>
+<li>And enqueuing <em>trader actions</em> in the proper queue.</li>
+</ul></li>
+<li><strong>Subscribed</strong> to Redis for receiving updates on prices.</li>
+<li><strong>Subscribed</strong> to several RabbitMQ queues for:
 
-<p>We needed three different adapters, but only three possible actions for each:</p>
+<ul>
+<li>Receiving the categorized <em>trader actions</em>.</li>
+<li>And deciding whether it should open/close some <em>market orders</em> or not.</li>
+</ul></li>
+<li>Opened and closed <em>market orders</em>.</li>
+</ol>
+
+<p>We needed to be able to communicate with three systems (PostgreSQL, RabbitMQ
+and Redis). However, in general, we only needed three actions:</p>
 
 <ul>
 <li><code>subscribe/1</code> to a channel.</li>
-<li><code>unsubscribe/1</code> from a channel.</li>
 <li><code>publish/2</code> a message in a channel.</li>
+<li><code>unsubscribe/1</code> from a channel.</li>
 </ul>
+
+<p>If we could generalize those three actions into an API, we could then implement
+three individual adapters for every system to handle the annoying stuff like
+disconnections, failures, resource management, protocols, etc.</p>
 
 <p><img src="https://media.giphy.com/media/aih5IZkussTiE/giphy.gif" alt="hard"></p>
 
@@ -137,7 +159,7 @@ Norse cosmology.</p>
 </blockquote>
 
 <p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> was our pub-sub
-generalization. Using the strong foundations of Phoenix pub-sub application, we
+generalization. Using the strong foundations of Phoenix pub-sub library, we
 built an agnostic publisher/subscriber application that has:</p>
 
 <ul>
