@@ -128,4 +128,4 @@ iex> :ok = Yggdrasil.publishe([name: "my_channel"], "my message")
 
 Hope you found this article useful. Happy coding!
 
-![Hell yeah!](https://media.giphy.com/media/CcF22AJSGZvX2/giphy.gif)
+![Heck yeah!](https://media.giphy.com/media/26xBENWdka2DSvvag/giphy.gif)
