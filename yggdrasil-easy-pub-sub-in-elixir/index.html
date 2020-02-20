@@ -57,7 +57,7 @@
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2019-07-06T00:00:00+00:00",
-  "dateModified": "2020-02-20T08:22:47+00:00",
+  "dateModified": "2020-02-20T08:33:49+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -100,9 +100,7 @@
        target="_blank">
     </a>
   </div></div>
-<p>When I started coding in Elixir (around 2016), I was working for a financial
-company. Our product automatically invested money in the Forex market by
-copying traders&#39; actions (<em>market orders</em>) in real time. We had the following:<span class="article-image">
+<p>When I started coding in Elixir (around 2016), I was working for a financial company. Our product automatically invested money in the Forex market by copying traders&#39; actions (<em>market orders</em>) in real time. We had the following:<span class="article-image">
   <p class="article-image-caption">
     <img class="article-image"
          src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/system.png"
@@ -128,8 +126,7 @@ In words, our system:</p>
 <li>Opened and closed <em>market orders</em>.</li>
 </ol>
 
-<p>We needed to be able to communicate with three systems (PostgreSQL, RabbitMQ
-and Redis). However, in general, we only needed three actions:</p>
+<p>We needed to be able to communicate with three systems (PostgreSQL, RabbitMQ and Redis). However, in general, we only needed three actions:</p>
 
 <ul>
 <li><code>subscribe/1</code> to a channel.</li>
@@ -137,30 +134,23 @@ and Redis). However, in general, we only needed three actions:</p>
 <li><code>unsubscribe/1</code> from a channel.</li>
 </ul>
 
-<p>If we could generalize those three actions into an API, we could then implement
-three individual adapters for every system to handle the annoying stuff like
-disconnections, failures, resource management, protocols, etc.</p>
+<p>If we could generalize those three actions into an API, we could then implement three individual adapters for every system to handle the annoying stuff like disconnections, failures, resource management, protocols, etc.</p>
 
 <p><img src="https://media.giphy.com/media/aih5IZkussTiE/giphy.gif" alt="hard"></p>
 
 <h2 id="meet-yggdrasil">Meet Yggdrasil</h2>
 
-<p>Handling subscriptions should be easy and, in an ideal world, we would only
-need to know <em>where</em> to connect and <em>start receiving</em> messages right away.</p>
+<p>Handling subscriptions should be easy and, in an ideal world, we would only need to know <em>where</em> to connect and <em>start receiving</em> messages right away.</p>
 
-<p>We shouldn&#39;t need to worry about secondary (yet relevant) things like
-disconnections, failures and managing resources.</p>
+<p>We shouldn&#39;t need to worry about secondary (yet relevant) things like disconnections, failures and managing resources.</p>
 
 <p><img src="https://raw.githubusercontent.com/gmtprime/yggdrasil/master/priv/static/yggdrasil.png" alt="Yggdrasil"></p>
 
 <blockquote>
-<p><em>Yggdrasil</em> is an immense mythical tree that connects the nine worlds in
-Norse cosmology.</p>
+<p><em>Yggdrasil</em> is an immense mythical tree that connects the nine worlds in Norse cosmology.</p>
 </blockquote>
 
-<p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> was our pub-sub
-generalization. Using the strong foundations of Phoenix pub-sub library, we
-built an agnostic publisher/subscriber application that has:</p>
+<p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> was our pub-sub generalization. Using the strong foundations of Phoenix pub-sub library, we built an agnostic publisher/subscriber application that has:</p>
 
 <ul>
 <li>Multi node support.</li>
@@ -183,41 +173,37 @@ built an agnostic publisher/subscriber application that has:</p>
 <ul>
 <li>A process subscribes to <code>&quot;my_channel&quot;</code>:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+   <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
 <ul>
-<li>A process (in this case the same process) publishes the message <code>&quot;my message&quot;</code>
-in <code>&quot;my_channel&quot;</code>.</li>
+<li>A process (in this case the same process) publishes the message <code>&quot;my message&quot;</code> in <code>&quot;my_channel&quot;</code>.</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>The message should be in the mailbox of the subscriber process:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+   <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>The subscriber can unsubscribe from the channel to stop receiving messages:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_DISCONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+   <span class="p">{</span><span class="ss">:Y_DISCONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
 <blockquote>
-<p><code>flush()</code> cleans the IEx process mailbox. In general, receiving Yggdrasil
-messages should be the same as receiving messages when the sender uses
-<code>send/2</code>.</p>
+<p><code>flush()</code> cleans the IEx process mailbox. In general, receiving Yggdrasil messages should be the same as receiving messages when the sender uses <code>send/2</code>.</p>
 </blockquote>
 
 <p><img src="https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif" alt="So easy!"></p>
 
 <h3 id="yggdrasil-behaviour">Yggdrasil behaviour</h3>
 
-<p>Yggdrasil provides a <code>behaviour</code> for writing subscribers easily. Following the
-previous example, the subscriber could be written as follows:</p>
+<p>Yggdrasil provides a <code>behaviour</code> for writing subscribers easily. Following the previous example, the subscriber could be written as follows:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Subscriber</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
 
@@ -239,17 +225,16 @@ previous example, the subscriber could be written as follows:</p>
 <span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
 </code></pre></div>
 <blockquote>
-<p>An interesting side-effect is that now we can send messages to any process as
-long as they are subscribed to the right channel without needing to know the
-process PID or name.</p>
+<p>An interesting side-effect is that now we can send messages to any process as long as they are subscribed to the right channel without needing to know the process PID or name.</p>
 </blockquote>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> hides the complexity of a
-pub/sub and let&#39;s you focus in what really matters: <strong>messages</strong>.</p>
+<p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> hides the complexity of a pub/sub and let&#39;s you focus in what really matters: <strong>messages</strong>.</p>
 
-<p><img src="https://media.giphy.com/media/dkGhBWE3SyzXW/giphy.gif" alt="Hell yeah!"></p>
+<p>Hope you found this article useful. Happy coding!</p>
+
+<p><img src="https://media.giphy.com/media/CcF22AJSGZvX2/giphy.gif" alt="Hell yeah!"></p>
 </article><hr><div class="bio-info">
     <img class="bio-info-child bio-avatar"
          src="/assets/img/handle/alex.jpg"
