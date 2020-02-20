@@ -7,20 +7,34 @@ image: yggdrasil.png
 author: Alex de Sousa
 ---
 
-When I started coding in Elixir, I was working for a financial company. Our
-product automatically invested money in the Forex market by copying traders'
-actions in real time. We had:
+When I started coding in Elixir (around 2016), I was working for a financial
+company. Our product automatically invested money in the Forex market by
+copying traders' actions (_market orders_) in real time. We had the following:
 
-- Market prices coming from a Redis channel.
-- Market action updates coming from a PostgreSQL notification channel and
-  written in RabbitMQ queues.
-- Market actions consumed in order from those RabbitMQ queues.
+{%- include image.html  src = "system.png" alt = "Our System" -%}
 
-We needed three different adapters, but only three possible actions for each:
+In words, our system:
+
+1. **Subscribed** to PostgreSQL for receiving _trader actions_.
+2. **Published** to RabbitMQ for:
+     - Categorizing _trader actions_.
+     - And enqueuing _trader actions_ in the proper queue.
+3. **Subscribed** to Redis for receiving updates on prices.
+4. **Subscribed** to several RabbitMQ queues for:
+     - Receiving the categorized _trader actions_.
+     - And deciding whether it should open/close some _market orders_ or not.
+5. Opened and closed _market orders_.
+
+We needed to be able to communicate with three systems (PostgreSQL, RabbitMQ
+and Redis). However, in general, we only needed three actions:
 
 - `subscribe/1` to a channel.
-- `unsubscribe/1` from a channel.
 - `publish/2` a message in a channel.
+- `unsubscribe/1` from a channel.
+
+If we could generalize those three actions into an API, we could then implement
+three individual adapters for every system to handle the annoying stuff like
+disconnections, failures, resource management, protocols, etc.
 
 ![hard](https://media.giphy.com/media/aih5IZkussTiE/giphy.gif)
 
@@ -38,7 +52,7 @@ disconnections, failures and managing resources.
 > Norse cosmology.
 
 [Yggdrasil](https://github.com/gmtprime/yggdrasil) was our pub-sub
-generalization. Using the strong foundations of Phoenix pub-sub application, we
+generalization. Using the strong foundations of Phoenix pub-sub library, we
 built an agnostic publisher/subscriber application that has:
 
 - Multi node support.
