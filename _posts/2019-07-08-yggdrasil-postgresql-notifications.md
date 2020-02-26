@@ -5,6 +5,7 @@ description: "Yggdrasil adapter for handling pg_notify notifications from Postgr
 handle: alex
 image: postgres.png
 author: Alex de Sousa
+published: false
 ---
 
 One thing I really like about PostgreSQL is its notifications via `pg_notify`.

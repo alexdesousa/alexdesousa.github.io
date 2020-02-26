@@ -33,7 +33,27 @@ If we could generalize those three actions into an API, we could then implement 
 
 ![hard](https://media.giphy.com/media/aih5IZkussTiE/giphy.gif)
 
-## Meet Yggdrasil
+## Table of Contents
+
+{% include toc.html
+   title = "Meet Yggdrasil"
+   number = "I"
+   image = "chapter.png"
+%}
+{% include toc.html
+   title = "Yggdrasil and PostgreSQL Notifications"
+   number = "II"
+   image = "chapter.png"
+%}
+{% include toc.html
+   chapter = "In the end"
+   title = "One API to Rule Them All"
+   number = "III"
+   image = "chapter.png"
+%}
+
+{% include chapter.html
+   number = 1 %}
 
 Handling subscriptions should be easy and, in an ideal world, we would only need to know _where_ to connect and _start receiving_ messages right away.
 
@@ -54,7 +74,7 @@ We shouldn't need to worry about secondary (yet relevant) things like disconnect
   - [PostgreSQL](https://github.com/gmtprime/yggdrasil_postgres).
   - [RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
 
-## One API to rule them all
+### One API to rule them all
 
 Yggdrasil's API is very simple:
 
@@ -122,7 +142,127 @@ iex> :ok = Yggdrasil.publishe([name: "my_channel"], "my message")
 
 > An interesting side-effect is that now we can send messages to any process as long as they are subscribed to the right channel without needing to know the process PID or name.
 
-## Conclusion
+{% include chapter.html
+   number = 2 %}
+
+One thing I really like about PostgreSQL is its notifications via `pg_notify`. This feature is very useful when trying to get real-time notifications for certain changes in a databases.
+
+### PostgreSQL notifications
+
+Creating notifications in PostgreSQL is very easy e.g. let's say we have a table for books:
+
+```sql
+-- User table creation
+CREATE TABLE books (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL UNIQUE
+);
+```
+
+and we want JSON notifications in the channel `new_books` every time a new book is created in our database e.g:
+
+```json
+{
+  "id": 1,
+  "title": "Animal Farm"
+}
+```
+
+The trigger could be implemented as follows:
+
+```sql
+-- Trigger function creation
+CREATE OR REPLACE FUNCTION trigger_new_book()
+  RETURNS TRIGGER AS $$
+  DECLARE
+    payload JSON;
+  BEGIN
+    payload := json_build_object(
+      'id', NEW.id,
+      'title', NEW.title
+    );
+
+    PERFORM pg_notify('new_books', payload);
+    RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+
+-- Sets the trigger function in 'books' table
+CREATE TRIGGER books_notify_new_book
+  BEFORE INSERT ON books
+  FOR EACH ROW
+  EXECUTE PROCEDURE trigger_new_book();
+```
+
+Then, the following query would trigger our JSON message in the channel `new_books`:
+
+```sql
+INSERT INTO books (title) VALUES ('Animal Farm');
+```
+
+### The Problem
+
+Though subscribing to our database notifications can be done easily with [Postgrex](https://github.com/elixir-ecto/postgrex) library, handling the connections to the database is a bit of a hassle. We need to ensure:
+
+- **Connection multiplexing**: avoiding over consuming database resources.
+- **Fault-tolerant connections**: supporting re-connections in case of failure or disconnection.
+- **Re-connection back-off time**: avoiding overloading the database on multiple re-connections.
+
+![problem](https://media.giphy.com/media/FrLKYbLI0djKU/giphy.gif)
+
+### The Solution
+
+[Yggdrasil for PostgreSQL](https://github.com/gmtprime/yggdrasil_postgres) is an adapter that supports all the features mentioned above while maintaining Yggdrasil's simple API e.g:
+
+For our example, we could subscribe to the database messages by doing the following:
+
+```elixir
+iex> Yggdrasil.subscribe(name: "new_books", adapter: :postgres, transformer: :json)
+iex> flush()
+{:Y_CONNECTED, %Yggdrasil.Channel{...}}
+```
+
+Running the following query:
+
+```sql
+INSERT INTO books (title) VALUES ('1984');
+```
+
+We will get the following message in IEx:
+
+```elixir
+iex> flush()
+{:Y_EVENT, %Yggdrasil.Channel{...}, %{"id" => 2, "title" => "1984"}}
+```
+
+Additionally, our subscriber could also be an `Yggdrasil` process e.g:
+
+```elixir
+defmodule Books.Subscriber do
+  use Yggdrasil
+
+  def start_link(options \\ []) do
+    channel = [
+      name: "new_books",
+      adapter: :postgres,
+      transformer: :json
+    ]
+
+    Yggdrasil.start_link(__MODULE__, [channel], options)
+  end
+
+  @impl true
+  def handle_event(_channel, %{"id" => id, "title" => title}, _state) do
+    ... handle event ...
+    {:ok, nil}
+  end
+end
+```
+
+![Too easy!](https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif)
+
+{% include chapter.html
+   number = 3 %}
 
 [Yggdrasil](https://github.com/gmtprime/yggdrasil) hides the complexity of a pub/sub and let's you focus in what really matters: **messages**.
 
