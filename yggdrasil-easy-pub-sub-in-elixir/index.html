@@ -57,7 +57,7 @@
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2019-07-06T00:00:00+00:00",
-  "dateModified": "2020-02-20T08:50:35+00:00",
+  "dateModified": "2020-02-26T16:21:26+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -94,7 +94,7 @@
 "/>
     <div class="header-info-child author">Alex de Sousa
 </div>
-    <div class="header-info-child read-time">2 min read</div>
+    <div class="header-info-child read-time">5 min read</div>
     <a class="header-info-child share-button share-twitter"
        href="https://twitter.com/intent/tweet?text=An+overview+of+Yggdrasil+capabilities&url=https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/&via=thebroken_link"
        target="_blank">
@@ -138,7 +138,25 @@ In words, our system:</p>
 
 <p><img src="https://media.giphy.com/media/aih5IZkussTiE/giphy.gif" alt="hard"></p>
 
-<h2 id="meet-yggdrasil">Meet Yggdrasil</h2>
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul>
+<li><a href="#I">Chapter I: Meet Yggdrasil</a></li>
+<li><a href="#II">Chapter II: Yggdrasil and PostgreSQL Notifications</a></li>
+<li><a href="#III">In the end: One API to Rule Them All</a></li>
+</ul>
+
+<div class="chapter" style="background-color: var(--deep-blue);">
+    <div class="chapter-content">
+      <strong style="color: white;">CHAPTER I:</strong>
+      <h2 id="I"
+          class="chapter-title"
+          style="color: white;">Meet Yggdrasil</h2>
+      <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
+           alt="CHAPTER I: Meet Yggdrasil"/>
+    </div>
+
+<p></div></p>
 
 <p>Handling subscriptions should be easy and, in an ideal world, we would only need to know <em>where</em> to connect and <em>start receiving</em> messages right away.</p>
 
@@ -166,7 +184,7 @@ In words, our system:</p>
 </ul></li>
 </ul>
 
-<h2 id="one-api-to-rule-them-all">One API to rule them all</h2>
+<h3 id="one-api-to-rule-them-all">One API to rule them all</h3>
 
 <p>Yggdrasil&#39;s API is very simple:</p>
 
@@ -228,7 +246,123 @@ In words, our system:</p>
 <p>An interesting side-effect is that now we can send messages to any process as long as they are subscribed to the right channel without needing to know the process PID or name.</p>
 </blockquote>
 
-<h2 id="conclusion">Conclusion</h2>
+<div class="chapter" style="background-color: var(--deep-blue);">
+    <div class="chapter-content">
+      <strong style="color: white;">CHAPTER II:</strong>
+      <h2 id="II"
+          class="chapter-title"
+          style="color: white;">Yggdrasil and PostgreSQL Notifications</h2>
+      <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
+           alt="CHAPTER II: Yggdrasil and PostgreSQL Notifications"/>
+    </div>
+
+<p></div></p>
+
+<p>One thing I really like about PostgreSQL is its notifications via <code>pg_notify</code>. This feature is very useful when trying to get real-time notifications for certain changes in a databases.</p>
+
+<h3 id="postgresql-notifications">PostgreSQL notifications</h3>
+
+<p>Creating notifications in PostgreSQL is very easy e.g. let&#39;s say we have a table for books:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- User table creation</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">books</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">title</span> <span class="n">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>
+<span class="p">);</span>
+</code></pre></div>
+<p>and we want JSON notifications in the channel <code>new_books</code> every time a new book is created in our database e.g:</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Animal Farm"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The trigger could be implemented as follows:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- Trigger function creation</span>
+<span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">trigger_new_book</span><span class="p">()</span>
+  <span class="k">RETURNS</span> <span class="k">TRIGGER</span> <span class="k">AS</span> <span class="err">$$</span>
+  <span class="k">DECLARE</span>
+    <span class="n">payload</span> <span class="n">JSON</span><span class="p">;</span>
+  <span class="k">BEGIN</span>
+    <span class="n">payload</span> <span class="p">:</span><span class="o">=</span> <span class="n">json_build_object</span><span class="p">(</span>
+      <span class="s1">'id'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+      <span class="s1">'title'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">title</span>
+    <span class="p">);</span>
+
+    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
+    <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+  <span class="k">END</span><span class="p">;</span>
+  <span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="c1">-- Sets the trigger function in 'books' table</span>
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">books_notify_new_book</span>
+  <span class="k">BEFORE</span> <span class="k">INSERT</span> <span class="k">ON</span> <span class="n">books</span>
+  <span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span>
+  <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">trigger_new_book</span><span class="p">();</span>
+</code></pre></div>
+<p>Then, the following query would trigger our JSON message in the channel <code>new_books</code>:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">books</span> <span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">'Animal Farm'</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="the-problem">The Problem</h3>
+
+<p>Though subscribing to our database notifications can be done easily with <a href="https://github.com/elixir-ecto/postgrex">Postgrex</a> library, handling the connections to the database is a bit of a hassle. We need to ensure:</p>
+
+<ul>
+<li><strong>Connection multiplexing</strong>: avoiding over consuming database resources.</li>
+<li><strong>Fault-tolerant connections</strong>: supporting re-connections in case of failure or disconnection.</li>
+<li><strong>Re-connection back-off time</strong>: avoiding overloading the database on multiple re-connections.</li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/FrLKYbLI0djKU/giphy.gif" alt="problem"></p>
+
+<h3 id="the-solution">The Solution</h3>
+
+<p><a href="https://github.com/gmtprime/yggdrasil_postgres">Yggdrasil for PostgreSQL</a> is an adapter that supports all the features mentioned above while maintaining Yggdrasil&#39;s simple API e.g:</p>
+
+<p>For our example, we could subscribe to the database messages by doing the following:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+</code></pre></div>
+<p>Running the following query:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">books</span> <span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">'1984'</span><span class="p">);</span>
+</code></pre></div>
+<p>We will get the following message in IEx:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">2</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">1984"</span><span class="p">}}</span>
+</code></pre></div>
+<p>Additionally, our subscriber could also be an <code>Yggdrasil</code> process e.g:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Books</span><span class="o">.</span><span class="no">Subscriber</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Yggdrasil</span>
+
+  <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span>
+      <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span>
+      <span class="ss">transformer:</span> <span class="ss">:json</span>
+    <span class="p">]</span>
+
+    <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">],</span> <span class="n">options</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="nv">@impl</span> <span class="no">true</span>
+  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="n">id</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="n">title</span><span class="p">},</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
+    <span class="o">...</span> <span class="n">handle</span> <span class="n">event</span> <span class="o">...</span>
+    <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<p><img src="https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif" alt="Too easy!"></p>
+
+<div class="chapter" style="background-color: var(--deep-blue);">
+    <div class="chapter-content">
+      <strong style="color: white;">IN THE END:</strong>
+      <h2 id="III"
+          class="chapter-title"
+          style="color: white;">One API to Rule Them All</h2>
+      <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
+           alt="IN THE END: One API to Rule Them All"/>
+    </div>
+
+<p></div></p>
 
 <p><a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> hides the complexity of a pub/sub and let&#39;s you focus in what really matters: <strong>messages</strong>.</p>
 
@@ -246,12 +380,12 @@ In words, our system:</p>
 </div>
   </div><div class="boxes"><!-- Next article --><div class="box">
   <img class="box-child box-image"
-       alt="Yggdrasil: PostgreSQL Notifications"
-       src="https://thebroken.link/assets/img/yggdrasil-postgresql-notifications/postgres.png"/>
-  <span class="box-child box-read-time">1 min read</span>
+       alt="Skogsrå: Simplifying Your Elixir Configuration"
+       src="https://thebroken.link/assets/img/skogsra-simplifying-your-elixir-configuration/skogsra.jpg"/>
+  <span class="box-child box-read-time">3 min read</span>
   <a class="box-child box-title nav-link-inactive"
-     href="/yggdrasil-postgresql-notifications/">Yggdrasil: PostgreSQL Notifications</a>
-  <span class="box-child box-description">Yggdrasil adapter for handling pg_notify notifications from PostgreSQL</span>
+     href="/skogsra-simplifying-your-elixir-configuration/">Skogsrå: Simplifying Your Elixir Configuration</a>
+  <span class="box-child box-description">Improving Elixir configurations for small and large projects.</span>
 </div>
 <!-- Previous article --><div class="box">
   <img class="box-child box-image"

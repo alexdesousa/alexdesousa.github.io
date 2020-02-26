@@ -602,6 +602,12 @@ hr {
   grid-template-rows: var(--header-height) 1fr var(--footer-height);
 }
 
+.article > p img {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Navigation layout
  ********************/
 
