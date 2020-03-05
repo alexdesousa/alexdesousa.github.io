@@ -286,7 +286,7 @@ One of the features I really like about RabbitMQ is its queue routing. Its flexi
 
 RabbitMQ uses not only **connections**, but virtual connections called **channels**. The idea of channels is to introduce multiplexing in a single connection. A small system could establish only one connection with RabbitMQ while opening a channel for every single execution thread e.g:
 
-{%- include image.html  src = "rabbitmq connection.png" alt = "RabbitMQ channel multiplexing" -%}
+{%- include image.html  src = "rabbitmq-connection.png" alt = "RabbitMQ channel multiplexing" -%}
 
 The rule of thumb would be to use:
 
@@ -310,7 +310,7 @@ Additionally, routing keys support wildcards, for example: `spain.barcelona.*` w
 
 It's easier to see these concepts with an image example:
 
-{%- include image.html  src = "rabbitmq exchange.png" alt = "RabbitMQ exchange routing" -%}
+{%- include image.html  src = "rabbitmq-exchange.png" alt = "RabbitMQ exchange routing" -%}
 
 In the previous image:
 
