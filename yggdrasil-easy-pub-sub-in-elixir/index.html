@@ -27,20 +27,20 @@
 
 <!-- Google card -->
 <meta itemprop="description" content="An overview of Yggdrasil capabilities" />
-<meta itemprop="image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
+<meta itemprop="image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
 
 <!-- Facebook card -->
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Alex de Sousa's Blog" />
 <meta property="og:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
-<meta property="og:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
+<meta property="og:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
 <meta property="og:url" content="https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/" />
 <meta property="og:description" content="An overview of Yggdrasil capabilities" />
 
 <!-- Twitter card -->
 <meta name="twitter:title" content="Yggdrasil: Easy Pub-Sub in Elixir" />
 <meta name="twitter:description" content="An overview of Yggdrasil capabilities" />
-<meta name="twitter:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/yggdrasil.png" />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/yggdrasil-easy-pub-sub-in-elixir/image.png" />
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="Alex de Sousa's Blog">
 <meta name="twitter:site" content="@thebroken_link">
@@ -57,7 +57,7 @@
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2019-07-06T00:00:00+00:00",
-  "dateModified": "2020-02-26T16:21:26+00:00",
+  "dateModified": "2020-03-05T21:14:06+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -94,7 +94,7 @@
 "/>
     <div class="header-info-child author">Alex de Sousa
 </div>
-    <div class="header-info-child read-time">5 min read</div>
+    <div class="header-info-child read-time">7 min read</div>
     <a class="header-info-child share-button share-twitter"
        href="https://twitter.com/intent/tweet?text=An+overview+of+Yggdrasil+capabilities&url=https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/&via=thebroken_link"
        target="_blank">
@@ -143,7 +143,8 @@ In words, our system:</p>
 <ul>
 <li><a href="#I">Chapter I: Meet Yggdrasil</a></li>
 <li><a href="#II">Chapter II: Yggdrasil and PostgreSQL Notifications</a></li>
-<li><a href="#III">In the end: One API to Rule Them All</a></li>
+<li><a href="#III">Chapter III: Yggdrasil and RabbitMQ Subscriptions</a></li>
+<li><a href="#IV">In the end: One API to Rule Them All</a></li>
 </ul>
 
 <div class="chapter" style="background-color: var(--deep-blue);">
@@ -239,7 +240,7 @@ In words, our system:</p>
 </code></pre></div>
 <p>This subscriber will print the message as it receives it:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">_pid</span><span class="p">}</span> <span class="o">=</span> <span class="no">Subscriber</span><span class="o">.</span><span class="n">start_link</span><span class="p">()</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publishe</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
 <span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
 </code></pre></div>
 <blockquote>
@@ -287,7 +288,7 @@ In words, our system:</p>
       <span class="s1">'title'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">title</span>
     <span class="p">);</span>
 
-    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">);</span>
+    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">::</span><span class="n">TEXT</span><span class="p">);</span>
     <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
   <span class="k">END</span><span class="p">;</span>
   <span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
@@ -329,6 +330,12 @@ In words, our system:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">2</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">1984"</span><span class="p">}}</span>
 </code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: <code>Yggdrasil</code> comes with built-in message transformers. We&#39;ve used
+<code>:json</code> transformer for this example in order to get a map from the JSON
+data.</p>
+</blockquote>
+
 <p>Additionally, our subscriber could also be an <code>Yggdrasil</code> process e.g:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Books</span><span class="o">.</span><span class="no">Subscriber</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
@@ -350,12 +357,140 @@ In words, our system:</p>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
+<p>It&#39;s also possbible to use <code>Yggdrasil.publish/2</code> with PostgreSQL:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">3</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">A Brave New World"</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span>
+</code></pre></div>
 <p><img src="https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif" alt="Too easy!"></p>
 
 <div class="chapter" style="background-color: var(--deep-blue);">
     <div class="chapter-content">
-      <strong style="color: white;">IN THE END:</strong>
+      <strong style="color: white;">CHAPTER III:</strong>
       <h2 id="III"
+          class="chapter-title"
+          style="color: white;">Yggdrasil and RabbitMQ Subscriptions</h2>
+      <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
+           alt="CHAPTER III: Yggdrasil and RabbitMQ Subscriptions"/>
+    </div>
+
+<p></div></p>
+
+<p>One of the features I really like about RabbitMQ is its queue routing. Its flexibility allows you to do interesting things without much of a hassle. But before I dig deep into RabbitMQ&#39;s routing capabilities, I would like to mention some concepts.</p>
+
+<h3 id="connections-and-channels">Connections and Channels</h3>
+
+<p>RabbitMQ uses not only <strong>connections</strong>, but virtual connections called <strong>channels</strong>. The idea of channels is to introduce multiplexing in a single connection. A small system could establish only one connection with RabbitMQ while opening a channel for every single execution thread e.g:<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/rabbitmq connection.png"
+         alt="RabbitMQ channel multiplexing"/></p>
+</span>
+The rule of thumb would be to use:</p>
+
+<ul>
+<li>One connection per application.</li>
+<li>One channel per process in the application.</li>
+</ul>
+
+<blockquote>
+<p><strong>Note</strong>: Once our connection starts to be overloaded, we can start adding more connections to our connection pool.</p>
+</blockquote>
+
+<p>With a normal RabbitMQ setup, we need to deal with:</p>
+
+<ul>
+<li><strong>Connection pools</strong>: avoiding over consuming resources.</li>
+<li><strong>Channel cleaning</strong>: avoiding channel memory leaks when they are not closed properly.</li>
+<li><strong>Fault-tolerant connections</strong>: supporting re-connections in case of failure or disconnection.</li>
+<li><strong>Re-connection back-off time</strong>: avoiding overloading the database on multiple re-connections.</li>
+</ul>
+
+<h3 id="exchanges-and-queues">Exchanges and Queues</h3>
+
+<p>An <strong>exchange</strong> is a message router. Every <strong>queue</strong> attached to it will be identified by a <strong>routing key</strong>. Typically, routing keys are words separated by dots e.g. <code>spain.barcelona.gracia</code>.</p>
+
+<p>Additionally, routing keys support wildcards, for example: <code>spain.barcelona.*</code> will match messages with routing keys like <code>spain.barcelona.gracia</code> and <code>spain.barcelona.raval</code>.</p>
+
+<p>It&#39;s easier to see these concepts with an image example:<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/rabbitmq exchange.png"
+         alt="RabbitMQ exchange routing"/></p>
+</span>
+In the previous image:</p>
+
+<ul>
+<li><strong><strong>Publisher X</strong></strong> and <strong><strong>Publisher Y</strong></strong> are sending messages to <strong><em>Exchange logs</em></strong>.</li>
+<li><strong><strong>Subscriber A</strong></strong> is subscribed to <code>logs.*</code>.</li>
+<li><strong><strong>Subscriber B</strong></strong> is subscribed to <code>logs.error</code>.</li>
+</ul>
+
+<p>Then:</p>
+
+<ul>
+<li><strong><strong>Publisher X</strong></strong> message will end up in <strong><em>Queue</em></strong> <code>logs.info</code>.</li>
+<li><strong><strong>Publisher Y</strong></strong> message will end up in <strong><em>Queue</em></strong> <code>logs.error</code>.</li>
+<li><strong><strong>Subscriber A</strong></strong> will receive <strong><strong>Publisher X</strong></strong> and <strong><strong>Publisher Y</strong></strong>&#39;s messages.</li>
+<li><strong><strong>Subscriber B</strong></strong> will receive <strong><strong>Publisher Y</strong></strong>&#39;s message.</li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/3o6gDSdED1B5wjC2Gc/giphy.gif" alt="Information Overload"></p>
+
+<h3 id="handling-subscriptions-in-yggdrasil">Handling Subscriptions in Yggdrasil</h3>
+
+<p>Handling RabbitMQ&#39;s complexity might be intimidating. Fortunately, <a href="https://github.com/gmtprime/yggdrasil_rabbitmq">Yggdrasil for RabbitMQ</a> generalizes the complexity in order to have a simpler API.</p>
+
+<p>The biggest difference with previous adapters is the channel name. Instead of being a string, it&#39;s a tuple with the exchange name and the routing key e.g:</p>
+
+<p>A subscriber would connect to the exchange <code>amq.topic</code> using the routing key <code>logs.*</code> as follows:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">)</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: The exchange must exist and its type should be <code>topic</code>. The exchange <code>amq.topic</code> is created by default in RabbitMQ.</p>
+</blockquote>
+
+<p>Then a publisher could send a message to the exchange <code>amq.topic</code> using <code>logs.info</code> as routing key:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">publisher</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.info"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">],</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>Finally, the subscriber would receive the message:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">}</span>
+</code></pre></div>
+<p>Additionally, the subscriber can be written using the <code>Yggdrasil</code> behaviour:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Logs</span><span class="o">.</span><span class="no">Subscriber</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Yggdrasil</span>
+
+  <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span>
+      <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span>
+    <span class="p">]</span>
+
+    <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">],</span> <span class="n">options</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="nv">@impl</span> <span class="no">true</span>
+  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
+    <span class="o">...</span> <span class="n">handle</span> <span class="n">event</span> <span class="o">...</span>
+    <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div>
+<h3 id="lost-messages">Lost Messages</h3>
+
+<p>Yggdrasil will acknowledge the messages as soon as they arrive to the adapter, then it will broadcast them to all the subscribers. If the adapter is alive while the subscribers are restarting/failing, some messages might be lost.</p>
+
+<p>Though it&#39;s possible to overcome this problem with exclusive queues, this feature is not implemented yet.</p>
+
+<p><img src="https://media.giphy.com/media/5YuhLwDgrgtRVwI7OY/giphy.gif" alt="Penguin&#39;s queueing"></p>
+
+<div class="chapter" style="background-color: var(--deep-blue);">
+    <div class="chapter-content">
+      <strong style="color: white;">IN THE END:</strong>
+      <h2 id="IV"
           class="chapter-title"
           style="color: white;">One API to Rule Them All</h2>
       <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
