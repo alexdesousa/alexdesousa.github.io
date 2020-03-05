@@ -325,7 +325,7 @@ Then:
 - **__Subscriber A__** will receive **__Publisher X__** and **__Publisher Y__**'s messages.
 - **__Subscriber B__** will receive **__Publisher Y__**'s message.
 
-![](https://media.giphy.com/media/3o6gDSdED1B5wjC2Gc/giphy.gif)
+![Information Overload](https://media.giphy.com/media/3o6gDSdED1B5wjC2Gc/giphy.gif)
 
 ### Handling Subscriptions in Yggdrasil
 
