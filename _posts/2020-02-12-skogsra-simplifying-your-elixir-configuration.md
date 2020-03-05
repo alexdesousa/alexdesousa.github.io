@@ -159,9 +159,10 @@ Though Skogsrå has [many options and features](https://hexdocs.pm/skogsra/readm
 
 ## Explicit type casting
 
-When the types are not `binary`, `integer`, `float`, `boolean` or `atom`, Skogsrå cannot automatically cast values solely by the default value's type. Types then need to be specified explicitly using the option `type`. The available types are:
+When the types are not `any`, `binary`, `integer`, `float`, `boolean` or `atom`, Skogsrå cannot automatically cast values solely by the default value's type. Types then need to be specified explicitly using the option `type`. The available types are:
 
-- `:binary` (default).
+- `:any` (default).
+- `:binary`.
 - `:integer`.
 - `:float`.
 - `:boolean`.

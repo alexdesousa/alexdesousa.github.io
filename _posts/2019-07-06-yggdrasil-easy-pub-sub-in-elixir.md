@@ -46,9 +46,14 @@ If we could generalize those three actions into an API, we could then implement 
    image = "chapter.png"
 %}
 {% include toc.html
+   title = "Yggdrasil and RabbitMQ Subscriptions"
+   number = "III"
+   image = "chapter.png"
+%}
+{% include toc.html
    chapter = "In the end"
    title = "One API to Rule Them All"
-   number = "III"
+   number = "IV"
    image = "chapter.png"
 %}
 
@@ -136,7 +141,7 @@ This subscriber will print the message as it receives it:
 
 ```elixir
 iex> {:ok, _pid} = Subscriber.start_link()
-iex> :ok = Yggdrasil.publishe([name: "my_channel"], "my message")
+iex> :ok = Yggdrasil.publish([name: "my_channel"], "my message")
 {:mailbox, "my_message"}
 ```
 
@@ -182,7 +187,7 @@ CREATE OR REPLACE FUNCTION trigger_new_book()
       'title', NEW.title
     );
 
-    PERFORM pg_notify('new_books', payload);
+    PERFORM pg_notify('new_books', payload::TEXT);
     RETURN NEW;
   END;
   $$ LANGUAGE plpgsql;
@@ -235,6 +240,10 @@ iex> flush()
 {:Y_EVENT, %Yggdrasil.Channel{...}, %{"id" => 2, "title" => "1984"}}
 ```
 
+> **Note**: `Yggdrasil` comes with built-in message transformers. We've used
+> `:json` transformer for this example in order to get a map from the JSON
+> data.
+
 Additionally, our subscriber could also be an `Yggdrasil` process e.g:
 
 ```elixir
@@ -259,10 +268,129 @@ defmodule Books.Subscriber do
 end
 ```
 
+It's also possbible to use `Yggdrasil.publish/2` with PostgreSQL:
+
+```elixir
+iex> message = %{"id" => 3, "title" => "A Brave New World"}
+iex> Yggdrasil.publish([name: "new_books", adapter: :postgres, transformer: :json], message)
+```
+
 ![Too easy!](https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif)
 
 {% include chapter.html
    number = 3 %}
+
+One of the features I really like about RabbitMQ is its queue routing. Its flexibility allows you to do interesting things without much of a hassle. But before I dig deep into RabbitMQ's routing capabilities, I would like to mention some concepts.
+
+### Connections and Channels
+
+RabbitMQ uses not only **connections**, but virtual connections called **channels**. The idea of channels is to introduce multiplexing in a single connection. A small system could establish only one connection with RabbitMQ while opening a channel for every single execution thread e.g:
+
+{%- include image.html  src = "rabbitmq connection.png" alt = "RabbitMQ channel multiplexing" -%}
+
+The rule of thumb would be to use:
+
+- One connection per application.
+- One channel per process in the application.
+
+> **Note**: Once our connection starts to be overloaded, we can start adding more connections to our connection pool.
+
+With a normal RabbitMQ setup, we need to deal with:
+
+- **Connection pools**: avoiding over consuming resources.
+- **Channel cleaning**: avoiding channel memory leaks when they are not closed properly.
+- **Fault-tolerant connections**: supporting re-connections in case of failure or disconnection.
+- **Re-connection back-off time**: avoiding overloading the database on multiple re-connections.
+
+### Exchanges and Queues
+
+An **exchange** is a message router. Every **queue** attached to it will be identified by a **routing key**. Typically, routing keys are words separated by dots e.g. `spain.barcelona.gracia`.
+
+Additionally, routing keys support wildcards, for example: `spain.barcelona.*` will match messages with routing keys like `spain.barcelona.gracia` and `spain.barcelona.raval`.
+
+It's easier to see these concepts with an image example:
+
+{%- include image.html  src = "rabbitmq exchange.png" alt = "RabbitMQ exchange routing" -%}
+
+In the previous image:
+
+- **__Publisher X__** and **__Publisher Y__** are sending messages to **_Exchange logs_**.
+- **__Subscriber A__** is subscribed to `logs.*`.
+- **__Subscriber B__** is subscribed to `logs.error`.
+
+Then:
+
+- **__Publisher X__** message will end up in **_Queue_** `logs.info`.
+- **__Publisher Y__** message will end up in **_Queue_** `logs.error`.
+- **__Subscriber A__** will receive **__Publisher X__** and **__Publisher Y__**'s messages.
+- **__Subscriber B__** will receive **__Publisher Y__**'s message.
+
+![](https://media.giphy.com/media/3o6gDSdED1B5wjC2Gc/giphy.gif)
+
+### Handling Subscriptions in Yggdrasil
+
+Handling RabbitMQ's complexity might be intimidating. Fortunately, [Yggdrasil for RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq) generalizes the complexity in order to have a simpler API.
+
+The biggest difference with previous adapters is the channel name. Instead of being a string, it's a tuple with the exchange name and the routing key e.g:
+
+A subscriber would connect to the exchange `amq.topic` using the routing key `logs.*` as follows:
+
+```elixir
+iex(subscriber)> Yggdrasil.subscribe(name: {"amq.topic", "logs.*"}, adapter: :rabbitmq)
+iex(subscriber)> flush()
+{:Y_CONNECTED, %Yggdrasil.Channel{...}}
+```
+
+> **Note**: The exchange must exist and its type should be `topic`. The exchange `amq.topic` is created by default in RabbitMQ.
+
+Then a publisher could send a message to the exchange `amq.topic` using `logs.info` as routing key:
+
+```elixir
+iex(publisher)> Yggdrasil.publish([name: {"amq.topic", "logs.info"}, adapter: :rabbitmq], "Some message")
+:ok
+```
+
+Finally, the subscriber would receive the message:
+
+```elixir
+iex(subscriber)> flush()
+{:Y_EVENT, %Yggdrasil.Channel{...}, "Some message"}
+```
+
+Additionally, the subscriber can be written using the `Yggdrasil` behaviour:
+
+```elixir
+defmodule Logs.Subscriber do
+  use Yggdrasil
+
+  def start_link(options \\ []) do
+    channel = [
+      name: {"amq.topic", "logs.*"},
+      adapter: :rabbitmq
+    ]
+
+    Yggdrasil.start_link(__MODULE__, [channel], options)
+  end
+
+  @impl true
+  def handle_event(_channel, message, _state) do
+    ... handle event ...
+    {:ok, nil}
+  end
+end
+```
+
+### Lost Messages
+
+
+Yggdrasil will acknowledge the messages as soon as they arrive to the adapter, then it will broadcast them to all the subscribers. If the adapter is alive while the subscribers are restarting/failing, some messages might be lost.
+
+Though it's possible to overcome this problem with exclusive queues, this feature is not implemented yet.
+
+![Penguin's queueing](https://media.giphy.com/media/5YuhLwDgrgtRVwI7OY/giphy.gif)
+
+{% include chapter.html
+   number = 4 %}
 
 [Yggdrasil](https://github.com/gmtprime/yggdrasil) hides the complexity of a pub/sub and let's you focus in what really matters: **messages**.
 
