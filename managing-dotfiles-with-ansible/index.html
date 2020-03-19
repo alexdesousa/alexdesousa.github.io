@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head><!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="A small tutorial on how to use Ansible to manage your dotfiles." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa
+" />
+
+<!-- title -->
+<title>Managing Dotfiles with Ansible | Alex de Sousa's Blog</title>
+
+<!--  canonical -->
+<link rel="canonical" href="https://thebroken.link/managing-dotfiles-with-ansible/"/>
+
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+
+<!-- Google card -->
+<meta itemprop="description" content="A small tutorial on how to use Ansible to manage your dotfiles." />
+<meta itemprop="image" content="https://thebroken.link/assets/img/managing-dotfiles-with-ansible/dots.png" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Alex de Sousa's Blog" />
+<meta property="og:title" content="Managing Dotfiles with Ansible" />
+<meta property="og:image" content="https://thebroken.link/assets/img/managing-dotfiles-with-ansible/dots.png" />
+<meta property="og:url" content="https://thebroken.link/managing-dotfiles-with-ansible/" />
+<meta property="og:description" content="A small tutorial on how to use Ansible to manage your dotfiles." />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="Managing Dotfiles with Ansible" />
+<meta name="twitter:description" content="A small tutorial on how to use Ansible to manage your dotfiles." />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/managing-dotfiles-with-ansible/dots.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Alex de Sousa's Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/managing-dotfiles-with-ansible/"
+  },
+  "headline": "Managing Dotfiles with Ansible",
+  "image": ["https://thebroken.link/assets/img/logo.png"],
+  "datePublished": "2020-03-19T00:00:00+00:00",
+  "dateModified": "2020-03-19T17:31:14+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa"
+  },
+  "description": "A small tutorial on how to use Ansible to manage your dotfiles."
+}
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
+  </script><script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body>
+    <div class="page">
+      <div class="navigation"><a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="Alex de Sousa's Blog"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a></nav>
+</div>
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">Managing Dotfiles with Ansible</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">3 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=A+small+tutorial+on+how+to+use+Ansible+to+manage+your+dotfiles.&url=https://thebroken.link/managing-dotfiles-with-ansible/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p>When developers get tired of configuring again and again their machines, we tend to create a dotfiles repository.</p>
+
+<h2 id="a-dotfiles-repository">A Dotfiles Repository</h2>
+
+<blockquote>
+<p><strong>Dotfiles</strong> are commonly used for storing user preferences or preserving the state of a utility, and are frequently created implicitly by using various utilities.</p>
+</blockquote>
+
+<p>It all starts with a small repository that contains configuration files for common tools e.g. <code>.zshrc</code>, <code>.vimrc</code>, etc. However, every time we configure a new machine, we need to copy those files <em>by hand</em>.</p>
+
+<p>We pride ourselves with our ability to automate any task. Therefore, the next logical step for a dotfiles repository is to create a &quot;small&quot; shell script for automating tool installation and machine configuration.</p>
+
+<p>All is well at first, but that &quot;small&quot; script ends up being hundreds of lines long and hard to maintain.</p>
+
+<p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="This is madness"></p>
+
+<h2 id="ansible-to-the-rescue">Ansible to the Rescue</h2>
+
+<blockquote>
+<p><a href="https://www.ansible.com/">Ansible</a> is an configuration management tool. It provides its own language to describe system configuration.</p>
+</blockquote>
+
+<p>This is not a new idea, but it feels like one: configure your own machine the same way you configure your servers... With Ansible.</p>
+
+<blockquote>
+<p><strong>Note</strong>: I&#39;m using Debian throughout this tutorial, though the same can be accomplished with any architecture and operative system as long as Ansible is available for it.</p>
+</blockquote>
+
+<p><img src="https://media.giphy.com/media/F1YaFvtJ7VlwA/giphy.gif" alt="Where&#39;s Ansible&#39;s supersuit?"></p>
+
+<h3 id="bootstrapping-ansible">Bootstrapping Ansible</h3>
+
+<p>For installing and configuring stuff with Ansible, we need to first install Ansible. We can use a small shell script to accomplish this. Some of the variables like <code>$HOSTS</code> and <code>$PLAYBOOK</code> will make sense in the next sections:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env bash</span>
+
+<span class="nb">set</span> <span class="nt">-e</span>
+
+<span class="c"># Dotfiles' project root directory</span>
+<span class="nv">ROOTDIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="k">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>
+<span class="c"># Host file location</span>
+<span class="nv">HOSTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$ROOTDIR</span><span class="s2">/hosts"</span>
+<span class="c"># Main playbook</span>
+<span class="nv">PLAYBOOK</span><span class="o">=</span><span class="s2">"</span><span class="nv">$ROOTDIR</span><span class="s2">/dotfiles.yml"</span>
+
+<span class="c"># Installs ansible</span>
+apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install</span> <span class="nt">-y</span> ansible
+
+<span class="c"># Runs Ansible playbook using our user.</span>
+ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class="nv">$HOSTS</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$PLAYBOOK</span><span class="s2">"</span> <span class="nt">--ask-become-pass</span>
+
+<span class="nb">exit </span>0
+</code></pre></div>
+<p>Running the previous script as our sudoer user will effectively install Ansible and run our main <em>playbook</em> with all our <em>roles</em>.</p>
+
+<blockquote>
+<p><strong>Playbook</strong>: A file that defines several tasks to be executed in a target machine.
+<strong>Role</strong>: Organizes multiple, related tasks with the data needed to run those tasks (variables, files, templates).</p>
+</blockquote>
+
+<h3 id="basic-folder-structure">Basic Folder Structure</h3>
+
+<p>Once we have our bootstrap script in place, we can start writing Ansible configuration files.</p>
+
+<p>In our dotfiles repository, our target is our own machine. This is very easy to define in our <code>hosts</code> file (with local connection so it doesn&#39;t require an ssh key):</p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># file: hosts</span>
+<span class="pi">[</span><span class="nv">local</span><span class="pi">]</span>
+<span class="s">localhost</span>
+
+<span class="pi">[</span><span class="nv">local</span><span class="pi">:</span><span class="nv">vars</span><span class="pi">]</span>
+<span class="s">ansible_connection=local</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: In our <code>bootstrap.sh</code> script, this file is found in the variable <code>$HOSTS</code>.</p>
+</blockquote>
+
+<p>Then we need a <em>playbook</em> that lists every <em>role</em> we want to deploy and configure in our machine.</p>
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="c1"># file: dotfiles.yml</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up local workstation</span>
+  <span class="na">hosts</span><span class="pi">:</span> <span class="s">local</span>
+  <span class="na">roles</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">role</span><span class="pi">:</span> <span class="s">zsh</span>
+      <span class="na">tags</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">zsh</span>
+</code></pre></div>
+<p>In our example, we&#39;ll install <code>zsh</code> role.</p>
+
+<blockquote>
+<p><strong>Note</strong>: In our <code>bootstrap.sh</code> script, this files is found in the variable <code>$PLAYBOOK</code>.</p>
+</blockquote>
+
+<p>In general, our folder structure would look something like:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">└ dotfiles
+  - bootstrap.sh
+  - dotfiles.yml
+  - hosts
+  └ roles
+    └ zsh
+      └ files
+        - zshrc.link
+      └ tasks
+        - main.yml
+</code></pre></div>
+<h3 id="zsh-role">ZSh role</h3>
+
+<p>The following would be our <code>zsh</code> role tasks for:</p>
+
+<ul>
+<li>Installing <code>zsh</code>.</li>
+<li>Setting it up as our default shell.</li>
+<li>Installing Oh-My-ZSH.</li>
+<li>Linking our <code>.zshrc</code> configuration file to our home folder.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="nn">---</span>
+<span class="c1"># file: roles/zsh/tasks/main.yml</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Installs zsh | apt</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="s">yes</span>
+  <span class="na">become_user</span><span class="pi">:</span> <span class="s">root</span>
+  <span class="na">apt</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">zsh</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Installs curl | apt</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="s">yes</span>
+  <span class="na">become_user</span><span class="pi">:</span> <span class="s">root</span>
+  <span class="na">apt</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">curl</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Sets zsh as default shell for my user | command</span>
+  <span class="na">become</span><span class="pi">:</span> <span class="s">yes</span>
+  <span class="na">become_user</span><span class="pi">:</span> <span class="s">root</span>
+  <span class="na">command</span><span class="pi">:</span> <span class="s">chsh -s /bin/zsh {{ lookup('env' 'USER') }}</span>
+  <span class="na">register</span><span class="pi">:</span> <span class="s">zsh_for_user</span>
+  <span class="na">failed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc &gt;= 1</span>
+  <span class="na">changed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc == 0</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checks for oh-my-zsh installation | stat</span>
+  <span class="na">stat</span><span class="pi">:</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">lookup('env',</span><span class="nv"> </span><span class="s">'HOME')</span><span class="nv"> </span><span class="s">}}/.oh-my-zsh"</span>
+  <span class="na">register</span><span class="pi">:</span> <span class="s">oh_my_zsh_stat</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Installs oh-my-zsh | raw</span>
+  <span class="na">raw</span><span class="pi">:</span> <span class="s1">'</span><span class="s">sh</span><span class="nv"> </span><span class="s">-c</span><span class="nv"> </span><span class="s">"$(curl</span><span class="nv"> </span><span class="s">-fsSL</span><span class="nv"> </span><span class="s">https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"'</span>
+  <span class="na">when</span><span class="pi">:</span> <span class="s">not oh_my_zsh_stat.stat.exists</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Links .zshrc file | file</span>
+  <span class="na">file</span><span class="pi">:</span>
+    <span class="na">src</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">lookup('env',</span><span class="nv"> </span><span class="s">'ROOTDIR')</span><span class="nv"> </span><span class="s">}}/roles/zsh/files/zshrc.link"</span>
+    <span class="na">dest</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">lookup('env',</span><span class="nv"> </span><span class="s">'HOME')</span><span class="nv"> </span><span class="s">}}/.zshrc"</span>
+    <span class="na">state</span><span class="pi">:</span> <span class="s">link</span>
+    <span class="na">force</span><span class="pi">:</span> <span class="s">yes</span></code></pre></figure>
+
+<h3 id="running-our-bootstrap-script">Running Our Bootstrap Script</h3>
+
+<p>Finally, we can run our script:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~/dotfiles <span class="nv">$ </span><span class="nb">chmod</span> +x bootstrap.sh
+~/dotfiles <span class="nv">$ </span><span class="nb">sudo </span>bootstrap.sh
+</code></pre></div>
+<p>This script will:</p>
+
+<ul>
+<li>Install Ansible.</li>
+<li>Run our playbook, which means installing and configuring <code>zsh</code>.</li>
+</ul>
+
+<p><img src="https://media.giphy.com/media/3o84sq21TxDH6PyYms/giphy.gif" alt="Unlimited power"></p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>There are more cool features you can use to customize your system using Ansible. You can check my <a href="https://github.com/alexdesousa/dotfiles">dotfiles</a> repository if you want to see a fully working example.</p>
+
+<p>Additionally, if you want to know more about Ansible, you can check <a href="https://serversforhackers.com/c/an-ansible2-tutorial">this amazing tutorial</a>.</p>
+
+<p>I hope you find this useful :)</p>
+
+<p><img src="https://media.giphy.com/media/kdiLau77NE9Z8vxGSO/giphy.gif" alt="Installation"></p>
+
+<p>Happy coding!</p>
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description"><a href="https://refillaqua.com">Refill Aqua</a> co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Previous article --><div class="box">
+  <img class="box-child box-image"
+       alt="Oath: Don't Loose Your Keys!"
+       src="https://thebroken.link/assets/img/oath-dont-loose-your-keys/keys.png"/>
+  <span class="box-child box-read-time">1 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/oath-dont-loose-your-keys/">Oath: Don't Loose Your Keys!</a>
+  <span class="box-child box-description">A ZSH plugin for handling your keys.</span>
+</div>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/social/twitter.png"
+        alt="Twitter"/>
+  </a>
+</div>
+</div>
+    </div>
+  </body>
+</html>

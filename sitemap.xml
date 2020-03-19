@@ -5,6 +5,10 @@
   xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
     http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
+    <loc>https://thebroken.link/managing-dotfiles-with-ansible/</loc>
+    <lastmod>2020-03-19T17:31:14+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://thebroken.link/oath-dont-loose-your-keys/</loc>
     <lastmod>2020-03-12T22:34:29+00:00</lastmod>
   </url>
