@@ -7,7 +7,7 @@ image: dots.png
 author: Alex de Sousa
 ---
 
-When developers get tired of configuring again and again their machines, we tend to create a dotfiles repository.
+When developers get tired of configuring again and again our machines, we tend to create a dotfiles repository.
 
 ## A Dotfiles Repository
 
