@@ -19,6 +19,7 @@ For this blog I use:
 
 - _Github Pages_ for hosting it.
 - _Jekyll_ for generating the static site.
+- _TailwindCSS_ for the site styling.
 - _Travis CI_ for building and deploying it.
 
 ## Why Github Pages?
@@ -103,22 +104,17 @@ deploy:
 [asdf-vm](https://github.com/asdf-vm/asdf) and its ruby plugin e.g:
 
 ```bash
-$ asdf plugin-add ruby # Installs the Ruby plugin.
-$ asdf install         # Installs Ruby.
-$ gem install bundler  # Installs bundler.
-$ bundle install       # Installs the rest of the dependencies.
+$ asdf install           # Installs Ruby.
+$ gem install bundler    # Installs bundler.
+$ bundle install         # Installs Jekyll dependencies.
+$ npm install            # Installs CSS dependencies.
+$ npm run build          # Generates CSS.
 ```
 
-You might need to:
+Before you do the previous, make sure you installed the following using `asdf`:
 
-- Install `libreadline-dev` and `zlib1g-dev` to build Ruby e.g:
-
-    ```bash
-    # apt-get install -y libreadline-dev zlib1g-dev
-    ```
-
-- Open a new shell after installing Ruby, if `ruby --version` does not match
-  the contents of `.tool-versions`.
+- NodeJS 12.14.1
+- Ruby 2.6.3
 
 ## Running the Server
 

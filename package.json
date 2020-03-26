@@ -1,0 +1,17 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "postcss css/tailwind.css -o assets/css/tailwind.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "autoprefixer": "^9.7.5",
+    "postcss-cli": "^7.1.0",
+    "tailwindcss": "^1.2.0"
+  }
+}
