@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head><!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="A small Elixir pubsub implementation using built-in module :pg2" />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa
+" />
+
+<!-- title -->
+<title>Elixir Pubsub In Less Than 50 Lines | Alex de Sousa's Blog</title>
+
+<!--  canonical -->
+<link rel="canonical" href="https://thebroken.link/elixir-pubsub-in-less-than-50-lines/"/>
+
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+
+<!-- Google card -->
+<meta itemprop="description" content="A small Elixir pubsub implementation using built-in module :pg2" />
+<meta itemprop="image" content="https://thebroken.link/assets/img/elixir-pubsub-in-less-than-50-lines/web.png" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Alex de Sousa's Blog" />
+<meta property="og:title" content="Elixir Pubsub In Less Than 50 Lines" />
+<meta property="og:image" content="https://thebroken.link/assets/img/elixir-pubsub-in-less-than-50-lines/web.png" />
+<meta property="og:url" content="https://thebroken.link/elixir-pubsub-in-less-than-50-lines/" />
+<meta property="og:description" content="A small Elixir pubsub implementation using built-in module :pg2" />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="Elixir Pubsub In Less Than 50 Lines" />
+<meta name="twitter:description" content="A small Elixir pubsub implementation using built-in module :pg2" />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/elixir-pubsub-in-less-than-50-lines/web.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Alex de Sousa's Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/elixir-pubsub-in-less-than-50-lines/"
+  },
+  "headline": "Elixir Pubsub In Less Than 50 Lines",
+  "image": ["https://thebroken.link/assets/img/logo.png"],
+  "datePublished": "2020-03-26T00:00:00+00:00",
+  "dateModified": "2020-03-26T20:45:25+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa"
+  },
+  "description": "A small Elixir pubsub implementation using built-in module :pg2"
+}
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
+  </script><script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body>
+    <div class="page">
+      <div class="navigation"><a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="Alex de Sousa's Blog"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a></nav>
+</div>
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">Elixir Pubsub In Less Than 50 Lines</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">3 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=A+small+Elixir+pubsub+implementation+using+built-in+module+%3Apg2&url=https://thebroken.link/elixir-pubsub-in-less-than-50-lines/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p><code>:pg2</code> is a mostly unknown, but powerful Erlang module. It provides an API for creating process groups.</p>
+
+<h2 id="process-group">Process Group</h2>
+
+<p>So, what&#39;s a process group? Well... it&#39;s a group of Erlang/Elixir processes.</p>
+
+<p>Perhaps, the correct question would be, why do we care about process groups? Well, process groups are the foundation for publisher-subscribers (pubsubs for short).</p>
+
+<h2 id="pg2">PG2</h2>
+
+<p>Understanding <code>:pg2</code> API and how it relates to a pubsub API will make it easier to understand: </p>
+
+<ul>
+<li>Every process group is a <code>channel</code> e.g. a group called <code>:my_channel</code> is created:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">)</span>
+   <span class="ss">:ok</span>
+</code></pre></div>
+<ul>
+<li>Every process in a group is a <code>subscriber</code> e.g. <code>self()</code> is part of <code>:my_channel</code> group:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">,</span> <span class="n">self</span><span class="p">())</span>
+   <span class="ss">:ok</span>
+</code></pre></div>
+<ul>
+<li>A <code>publisher</code> can <code>send/2</code> messages to a <code>channel</code> e.g. the publisher gets all the members of the group <code>:my_channel</code> and sends <code>&quot;Some message&quot;</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">)</span>
+   <span class="ss">:ok</span>
+   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>A <code>subscriber</code> will receive the messages in its mailbox:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+   <span class="sd">"</span><span class="s2">Some message"</span>
+   <span class="ss">:ok</span>
+</code></pre></div>
+<ul>
+<li>A <code>subscriber</code> can unsubscribe from a <code>channel</code> e.g. <code>self()</code> leaves the group <code>:my_channel</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">leave</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">,</span> <span class="n">self</span><span class="p">())</span>
+   <span class="ss">:ok</span>
+</code></pre></div>
+<ul>
+<li>A <code>channel</code> can be deleted:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">)</span>
+   <span class="ss">:ok</span>
+</code></pre></div>
+<p>And that&#39;s it! That&#39;s the API. And you know what&#39;s the best thing about it? <strong>It can work between connected nodes</strong>. Keep reading and you&#39;ll see :)</p>
+
+<p><img src="https://media.giphy.com/media/mcueTtCHvqNPy/giphy.gif" alt="Message in cereal"></p>
+
+<h2 id="implementing-a-pubsub">Implementing a PubSub</h2>
+
+<p>A <code>PubSub</code> has three main functions:</p>
+
+<ul>
+<li><code>subscribe/1</code> for subscribing to a <code>channel</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="k">def</span> <span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">do</span>
+     <span class="n">pid</span> <span class="o">=</span> <span class="n">self</span><span class="p">()</span>
+
+     <span class="k">case</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">do</span>
+       <span class="n">members</span> <span class="ow">when</span> <span class="n">is_list</span><span class="p">(</span><span class="n">members</span><span class="p">)</span> <span class="o">-&gt;</span>
+         <span class="k">if</span> <span class="n">pid</span> <span class="ow">in</span> <span class="n">members</span> <span class="k">do</span>
+           <span class="ss">:ok</span>                     <span class="c1"># It's already subscribed.</span>
+         <span class="k">else</span>
+           <span class="ss">:pg2</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="c1"># Subscribes to channel</span>
+         <span class="k">end</span>
+
+       <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="p">{</span><span class="ss">:no_such_group</span><span class="p">,</span> <span class="o">^</span><span class="n">channel</span><span class="p">}}</span> <span class="o">-&gt;</span>
+         <span class="ss">:pg2</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>      <span class="c1"># Creates channel</span>
+         <span class="ss">:pg2</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>   <span class="c1"># Subscribe to channel</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+</code></pre></div>
+<ul>
+<li><code>unsubscribe/1</code> for unsubscribing from a <code>channel</code>.</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">    <span class="k">def</span> <span class="n">unsubscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">pid</span> <span class="o">=</span> <span class="n">self</span><span class="p">()</span>
+
+      <span class="k">case</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">do</span>
+        <span class="p">[</span><span class="o">^</span><span class="n">pid</span><span class="p">]</span> <span class="o">-&gt;</span>
+          <span class="ss">:pg2</span><span class="o">.</span><span class="n">leave</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span>   <span class="c1"># Unsubscribes from channel</span>
+          <span class="ss">:pg2</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>       <span class="c1"># Deletes the channel</span>
+
+        <span class="n">members</span> <span class="ow">when</span> <span class="n">is_list</span><span class="p">(</span><span class="n">members</span><span class="p">)</span> <span class="o">-&gt;</span>
+          <span class="k">if</span> <span class="n">pid</span> <span class="ow">in</span> <span class="n">members</span> <span class="k">do</span>
+            <span class="ss">:pg2</span><span class="o">.</span><span class="n">leave</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">pid</span><span class="p">)</span> <span class="c1"># Unsubscribes from channel</span>
+          <span class="k">else</span>
+            <span class="ss">:ok</span>                      <span class="c1"># It's already unsubscribed</span>
+          <span class="k">end</span>
+
+        <span class="n">_</span> <span class="o">-&gt;</span>
+          <span class="ss">:ok</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+</code></pre></div>
+<ul>
+<li><code>publish/2</code> for sending a <code>message</code> to a <code>channel</code>.</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="k">def</span> <span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="k">do</span>
+     <span class="k">case</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span> <span class="k">do</span>
+       <span class="p">[</span><span class="n">_</span> <span class="o">|</span> <span class="n">_</span><span class="p">]</span> <span class="o">=</span> <span class="n">members</span> <span class="o">-&gt;</span>
+         <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+         <span class="ss">:ok</span>
+
+       <span class="n">_</span> <span class="o">-&gt;</span>
+         <span class="ss">:ok</span>
+     <span class="k">end</span>
+   <span class="k">end</span>
+</code></pre></div>
+<p>For a full implementation of <code>PubSub</code> you can check <a href="https://gist.github.com/alexdesousa/4d592fe206cca17393affaefa4c8fd33">this gist</a>.</p>
+
+<p>I usually create a <code>.iex.exs</code> file in my <code>$HOME</code> folder and then run <code>iex</code>. You could do the same with the previous gist by doing the following:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">~ <span class="nv">$ PUBSUB</span><span class="o">=</span><span class="s2">"https://gist.githubusercontent.com/alexdesousa/4d592fe206cca17393affaefa4c8fd33/raw/4d84894f016bd9eef84bba647c77c62b9c9a6094/pub_sub.ex"</span>
+~ <span class="nv">$ </span>curl <span class="s2">"</span><span class="nv">$PUBSUB</span><span class="s2">"</span> <span class="nt">-o</span> .iex.exs
+~ <span class="nv">$ </span>iex
+</code></pre></div>
+<p><img src="https://media.giphy.com/media/3o7btNa0RUYa5E7iiQ/giphy.gif" alt="It&#39;s that easy"></p>
+
+<h2 id="distributed-pubsub">Distributed PubSub</h2>
+
+<p>For our distributed experiment we&#39;ll need two nodes. My machine is called <code>matrix</code> and both nodes will be <code>neo</code> and <code>trinity</code> respectively:</p>
+
+<ul>
+<li><code>:neo@matrix</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   alex@matrix ~ <span class="nv">$ </span>iex <span class="nt">--sname</span> neo
+   iex<span class="o">(</span>neo@matrix<span class="o">)</span>1&gt;
+</code></pre></div>
+<ul>
+<li><code>:trinity@matrix</code>:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   alex@matrix ~ <span class="nv">$ </span>iex <span class="nt">--sname</span> trinity
+   iex<span class="o">(</span>trinity@matrix<span class="o">)</span>1&gt; Node.connect<span class="o">(</span>:neo@matrix<span class="o">)</span> <span class="c"># Connects both nodes</span>
+</code></pre></div>
+<p>Now <code>:neo@matrix</code> can subscribe to <code>:mainframe</code> channel:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">)</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>And <code>:trinity@matrix</code> can send a message:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Wake up, Neo..."</span><span class="p">)</span>
+<span class="ss">:ok</span> 
+</code></pre></div>
+<blockquote>
+<p><strong>Note</strong>: Sometimes it takes a bit of time for nodes to synchronize their process groups, so you might need to <code>publish/2</code> your message twice.</p>
+</blockquote>
+
+<p>Finally, <code>:neo@matrix</code> should receive the message:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="sd">"</span><span class="s2">Wake up, Neo..."</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>And that&#39;s it. A powerful pubsub in a few lines of code thanks to <code>:pg2</code>.</p>
+
+<p><img src="https://media.giphy.com/media/S27iRp6ypEcnK/giphy.gif" alt="Follow the white rabbit"></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Erlang has several built-in hidden gems like <code>:pg2</code> that make our lives easier.</p>
+
+<p><img src="https://media.giphy.com/media/PdfNwG98g6Sxq/giphy.gif" alt="gem"></p>
+
+<p>Happy coding!</p>
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description"><a href="https://refillaqua.com">Refill Aqua</a> co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Previous article --><div class="box">
+  <img class="box-child box-image"
+       alt="Managing Dotfiles with Ansible"
+       src="https://thebroken.link/assets/img/managing-dotfiles-with-ansible/dots.png"/>
+  <span class="box-child box-read-time">3 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/managing-dotfiles-with-ansible/">Managing Dotfiles with Ansible</a>
+  <span class="box-child box-description">A small tutorial on how to use Ansible to manage your dotfiles.</span>
+</div>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/social/twitter.png"
+        alt="Twitter"/>
+  </a>
+</div>
+</div>
+    </div>
+  </body>
+</html>
