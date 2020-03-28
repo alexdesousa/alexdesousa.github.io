@@ -46,7 +46,35 @@
 }
 
 .tab-content {
-  @apply page-layout opacity-0 w-0 h-0 py-4;
+  @apply w-0 h-0 opacity-0 page-layout;
+}
+
+/**
+ * More buttom.
+ */
+
+.more-item {
+  @apply hidden;
+}
+
+.more-item:checked + label {
+  @apply hidden;
+}
+
+.more-item + label {
+  @apply font-semibold text-purple-700;
+}
+
+.more-item + label:hover {
+  @apply underline;
+}
+
+.more-item:checked ~ .more-content {
+  @apply h-full max-h-full opacity-100;
+}
+
+.more-content {
+  @apply transition duration-500 ease-in opacity-0 h-0;
 }
 
 @tailwind utilities;

@@ -1,0 +1,71 @@
+asolvi:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/asolvi.png"
+    profile: "https://unsplash.com/@simowilliams"
+    author: "Simon Williams"
+  job:
+    type: "Remote"
+    beginning: "September 2019"
+    ending: "Present"
+    title: "Senior Software Developer"
+    website: "https://asolvi.com"
+    name: "Asolvi AS"
+  description:
+    - "I've spent 4 weeks in Trondheim for the onboarding process and met my team (75% of them remote workers as me)."
+    - "After that, I returned to Barcelona and we've been designing and developing a modern version of one of the company's products."
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "graphql"
+    - "postgresql"
+    - "mssql"
+    - "terraform"
+    - "ci/cd"
+
+refill_aqua:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/refill_aqua.png"
+    profile: "https://unsplash.com/@benjagremler"
+    author: "Benjamín Gremler"
+  job:
+    type: "Project"
+    beginning: "August 2019"
+    ending: "Present"
+    title: "Co-founder"
+    website: "https://refillaqua.com"
+    name: "Refill Aqua"
+  description:
+    - "Barcelona has a serious plastic pollution problem. We wanted to help reducing single-use plastic by partnering with businesses in the city that can offer filtered water to our users."
+    - "As I'm the sole programmer in the company, I'm developing the webpage, the blog, the backend and the mobile application."
+  stack:
+    - "elixir"
+    - "ansible"
+    - "postgresql"
+    - "flutter"
+    - "jekyll"
+    - "ci/cd"
+
+derivco:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/derivco.png"
+    profile: "https://unsplash.com/@upmanis"
+    author: "Kaspars Upmanis"
+  job:
+    type: "On-Site"
+    beginning: "January 2019"
+    ending: "July 2019"
+    title: "Senior Software Developer"
+    website: "https://asolvi.com"
+    name: "Derivco Barcelona"
+  description:
+    - "We were mainly maintaining and automating deploy of several systems."
+    - "After almost 4 years working remotely, I decided to try working on-site again. It didn't feel right after some weeks though."
+  stack:
+    - "elixir"
+    - "ansible"
+    - "postgresql"
+    - "ruby"
+    - "ci/cd"

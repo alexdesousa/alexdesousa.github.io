@@ -696,14 +696,47 @@ video {
 }
 
 .tab-content {
+  width: 0;
+  height: 0;
+  opacity: 0;
   margin-left: auto;
   margin-right: auto;
   max-width: 768px;
+}
+
+/**
+ * More buttom.
+ */
+
+.more-item {
+  display: none;
+}
+
+.more-item:checked + label {
+  display: none;
+}
+
+.more-item + label {
+  font-weight: 600;
+  color: #6b46c1;
+}
+
+.more-item + label:hover {
+  text-decoration: underline;
+}
+
+.more-item:checked ~ .more-content {
+  height: 100%;
+  max-height: 100%;
+  opacity: 1;
+}
+
+.more-content {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
   opacity: 0;
-  width: 0;
   height: 0;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .sr-only {

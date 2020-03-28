@@ -1,0 +1,71 @@
+<div class="m-2 mt-6 overflow-hidden bg-white border rounded-lg shadow-lg md:m-6">
+  <div class="flex w-full h-64"
+       style="
+    background-image: url('{{- include.data.cover.source -}}');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: multiply;">
+    <div class="self-start justify-start p-2 m-2 bg-white rounded-full">
+      <svg class="w-6 h-6 text-purple-700 fill-current"
+           xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 20 20">
+        {%- if include.data.cover.icon == "job" -%}
+        <path d="M9 10h2v2h9s-.149-4.459-.2-5.854C19.75 4.82 19.275 4 17.8 4h-3.208l-1.197-2.256C13.064 1.121 12.951 1 12.216 1H7.783c-.735 0-.847.121-1.179.744-.165.311-.7 1.318-1.196 2.256H2.199c-1.476 0-1.945.82-2 2.146C.145 7.473 0 12 0 12h9v-2zM7.649 2.916c.23-.432.308-.516.817-.516h3.067c.509 0 .588.084.816.516L12.924 4h-5.85l.575-1.084zM11 15H9v-2H.5s.124 1.797.199 3.322C.73 16.955.917 18 2.499 18H17.5c1.582 0 1.765-1.047 1.8-1.678.087-1.568.2-3.322.2-3.322H11v2z"/>
+        {%- elsif include.data.cover.icon == "project" -%}
+        <path d="M5.719 14.75a.997.997 0 01-.664-.252L-.005 10l5.341-4.748a1 1 0 011.328 1.495L3.005 10l3.378 3.002a1 1 0 01-.664 1.748zm8.945-.002L20.005 10l-5.06-4.498a.999.999 0 10-1.328 1.495L16.995 10l-3.659 3.252a1 1 0 001.328 1.496zm-4.678 1.417l2-12a1 1 0 10-1.972-.329l-2 12a1 1 0 101.972.329z"/>
+        {%- elsif include.data.cover.icon == "travel" -%}
+        <path d="M19.87 6.453c.119.257.127 1.29-4.884 3.642l-4.913 2.306c-1.71.803-4.191 1.859-5.285 2.151-.766.204-1.497-.316-1.497-.316S1.085 12.261.499 11.817c-.585-.444-.535-.67.215-.91.467-.149 3.13.493 4.265.78A91.697 91.697 0 018.12 9.889c-1.396-1.033-4.008-2.962-4.841-3.55-.799-.565.01-.768.01-.768.368-.099 1.162-.228 1.562-.144 2.721.569 7.263 2.071 7.611 2.186a90.641 90.641 0 012.922-1.465c2.075-.974 4.327-.037 4.486.305z"/>
+        {%- elsif include.data.cover.icon == "education" -%}
+        <path d="M3.302 12.238c.464 1.879 1.054 2.701 3.022 3.562 1.969.86 2.904 1.8 3.676 1.8.771 0 1.648-.822 3.616-1.684 1.969-.861 1.443-1.123 1.907-3.002L10 15.6l-6.698-3.362zm16.209-4.902l-8.325-4.662c-.652-.365-1.72-.365-2.372 0L.488 7.336c-.652.365-.652.963 0 1.328l8.325 4.662c.652.365 1.72.365 2.372 0l5.382-3.014-5.836-1.367a3.09 3.09 0 01-.731.086c-1.052 0-1.904-.506-1.904-1.131 0-.627.853-1.133 1.904-1.133.816 0 1.51.307 1.78.734l6.182 2.029 1.549-.867c.651-.364.651-.962 0-1.327zm-2.544 8.834c-.065.385 1.283 1.018 1.411-.107.579-5.072-.416-6.531-.416-6.531l-1.395.781c0-.001 1.183 1.125.4 5.857z"/>
+        {%- endif -%}
+      </svg>
+    </div>
+    <div class="flex self-end justify-end w-full">
+      <span class="px-2 py-1 text-xs font-normal text-purple-700 bg-white rounded-t">
+        Photo by
+        <a class="ml-1 font-semibold hover:underline"
+           target="_blank"
+           href="{{- include.data.cover.profile -}}">
+          {{- include.data.cover.author -}}
+        </a>
+      </span>
+    </div>
+  </div>
+  <div class="flex flex-col px-6 py-4">
+    <div class="text-xs font-semibold tracking-wider text-gray-600 uppercase">
+      {{- include.data.job.type }} &bull;
+      {{ include.data.job.beginning }} - {{ include.data.job.ending -}}
+    </div>
+
+    <h2 class="text-lg font-semibold">
+      {{- include.data.job.title }} at
+      <a class="text-purple-700 hover:text-purple-500"
+         target="_blank"
+         href="{{- include.data.job.website -}}">
+        {{ include.data.job.name -}}
+      </a>
+    </h2>
+
+    <input type="checkbox"
+           id="{{- include.data.job.name-}}"
+           name="more"
+           class="more-item"/>
+    <label for="{{- include.data.job.name -}}">read more...</label>
+
+    <div class="pt-2 more-content">
+      {%- for line in include.data.description -%}
+      <p class="pt-2 text-sm leading-6">
+        {{- line -}}
+      </p>
+      {%- endfor -%}
+    </div>
+
+    <div class="flex flex-wrap pt-4">
+    {%- for tag in include.data.stack -%}
+      <span class="inline-block px-3 py-1 mb-1 mr-2 text-sm font-semibold text-purple-900 bg-purple-200 rounded-full">
+        #{{- tag -}}
+      </span>
+    {%- endfor -%}
+    </div>
+  </div>
+</div>
