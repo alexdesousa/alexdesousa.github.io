@@ -629,6 +629,16 @@ video {
   max-width: 768px;
 }
 
+a {
+  font-weight: 600;
+  color: #6b46c1;
+}
+
+a:hover {
+  color: #9f7aea;
+  text-decoration: underline;
+}
+
 /**
  * CSS tabs.
  */
@@ -644,8 +654,8 @@ video {
 
 .tab-item:checked + label {
   display: inline-block;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-weight: 600;
@@ -678,63 +688,99 @@ video {
 }
 
 .tab-item:checked:nth-of-type(1) ~ .tab-content:nth-of-type(1) {
+  height: 100%;
   max-height: 100%;
-  min-width: 100%;
   opacity: 1;
 }
 
 .tab-item:checked:nth-of-type(2) ~ .tab-content:nth-of-type(2) {
+  height: 100%;
   max-height: 100%;
-  min-width: 100%;
   opacity: 1;
 }
 
 .tab-item:checked:nth-of-type(3) ~ .tab-content:nth-of-type(3) {
+  width: 100%;
+  height: 100%;
   max-height: 100%;
-  min-width: 100%;
   opacity: 1;
 }
 
 .tab-content {
-  width: 0;
   height: 0;
+  overflow: hidden;
   opacity: 0;
+  --transform-translate-x: 0;
+  --transform-translate-y: 0;
+  --transform-rotate: 0;
+  --transform-skew-x: 0;
+  --transform-skew-y: 0;
+  --transform-scale-x: 1;
+  --transform-scale-y: 1;
+  transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
+  transition-duration: 75ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
   margin-left: auto;
   margin-right: auto;
   max-width: 768px;
 }
 
 /**
- * More buttom.
+ * Card CSS.
  */
 
-.more-item {
-  display: none;
+.card {
+  margin: 0.5rem;
+  margin-top: 1.5rem;
+  overflow: hidden;
+  background-color: #fff;
+  border-width: 1px;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-.more-item:checked + label {
-  display: none;
+.card:hover {
+  --transform-scale-x: .5;
 }
 
-.more-item + label {
-  font-weight: 600;
-  color: #6b46c1;
+.card-content {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
-.more-item + label:hover {
-  text-decoration: underline;
+.card-content-description {
+  height: 0;
+  padding-top: 0.5rem;
+  opacity: 0;
+  transition-property: all;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.more-item:checked ~ .more-content {
+.card:hover > .card-content > .card-content-description {
   height: 100%;
   max-height: 100%;
   opacity: 1;
 }
 
-.more-content {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  transition-duration: 500ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+.read-more {
+  height: 100%;
+  max-height: 100%;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9f7aea;
+  text-decoration: underline;
+  text-transform: uppercase;
+  opacity: 1;
+  transition-property: all;
+}
+
+.card:hover > .card-content > .read-more {
   opacity: 0;
   height: 0;
 }

@@ -5,6 +5,14 @@
   @apply mx-auto max-w-screen-md;
 }
 
+a {
+  @apply font-semibold text-purple-700;
+}
+
+a:hover {
+  @apply text-purple-500 underline;
+}
+
 /**
  * CSS tabs.
  */
@@ -18,7 +26,7 @@
 }
 
 .tab-item:checked + label {
-  @apply inline-block px-4 py-2 font-semibold text-purple-700 border-t border-l border-r rounded-t;
+  @apply inline-block px-2 py-2 font-semibold text-purple-700 border-t border-l border-r rounded-t;
 }
 
 .tab-item:checked + label:hover {
@@ -34,47 +42,51 @@
 }
 
 .tab-item:checked:nth-of-type(1) ~ .tab-content:nth-of-type(1) {
-  @apply max-h-full min-w-full opacity-100;
-}
-
-.tab-item:checked:nth-of-type(2) ~ .tab-content:nth-of-type(2) {
-  @apply max-h-full min-w-full opacity-100;
-}
-
-.tab-item:checked:nth-of-type(3) ~ .tab-content:nth-of-type(3) {
-  @apply max-h-full min-w-full opacity-100;
-}
-
-.tab-content {
-  @apply w-0 h-0 opacity-0 page-layout;
-}
-
-/**
- * More buttom.
- */
-
-.more-item {
-  @apply hidden;
-}
-
-.more-item:checked + label {
-  @apply hidden;
-}
-
-.more-item + label {
-  @apply font-semibold text-purple-700;
-}
-
-.more-item + label:hover {
-  @apply underline;
-}
-
-.more-item:checked ~ .more-content {
   @apply h-full max-h-full opacity-100;
 }
 
-.more-content {
-  @apply transition duration-500 ease-in opacity-0 h-0;
+.tab-item:checked:nth-of-type(2) ~ .tab-content:nth-of-type(2) {
+  @apply h-full max-h-full opacity-100;
+}
+
+.tab-item:checked:nth-of-type(3) ~ .tab-content:nth-of-type(3) {
+  @apply w-full h-full max-h-full opacity-100;
+}
+
+.tab-content {
+  @apply h-0 overflow-hidden opacity-0 transform duration-75 ease-in page-layout;
+}
+
+/**
+ * Card CSS.
+ */
+
+.card {
+  @apply m-2 mt-6 overflow-hidden bg-white border rounded-lg shadow-lg;
+}
+
+.card:hover {
+  @apply scale-x-50;
+}
+
+.card-content {
+  @apply flex flex-col px-6 py-4;
+}
+
+.card-content-description {
+  @apply h-0 pt-2 opacity-0 transition-all duration-200 ease-in-out;
+}
+
+.card:hover > .card-content > .card-content-description {
+  @apply h-full max-h-full opacity-100;
+}
+
+.read-more {
+  @apply h-full max-h-full mt-2 text-xs font-semibold text-purple-500 underline uppercase opacity-100 transition-all;
+}
+
+.card:hover > .card-content > .read-more {
+  @apply opacity-0 h-0;
 }
 
 @tailwind utilities;
