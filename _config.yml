@@ -11,7 +11,8 @@ exclude: [
   "package.json",
   "package-lock.json",
   "postcss.config.js",
-  "css"
+  "css",
+  "node_modules",
 ]
 redcarpet:
   extensions: [
