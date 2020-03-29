@@ -2,12 +2,12 @@ language: ruby
 rvm:
   - 2.6
 before_install:
-  - nvm node 12.14.1
+  - nvm install 12.14.1
 install:
   - gem install bundler
   - bundle install
   - npm install
-  - npm run build
+  - NODE_ENV=production npm run build
 script:
   - bundle exec jekyll build
   - bundle exec htmlproofer ./_site --disable-external
