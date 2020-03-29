@@ -1,0 +1,43 @@
+---
+layout: cv
+title: Alex de Sousa's CV
+description: Alex de Sousa's CV
+---
+
+{%- include cv/header.html name = "Alex de Sousa" -%}
+
+<div class="py-6 page-layout">
+  <div class="px-2 md:px-0 tab-wrap">
+    <!-- tabs -->
+    <input type="radio"
+           id="timeline"
+           name="navigation"
+           class="tab-item" checked/>
+    <label for="timeline">Timeline</label>
+
+    <input type="radio"
+           id="projects"
+           name="navigation"
+           class="tab-item"/>
+    <label for="projects">My Projects</label>
+
+    <input type="radio"
+           id="contact"
+           name="navigation"
+           class="tab-item"/>
+    <label for="contact">Contact</label>
+
+    <!-- content -->
+    <div class="tab-content">
+      {%- include cv/timeline.html -%}
+    </div>
+
+    <div class="tab-content">
+      {%- include cv/projects.html -%}
+    </div>
+
+    <div class="tab-content">
+      {%- include cv/contact.html -%}
+    </div>
+  </div>
+</div>

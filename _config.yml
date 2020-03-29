@@ -6,7 +6,12 @@ markdown: redcarpet
 exclude: [
   "Gemfile",
   "Gemfile.lock",
-  "README.md"
+  "README.md",
+  "tailwind.config.js",
+  "package.json",
+  "package-lock.json",
+  "postcss.config.js",
+  "css"
 ]
 redcarpet:
   extensions: [

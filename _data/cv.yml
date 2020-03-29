@@ -1,0 +1,328 @@
+asolvi:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/asolvi.jpg"
+    profile: "https://unsplash.com/@simowilliams"
+    author: "Simon Williams"
+  job:
+    type: "Remote"
+    beginning: "September 2019"
+    ending: "Present"
+    title: "Senior Software Developer"
+    website: "https://asolvi.com"
+    name: "Asolvi AS"
+  description:
+    - "I've spent 4 weeks in Trondheim for the onboarding process and met my team (75% of them remote workers as me)."
+    - "After that, I returned to Barcelona and we've been designing and developing a modern version of one of the company's products."
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "graphql"
+    - "prometheus"
+    - "postgresql"
+    - "mssql"
+    - "terraform"
+    - "ci/cd"
+
+refill_aqua:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/refill_aqua.jpg"
+    profile: "https://unsplash.com/@benjagremler"
+    author: "Benjamín Gremler"
+  job:
+    type: "Project"
+    beginning: "August 2019"
+    ending: "Present"
+    title: "Co-founder"
+    website: "https://refillaqua.com"
+    name: "Refill Aqua"
+  description:
+    - "Barcelona has a serious plastic pollution problem. We wanted to help reducing single-use plastic by partnering with businesses in the city that can offer filtered water to our users."
+    - "As I'm the only programmer in the project, I'm developing the webpage, the blog, the backend and the mobile application."
+  stack:
+    - "elixir"
+    - "ansible"
+    - "postgresql"
+    - "flutter"
+    - "jekyll"
+    - "ci/cd"
+
+blog:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/blog.jpg"
+    profile: "https://unsplash.com/@jjying"
+    author: "JJ Ying"
+  job:
+    type: "Project"
+    beginning: "May 2019"
+    ending: "Present"
+    title: "Personal Blog"
+    website: "https://thebroken.link"
+    name: "The Broken Link"
+  description:
+    - "Where I share my knoledge and discoveries. Also available at <a href=\"https://dev.to/alexdesousa\" target=\"_blank\">DEV</a>."
+  stack:
+    - "elixir"
+    - "jekyll"
+    - "tailwindcss"
+
+derivco:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/derivco.jpg"
+    profile: "https://unsplash.com/@upmanis"
+    author: "Kaspars Upmanis"
+  job:
+    type: "On Site"
+    beginning: "January 2019"
+    ending: "July 2019"
+    title: "Senior Software Developer"
+    website: "https://derivco.com"
+    name: "Derivco Barcelona"
+  description:
+    - "We were mainly maintaining and automating deploy of several systems."
+    - "After almost 4 years working remotely, I decided to try working on-site again. It didn't feel right after some weeks though."
+  stack:
+    - "elixir"
+    - "ansible"
+    - "postgresql"
+    - "ruby"
+    - "ci/cd"
+
+ayesql:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/ayesql.jpg"
+    profile: "https://unsplash.com/@arstyy"
+    author: "Austin Neill"
+  job:
+    type: "Project"
+    beginning: "September 2018"
+    ending: "Present"
+    title: "AyeSQL"
+    website: "https://github.com/alexdesousa/ayesql"
+    name: "Github"
+  description:
+    - "Library for using raw SQL in Elixir"
+  stack:
+    - "elixir"
+    - "sql"
+    - "postgresql"
+    - "ecto"
+
+1bitcloud:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/1bitcloud.jpg"
+    profile: "https://unsplash.com/@zombience"
+    author: "Ryan Spencer"
+  job:
+    type: "Remote"
+    beginning: "November 2017"
+    ending: "November 2018"
+    title: "Senior Software Developer"
+    website: ""
+    name: "1BitCloud"
+  description:
+    - "During 2017 cryptocurrency bubble, a lot of people were building mining datacenters. Lacking tools for configuring their machines, we created a small IoT device that configured their whole datacenter in minutes."
+    - "We also provided our clients miner and revenue monitoring statistics in a stylish dashboard."
+    - "After the craze ended and Bitcoin price declined, most of our clients closed their datacenters for good."
+    - "GMT Prime Corp's owner was also this company's owner, thus we shared a lot of tools between companies."
+  stack:
+    - "elixir"
+    - "postgresql"
+    - "rabbitmq"
+    - "bash"
+    - "python"
+    - "prometheus"
+    - "ci/cd"
+
+skogsra:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/skogsra.jpg"
+    profile: "https://unsplash.com/@szmigieldesign"
+    author: "Łukasz Szmigiel"
+  job:
+    type: "Project"
+    beginning: "June 2017"
+    ending: "Present"
+    title: "Skogsrå"
+    website: "https://github.com/gmtprime/skogsra"
+    name: "Github"
+  description:
+    - "Library to manage OS environment variables and application configuration options with ease"
+  stack:
+    - "elixir"
+    - "environment-variables"
+    - "application-configuration"
+
+yggdrasil:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/yggdrasil.jpg"
+    profile: "https://unsplash.com/@toddquackenbush"
+    author: "Todd Quackenbush"
+  job:
+    type: "Project"
+    beginning: "February 2016"
+    ending: "Present"
+    title: "Yggdrasil"
+    website: "https://github.com/gmtprime/yggdrasil"
+    name: "Github"
+  description:
+    - "Subscription and publishing server for Elixir applications."
+  stack:
+    - "elixir"
+    - "pub-sub"
+    - "rabbitmq"
+    - "redis"
+    - "postgresql"
+    - "multinode"
+
+gmtprime_remote:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/gmtprime_remote.jpg"
+    profile: "https://unsplash.com/@rutherford2020"
+    author: "Steele Rutherford"
+  job:
+    type: "Remote"
+    beginning: "March 2015"
+    ending: "November 2018"
+    title: "Senior Software Developer"
+    website: "https://github.com/gmtprime"
+    name: "GMT Prime Corp"
+  description:
+    - "We built an automated crowd-trading platform for the foreign exchange market (ForEx)"
+    - "You can read more about our architecture <a href=\"https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/\" target=\"_blank\">in this blog post.</a>"
+  stack:
+    - "elixir"
+    - "postgresql"
+    - "rabbitmq"
+    - "redis"
+    - "bash"
+    - "python"
+    - "c/c++"
+    - "mono"
+    - "mql"
+    - "prometheus"
+    - "ci/cd"
+
+upc:
+  cover:
+    icon: "education"
+    source: "/assets/img/cv/upc.jpg"
+    profile: "https://unsplash.com/@johanmouchet"
+    author: "Johan Mouchet"
+  job:
+    type: "Master's degree"
+    beginning: "October 2014"
+    ending: "July 2015"
+    title: "Mobile Business & Apps Design"
+    website: "https://www.upc.edu/es/"
+    name: "Universitat Politècnica de Catalunya"
+  description:
+    - "Here I learnt about business development and mobile application design."
+  stack:
+    - "business-development"
+    - "ui/ux"
+    - "objective-c"
+    - "java"
+    - "serverless-architecture"
+
+barcelona:
+  cover:
+    icon: "travel"
+    source: "/assets/img/cv/barcelona.jpg"
+    profile: "https://unsplash.com/@nilsnedel"
+    author: "Nils Nedel"
+  job:
+    type: "Travel"
+    beginning: "October 2014"
+    ending: "October 2014"
+    title: "Moved to Barcelona"
+  description:
+    - "After fighting Venezuelan bureaucracy for months, I managed to have all the required documents to move to Barcelona and start my master's degree."
+  stack:
+    - "airplane"
+    - "suitcases"
+    - "laptop"
+    - "cellphone"
+
+gmtprime_onsite:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/gmtprime_onsite.jpg"
+    profile: "https://www.flickr.com/people/danielito311/"
+    author: "Daniel"
+  job:
+    type: "On site"
+    beginning: "January 2012"
+    ending: "May 2014"
+    title: "Software Developer"
+    website: "https://github.com/gmtprime"
+    name: "GMT Prime Corp (Caracas)"
+  description:
+    - "We developed a platform for foreign exchange market traders. At this time the business model wasn't that defined, mainly because government regulations made us take unexpected turns."
+    - "I got the opportunity to build a distributed system using Erlang :)"
+  stack:
+    - "erlang"
+    - "postgresql"
+    - "python"
+    - "c/c++"
+    - "mono"
+    - "mql"
+
+github:
+  cover:
+    icon: "project"
+    source: "/assets/img/cv/github.jpg"
+    profile: "https://unsplash.com/@swimstaralex"
+    author: "Alexander Sinn"
+  job:
+    type: "Project"
+    beginning: "March 2011"
+    ending: "Present"
+    title: "Github Account"
+    website: "https://github.com/alexdesousa"
+    name: "Github"
+  description:
+    - "I've highlighted the most relevant projects, but you can always find more in my Github profile. <a href=\"https://github.com/sponsors/alexdesousa\" target=\"_blank\">Sponsors are always welcome!</a>"
+  stack:
+    - "elixir"
+    - "erlang"
+    - "zsh"
+    - "sql"
+
+usb:
+  cover:
+    icon: "education"
+    source: "/assets/img/cv/usb.jpg"
+    profile: "https://usb.ve"
+    author: "Unknown"
+  job:
+    type: "Bachelor's degree"
+    beginning: "September 2006"
+    ending: "November 2011"
+    title: "Computer Science"
+    website: "https://usb.ve"
+    name: "Universidad Simón Bolívar"
+  description:
+    - "Though I had coded before, here I officially started my journey as a developer."
+    - "I discovered functional programming, had amazing professors and made good friends."
+  stack:
+    - "haskell"
+    - "prolog"
+    - "c/c++"
+    - "postgresql"
+    - "java"
+    - "python"
+    - "ruby"
+    - "language-design"
+    - "algorithm-design"
+    - "computer-graphics"
+    - "functional-programming"
+    - "np-problem-resolution"
