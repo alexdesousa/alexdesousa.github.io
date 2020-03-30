@@ -10,4 +10,7 @@
     <lastmod>{{- post.last_modified_at | date_to_xmlschema -}}</lastmod>
   </url>
   {%- endfor %}
+  <url>
+    <loc>{{- site.url-}}/cv/</loc>
+  </url>
 </urlset>
