@@ -4,7 +4,6 @@ title: "AyeSQL: Writing Raw SQL in Elixir"
 image: ship.png
 description: Sometimes good'ol SQL is better than any abstraction.
 handle: alex
-published: false
 ---
 
 Most developers consider that writing raw SQL (Structured Query Language) is a bad practice. The main arguments against it are that Object Relational Mappers (ORMs):
