@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head><!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Sometimes good'ol SQL is better than any abstraction." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa
+" />
+
+<!-- title -->
+<title>AyeSQL: Writing Raw SQL in Elixir | Alex de Sousa's Blog</title>
+
+<!--  canonical -->
+<link rel="canonical" href="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/"/>
+
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+
+<!-- Google card -->
+<meta itemprop="description" content="Sometimes good'ol SQL is better than any abstraction." />
+<meta itemprop="image" content="https://thebroken.link/assets/img/ayesql-writing-raw-sql-in-elixir/ship.png" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Alex de Sousa's Blog" />
+<meta property="og:title" content="AyeSQL: Writing Raw SQL in Elixir" />
+<meta property="og:image" content="https://thebroken.link/assets/img/ayesql-writing-raw-sql-in-elixir/ship.png" />
+<meta property="og:url" content="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/" />
+<meta property="og:description" content="Sometimes good'ol SQL is better than any abstraction." />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="AyeSQL: Writing Raw SQL in Elixir" />
+<meta name="twitter:description" content="Sometimes good'ol SQL is better than any abstraction." />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/ayesql-writing-raw-sql-in-elixir/ship.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Alex de Sousa's Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/ayesql-writing-raw-sql-in-elixir/"
+  },
+  "headline": "AyeSQL: Writing Raw SQL in Elixir",
+  "image": ["https://thebroken.link/assets/img/logo.png"],
+  "datePublished": "2020-03-31T00:00:00+00:00",
+  "dateModified": "2020-04-02T14:50:58+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa"
+  },
+  "description": "Sometimes good'ol SQL is better than any abstraction."
+}
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
+  </script><script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body>
+    <div class="page">
+      <div class="navigation"><a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="Alex de Sousa's Blog"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a><a href="/cv/"
+       class="nav-link-inactive">CV</a></nav>
+</div>
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">AyeSQL: Writing Raw SQL in Elixir</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">8 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=Sometimes+good%27ol+SQL+is+better+than+any+abstraction.&url=https://thebroken.link/ayesql-writing-raw-sql-in-elixir/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p>Most developers consider that writing raw SQL (Structured Query Language) is a bad practice. The main arguments against it are that Object Relational Mappers (ORMs):</p>
+
+<ul>
+<li>Abstract several SQL dialects.</li>
+<li>Have a flat learning curve unlike SQL.</li>
+<li>Optimize queries.</li>
+</ul>
+
+<p>ORMs allow you to abstract queries in an almost magical way:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp"># INSERT INTO user (name, age)
+#   VALUES ('Bob', 18)
+#   ON CONFLICT(name)
+#   DO UPDATE SET name = EXCLUDED.name
+#   RETURNING name, age
+</span><span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="p">(</span><span class="s">"Bob"</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+
+<span class="cp"># UPDATE user
+#   SET age = 17
+#   WHERE name = 'Bob'
+</span><span class="n">user</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">17</span>
+</code></pre></div>
+<p><img src="https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif" alt="Magic!"></p>
+
+<blockquote>
+<p>The contents of this article are a mix between my work experience and the great insights <a href="https://www.goodreads.com/book/show/36555832-mastering-postgresql-in-application-development">Mastering PostgreSQL in Application Development</a> book provides.</p>
+
+<p>The code for this article can be found <a href="https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/f1">here</a></p>
+</blockquote>
+
+<h2 id="my-orm-abstracts-several-sql-dialects">My ORM abstracts several SQL dialects</h2>
+
+<p>In my experience, I&#39;ve found that it&#39;s more likely for an application to be re-written in another language e.g. Ruby to Elixir than actually migrating the data from one database to another e.g. MySQL to PostgreSQL.</p>
+
+<p>Additionally, running the database migrations in a different database is not a walk in the park either. Complex applications end up adding custom SQL to their migrations in order to optimize or automate certain processes: database extensions, indexes and triggers.</p>
+
+<p>And then, the data needs to be migrated e.g. <code>pgloader</code> is an amazing tool that migrates data from MySQL, SQLite or MSSQL to PostgreSQL. However, sometimes these tools don&#39;t work correctly or they are nonexistent.</p>
+
+<p><img src="https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy.gif" alt="At least you tried"></p>
+
+<h2 id="my-orm-has-a-flat-learning-curve-unlike-sql">My ORM has a flat learning curve unlike SQL</h2>
+
+<p>SQL is different. It&#39;s a functional language and most programmers are used to imperative languages. It&#39;s also hard to master.</p>
+
+<p>Ironically, the queries are almost in natural language e.g. if we show the following sentences to someone who doesn&#39;t know SQL, probably they&#39;ll know they have the same objective:</p>
+
+<ul>
+<li><em>Get the <code>name</code> and <code>age</code> of every <code>client</code> older than or equal to <code>18</code></em>.</li>
+<li><code>SELECT name, age FROM client WHERE age ≥ 18</code></li>
+</ul>
+
+<p>ORMs specifically work great for simple queries. However, when you need a more complex query, you end up doing certain workarounds to bypass the ORMs limitations:</p>
+
+<ul>
+<li>Writing raw SQL directly.</li>
+<li>Querying the database several times (sometimes unknowingly) to retrieve the data we need and doing the computation in our language instead of the database.</li>
+</ul>
+
+<p>For now I&#39;ll focus on the second approach and I&#39;ll talk about the first one later. It&#39;s easier to see it with a small example:</p>
+
+<p>Given the following subset of tables from the <a href="https://github.com/lerocha/chinook-database">Chinook database</a>:</p>
+
+<p><span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/ayesql-writing-raw-sql-in-elixir/music.png"
+         alt="Chinook database subset"/>Chinook database subset</p>
+</span></p>
+
+<p>We want to know the <em>duration of every album Pearl Jam has ever made</em> (or at least the ones listed in the database). In an OO language we would do something like:</p>
+<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Artist</span> <span class="n">artist</span> <span class="o">=</span> <span class="n">Artist</span><span class="p">.</span><span class="n">one</span><span class="p">(</span><span class="n">name</span><span class="o">:</span> <span class="s">"Pearl Jam"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">album</span> <span class="n">in</span> <span class="n">Album</span><span class="p">.</span><span class="n">all</span><span class="p">(</span><span class="n">artistId</span><span class="o">:</span> <span class="n">artist</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+  <span class="n">ms</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="k">for</span> <span class="n">track</span> <span class="n">in</span> <span class="n">Track</span><span class="p">.</span><span class="n">all</span><span class="p">(</span><span class="n">albumId</span><span class="o">:</span> <span class="n">album</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">ms</span> <span class="o">+=</span> <span class="n">track</span><span class="p">.</span><span class="n">milliseconds</span>
+
+  <span class="n">print</span><span class="p">(</span><span class="s">"#{album.title} | #{format_time(ms)}"</span><span class="p">)</span>
+</code></pre></div>
+<p>For a developer who doesn&#39;t know SQL, this would seem like reasonable code. In reality, it&#39;s highly inefficient:</p>
+
+<ol>
+<li><p>We&#39;re requesting one artist by name:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Artist"</span> <span class="k">WHERE</span> <span class="nv">"Name"</span> <span class="o">=</span> <span class="s1">'Pearl Jam'</span>
+</code></pre></div></li>
+<li><p>Then requesting all albums by artist id:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Album"</span> <span class="k">WHERE</span> <span class="nv">"ArtistId"</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="n">id</span>
+</code></pre></div></li>
+<li><p>For every album, we&#39;re requesting the tracks by album id:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Track"</span> <span class="k">WHERE</span> <span class="nv">"AlbumId"</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">id</span>
+</code></pre></div></li>
+</ol>
+
+<p>This database contains 5 Pearl Jam albums, so we would be querying the database 7 times. The magic behind the ORM is deceiving us. In every round trip to the database, we need to consider two things:</p>
+
+<ul>
+<li>Time the query takes to execute.</li>
+<li>Time the network transmits the data.</li>
+</ul>
+
+<p>Good ORMs introduce ways of dealing with this type of problem. However, knowing we need to use those tools in order to have good performance in our queries requires knowing SQL.</p>
+
+<p>So, going back to the title of this section: Do ORMs really have a flat learning curve? Considering programmers need to know SQL to understand the tools ORMs offer and SQL is hard, then I guess they&#39;re not.</p>
+
+<p><img src="https://media.giphy.com/media/1oJLpejP9jEvWQlZj4/giphy.gif" alt="Visible confusion"></p>
+
+<p>The previous problem can be solved with one query:</p>
+
+<blockquote>
+<p><strong>Note:</strong> Chinook database has capitalized table and column names. That&#39;s why they need to be between double quotes.</p>
+</blockquote>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql">    <span class="k">SELECT</span> <span class="nv">"Album"</span><span class="p">.</span><span class="nv">"Title"</span> <span class="k">AS</span> <span class="n">album</span><span class="p">,</span>
+           <span class="k">SUM</span><span class="p">(</span><span class="nv">"Track"</span><span class="p">.</span><span class="nv">"Milliseconds"</span><span class="p">)</span> <span class="o">*</span> <span class="n">interval</span> <span class="s1">'1 ms'</span> <span class="k">AS</span> <span class="n">duration</span>
+      <span class="k">FROM</span> <span class="nv">"Album"</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">"Artist"</span> <span class="k">USING</span><span class="p">(</span><span class="nv">"ArtistId"</span><span class="p">)</span>
+ <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="nv">"Track"</span> <span class="k">USING</span><span class="p">(</span><span class="nv">"AlbumId"</span><span class="p">)</span>
+     <span class="k">WHERE</span> <span class="nv">"Artist"</span><span class="p">.</span><span class="nv">"Name"</span> <span class="o">=</span> <span class="s1">'Pearl Jam'</span>
+  <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">album</span>
+  <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">album</span>
+</code></pre></div>
+<p>and our result would be already formatted:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">          album          |   duration
+-------------------------+-------------
+ Live On Two Legs [Live] | 01:11:18.954
+ Pearl Jam               | 00:49:43.857
+ Riot Act                | 00:54:16.468
+ Ten                     | 00:53:25.871
+ Vs.                     | 00:46:17.674
+</code></pre></div>
+<h2 id="my-orm-optimizes-queries">My ORM optimizes queries</h2>
+
+<p>Good ORMs do optimize queries. Usually they optimize queries for the most common cases. However, if the problem we&#39;re solving is not covered by these optimizations, it can be a real head-scratcher.</p>
+
+<p>In the end, we end up with a subpar solution or writing raw SQL to overcome the limitations.</p>
+
+<p><img src="https://media.giphy.com/media/D1ETZoAPSt5EA/giphy.gif" alt="duct taping broken wall"></p>
+
+<h2 id="language-mappers">Language Mappers</h2>
+
+<p>There are alternatives to ORMs. In Elixir, we have <a href="https://github.com/elixir-ecto/ecto">Ecto</a>. It&#39;s not an ORM, but a language mapper. It gives you a Domain Specific Language (DSL) for dealing with SQL queries in Elixir e.g. again if we want to know the <em>duration of every album Pearl Jam has ever made</em> (or the 5 listed in this database), we would do the following:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">query</span> <span class="o">=</span>
+  <span class="n">from</span> <span class="n">al</span> <span class="ow">in</span> <span class="no">Album</span><span class="p">,</span>
+    <span class="ss">inner_join:</span> <span class="n">ar</span> <span class="ow">in</span> <span class="no">Artist</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">al</span><span class="o">.</span><span class="n">artistId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">artistId</span><span class="p">,</span>
+    <span class="ss">left_join:</span> <span class="n">tr</span> <span class="ow">in</span> <span class="no">Track</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">tr</span><span class="o">.</span><span class="n">albumId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">albumId</span><span class="p">,</span>
+    <span class="ss">where:</span> <span class="n">ar</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="sd">"</span><span class="s2">Pearl Jam"</span>
+    <span class="ss">group_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
+    <span class="ss">order_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
+    <span class="ss">select:</span> <span class="p">%{</span><span class="ss">album:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="ss">duration:</span> <span class="n">sum</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">milliseconds</span><span class="p">)}</span>
+
+<span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<p>Language mappers require developers to know SQL, but allows them to <em>almost</em> never leave the comfort of their language. That <em>&quot;almost&quot;</em> is important.</p>
+
+<p><img src="https://media.giphy.com/media/RgfGmnVvt8Pfy/giphy.gif" alt="that&#39;s good"></p>
+
+<p>Though not everything is sunshine and rainbows. Language mappers try to abstract several SQL dialects in an unified DSL. This means that not all the SQL of our database is going to be included in this DSL.</p>
+
+<p>To overcome this limitation, Ecto introduces the concept of <em>fragments</em>. Fragments are pieces of custom SQL code that can be added to our queries e.g. given the following subset from <a href="https://ergast.com/mrd/db/">Ergast Developer API</a> database:</p>
+
+<p><span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/ayesql-writing-raw-sql-in-elixir/f1.png"
+         alt="Ergast Developer API database"/>Ergast Developer API database</p>
+</span></p>
+
+<p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. Using Ecto, we could do something like this:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># NOTE: The schema definition is omitted.</span>
+
+<span class="n">from</span> <span class="o">=</span> <span class="m">1974</span>
+<span class="n">to</span> <span class="o">=</span> <span class="m">1990</span>
+
+<span class="n">accidents</span> <span class="o">=</span>
+  <span class="n">from</span> <span class="n">re</span> <span class="ow">in</span> <span class="no">Result</span><span class="p">,</span>
+    <span class="ss">join:</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:status</span><span class="p">),</span>
+    <span class="ss">join:</span> <span class="n">ra</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:race</span><span class="p">),</span>
+    <span class="ss">group_by:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">season"</span><span class="p">),</span>
+    <span class="ss">select:</span> <span class="p">%{</span>
+      <span class="ss">season:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="n">ra</span><span class="o">.</span><span class="n">date</span><span class="p">),</span>
+      <span class="ss">participants:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*)"</span><span class="p">),</span>
+      <span class="ss">accidents:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*) FILTER(WHERE status = 'Accident')"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="n">query</span> <span class="o">=</span>
+  <span class="n">from</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">subquery</span><span class="p">(</span><span class="n">accidents</span><span class="p">),</span>
+    <span class="ss">where:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">? BETWEEN ? AND ?"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="o">^</span><span class="n">from</span><span class="p">,</span> <span class="o">^</span><span class="n">to</span><span class="p">),</span>
+    <span class="ss">select:</span> <span class="p">%{</span>
+      <span class="ss">season:</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span>
+      <span class="ss">percentage:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">ROUND(100.0 * ? / ?, 2)"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">accidents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">participants</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<p>The code above is hard to read, hard to write and error prone. A maintenance nightmare.</p>
+
+<p><img src="https://media.giphy.com/media/kUo4mBl85jDos/giphy.gif" alt="Nightmare"></p>
+
+<p>Probably we could re-write the previous SQL query differently to avoid using fragments. However, that&#39;s a valid and performant solution to our problem. Re-writing this query for the sake of readability could end up with:</p>
+
+<ul>
+<li>A subpar solution.</li>
+<li>Wasting time we could have invested in something else.</li>
+</ul>
+
+<p>In contrast, the query seems hard to maintain in Ecto, but it&#39;s perfectly fine and understandable in SQL:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
+<span class="p">(</span>
+    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="k">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="n">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
+           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
+           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FILTER</span><span class="p">(</span><span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">accidents</span>
+      <span class="k">FROM</span> <span class="n">f1db</span><span class="p">.</span><span class="n">results</span>
+      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">status</span> <span class="k">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
+      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">races</span> <span class="k">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
+  <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">season</span>
+<span class="p">)</span>
+  <span class="k">SELECT</span> <span class="n">season</span><span class="p">,</span>
+         <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">percentage</span>
+    <span class="k">FROM</span> <span class="n">accidents</span>
+   <span class="k">WHERE</span> <span class="n">season</span> <span class="k">BETWEEN</span> <span class="mi">1974</span> <span class="k">AND</span> <span class="mi">1990</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">season</span>
+</code></pre></div>
+<h2 id="raw-sql">Raw SQL</h2>
+
+<p>So far we&#39;ve seen ORMs and language mappers are good for general problems we might encounter. However, some other problems are better left in raw SQL.</p>
+
+<p>ORMs, language mappers and database adapters usually provide an API for running raw SQL. In Elixir, Ecto and <a href="https://github.com/elixir-ecto/postgrex">Postgrex</a> give us the function <code>query/2</code> e.g. in Ecto we would do the following:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">query</span> <span class="o">=</span>
+  <span class="sd">"""
+  WITH accidents AS
+  (
+      SELECT EXTRACT(year from races.date) AS season,
+             COUNT(*) AS participants,
+             COUNT(*) FILTER(WHERE status = 'Accident') AS accidents
+        FROM results
+        JOIN status USING(statusid)
+        JOIN races USING(raceid)
+    GROUP BY season
+  )
+    SELECT season,
+           ROUND(100.0 * accidents / participants, 2) AS percentage
+      FROM accidents
+     WHERE season BETWEEN $1 AND $2
+  ORDER BY season
+  """</span>
+
+<span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="m">1974</span><span class="p">,</span> <span class="m">1990</span><span class="p">])</span>
+</code></pre></div>
+<p>There are some things I&#39;d like to point out from the previous code:</p>
+
+<ul>
+<li><code>$1</code> and <code>$2</code> are the query parameters: The numbers indicate the position in the parameter list. If we add status as a variable instead of the constant <code>&#39;Accidents&#39;</code>, we would need to update the other indexes.</li>
+<li>The query is a string: usually editors wouldn&#39;t highlight the SQL syntax inside the string.</li>
+<li>The <code>columns</code> and <code>rows</code> are separated in the result:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
+    <span class="p">%</span><span class="no">Postgrex</span><span class="o">.</span><span class="no">Result</span><span class="p">{</span>
+      <span class="ss">columns:</span> <span class="p">[</span><span class="sd">"</span><span class="s2">season"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">percentage"</span><span class="p">],</span>
+      <span class="ss">command:</span> <span class="ss">:select</span><span class="p">,</span>
+      <span class="ss">connection_id:</span> <span class="m">206</span><span class="p">,</span>
+      <span class="ss">messages:</span> <span class="p">[],</span>
+      <span class="ss">num_rows:</span> <span class="m">17</span><span class="p">,</span>
+      <span class="ss">rows:</span> <span class="p">[</span>
+        <span class="p">[</span><span class="m">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
+        <span class="p">[</span><span class="m">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
+        <span class="p">[</span><span class="m">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
+        <span class="p">[</span><span class="m">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
+        <span class="p">[</span><span class="m">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
+        <span class="o">...</span>
+   <span class="p">}}</span>
+</code></pre></div>
+<p>The complexity it&#39;s still there.</p>
+
+<h2 id="meet-ayesql">Meet AyeSQL</h2>
+
+<p>Inspired by Clojure library <a href="https://github.com/krisajenkins/yesql">Yesql</a>, <a href="https://github.com/alexdesousa/ayesql">AyeSQL</a> tries to find a middle ground between raw SQL strings and SQL language mappers by:</p>
+
+<ul>
+<li>Keeping SQL in SQL files.</li>
+<li>Generating Elixir functions for every query.</li>
+<li>Working out of the box with PostgreSQL using Ecto or Postgrex.</li>
+<li>Being extendable to support other databases and outputs.</li>
+<li>Allowing some query composability.</li>
+</ul>
+
+<p>Defining the same query in AyeSQL, we would need the following:</p>
+
+<ul>
+<li>A file for defining our query in raw SQL:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="o">--</span> <span class="ss">file:</span> <span class="n">lib</span><span class="o">/</span><span class="n">f1</span><span class="o">/</span><span class="n">query</span><span class="o">/</span><span class="n">season</span><span class="o">.</span><span class="n">sql</span>
+
+   <span class="o">--</span> <span class="ss">name:</span> <span class="n">get_accidents</span>
+   <span class="o">--</span> <span class="ss">docs:</span> <span class="no">Gets</span> <span class="n">accidents</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">season</span> <span class="n">range</span><span class="o">.</span>
+   <span class="no">WITH</span> <span class="n">accidents</span> <span class="no">AS</span>
+   <span class="p">(</span>
+       <span class="no">SELECT</span> <span class="no">EXTRACT</span><span class="p">(</span><span class="n">year</span> <span class="n">from</span> <span class="n">races</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="no">AS</span> <span class="n">season</span><span class="p">,</span>
+              <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">AS</span> <span class="n">participants</span><span class="p">,</span>
+              <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">FILTER</span><span class="p">(</span><span class="no">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="no">AS</span> <span class="n">accidents</span>
+         <span class="no">FROM</span> <span class="n">f1db</span><span class="o">.</span><span class="n">results</span> <span class="no">AS</span> <span class="n">results</span>
+         <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">status</span> <span class="no">AS</span> <span class="n">status</span> <span class="no">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
+         <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">races</span> <span class="no">AS</span> <span class="n">races</span> <span class="no">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
+     <span class="no">GROUP</span> <span class="no">BY</span> <span class="n">season</span>
+   <span class="p">)</span>
+     <span class="no">SELECT</span> <span class="n">season</span><span class="p">,</span>
+            <span class="no">ROUND</span><span class="p">(</span><span class="m">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
+       <span class="no">FROM</span> <span class="n">accidents</span>
+      <span class="no">WHERE</span> <span class="n">season</span> <span class="no">BETWEEN</span> <span class="ss">:from</span> <span class="no">AND</span> <span class="ss">:to</span>
+   <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">season</span>
+</code></pre></div>
+<ul>
+<li>A file for declaring our queries as Elixir functions:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: lib/f1/queries.ex</span>
+
+   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="m">3</span><span class="p">]</span>
+
+   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="sd">"</span><span class="s2">query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>Modify our configuration to run the queries by default:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: config/config.exs</span>
+
+   <span class="kn">import</span> <span class="no">Config</span>
+
+   <span class="n">config</span> <span class="ss">:ayesql</span><span class="p">,</span> <span class="ss">run?:</span> <span class="no">true</span>
+</code></pre></div>
+<p>Then we can call our query as follows:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="m">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="m">1990</span><span class="p">)</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
+ <span class="p">[</span>
+   <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;3.67&gt;, season: 1974.0},</span>
+   <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;14.88&gt;, season: 1975.0},</span>
+   <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;11.06&gt;, season: 1976.0},</span>
+   <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;12.58&gt;, season: 1977.0},</span>
+   <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;10.19&gt;, season: 1978.0},</span>
+   <span class="o">...</span>
+ <span class="p">]}</span>
+</code></pre></div>
+<p>I don&#39;t know about you, but IMHO this seems like a maintainable way of dealing with complex SQL queries.</p>
+
+<p><img src="https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif" alt="easy"></p>
+
+<p>AyeSQL provides query runners for Ecto and Postgrex out-of-the-box. In the previous example we used Ecto&#39;s runner. If we need a different output or query a different database e.g. MSSQL, we could implement the behaviour <code>AyeSQL.Runner</code> for our use case.</p>
+
+<blockquote>
+<p><strong>Note</strong>: In the past year, my team and I had to write an Elixir application with a pre-existent MSSQL database. <code>AyeSQL.Runner</code> behaviour and <a href="https://github.com/livehelpnow/tds">TDS</a> library allowed us to query the database with ease.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I&#39;m hoping this article helps change the negative reputation raw SQL queries have.</p>
+
+<p>Yesql inspired libraries like AyeSQL, can help you to be more productive when your ORM or language mapper have failed you.</p>
+
+<p><img src="https://media.giphy.com/media/fdhZs6PUqxSQU/giphy.gif" alt="There is another"></p>
+
+<p>I&#39;ll write more about AyeSQL features in future articles, but for now happy coding!</p>
+
+<p><em>Cover image by <a href="https://unsplash.com/@arstyy">Austin Neill</a></em></p>
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description"><a href="https://refillaqua.com">Refill Aqua</a> co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Previous article --><div class="box">
+  <img class="box-child box-image"
+       alt="Elixir Pubsub In Less Than 50 Lines"
+       src="https://thebroken.link/assets/img/elixir-pubsub-in-less-than-50-lines/web.png"/>
+  <span class="box-child box-read-time">3 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/elixir-pubsub-in-less-than-50-lines/">Elixir Pubsub In Less Than 50 Lines</a>
+  <span class="box-child box-description">A small Elixir pubsub implementation using built-in module :pg2</span>
+</div>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/social/twitter.png"
+        alt="Twitter"/>
+  </a>
+</div>
+</div>
+    </div>
+  </body>
+</html>
