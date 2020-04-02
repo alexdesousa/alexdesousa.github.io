@@ -13,6 +13,7 @@ exclude: [
   "postcss.config.js",
   "css",
   "node_modules",
+  "examples"
 ]
 redcarpet:
   extensions: [

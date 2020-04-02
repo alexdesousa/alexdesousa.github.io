@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./f1db.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: "toor"
+      MYSQL_DATABASE: "f1db"
+      MYSQL_USER: "mysql"
+      MYSQL_PASSWORD: "mysql"
+  postgres:
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "f1db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"

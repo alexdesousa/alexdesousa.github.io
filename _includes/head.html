@@ -49,18 +49,19 @@
 <meta name="twitter:site" content="@thebroken_link">
 
 <!-- styles -->
-{%- if page.handle -%}
+{%- if page.layout == "article" -%}
 <link rel="stylesheet"
       href="{{- "/assets/css/article.css?version=20191116"
                 | prepend: site.baseurl -}}">
-{%- else -%}
+{%- elsif page.layout == "default" -%}
 <link rel="stylesheet"
       href="{{- "/assets/css/default.css?version=20191116"
                 | prepend: site.baseurl -}}">
-{%- endif -%}
+{%- elsif page.layout == "cv" -%}
 <link rel="stylesheet"
       href="{{- "/assets/css/tailwind.css"
                 | prepend: site.baseurl -}}"/>
+{%- endif -%}
 
 <!-- metadata -->
 {%- include metadata.html -%}
