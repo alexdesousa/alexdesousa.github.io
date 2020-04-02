@@ -1,5 +1,12 @@
 # AyeSQL: Writing Raw SQL With Elixir
 
+This small elixir project has two implementations of the same query:
+
+- One with AyeSQL.
+- One with Ecto.
+
+The idea is to be able to compare different approaches to the same problem.
+
 ## Running the Databases
 
 The provided docker compose has two postgres databases:
@@ -7,7 +14,8 @@ The provided docker compose has two postgres databases:
 - [Chinook](https://github.com/lerocha/chinook-database) on port 5431.
 - [Ergast Developer API](https://ergast.com/mrd/db/) on port 5432.
 
-The first one is used for the examples in the first part of the [article]()
+The first one is used for the examples in the first part of the
+[article](https://thebroken.link/ayesql-writing-raw-sql-in-elixir/)
 and the second one is used for comparing Ecto with AyeSQL for complex queries.
 
 Just run the following to have access to both of them:
@@ -15,6 +23,30 @@ Just run the following to have access to both of them:
 ```bash
 $ docker-compose up
 ```
+
+## Running the Project
+
+This is a normal Elixir project, so, once you've run the docker compose, just
+run the project:
+
+```elixir
+$ mix deps.get
+$ iex -S mix
+```
+
+Once you're in IEx, just run the following:
+
+- Ecto implementation:
+
+  ```elixir
+  iex> F1.get_accidents(1974, 1990)
+  ```
+
+- AyeSQL implementation:
+
+  ```elixir
+  iex> F1.Query.Season.get_accidents(from: 1974, to: 1990)
+  ```
 
 ## Generating a valid PostgreSQL database dump
 

@@ -107,7 +107,7 @@ This database contains 5 Pearl Jam albums, so we would be querying the database 
 
 Good ORMs introduce ways of dealing with this type of problem. However, knowing we need to use those tools in order to have good performance in our queries requires knowing SQL.
 
-So, going back to the title of this section: Do ORMs really have a flat learning curve? Considering programmers need to know SQL to understand the tools ORMs offer and SQL is hard, then I guess they're not.
+So, going back to the title of this section: Do ORMs really have a flat learning curve? Considering programmers need to know SQL to understand the tools ORMs offer and SQL is hard, then I guess they have not.
 
 ![Visible confusion](https://media.giphy.com/media/1oJLpejP9jEvWQlZj4/giphy.gif)
 
