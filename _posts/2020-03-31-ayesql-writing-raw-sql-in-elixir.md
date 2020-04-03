@@ -34,7 +34,7 @@ user.age = 17
 >
 > The code for this article can be found [here](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/f1)
 
-## My ORM abstracts several SQL dialects
+## "My ORM abstracts several SQL dialects"
 
 In my experience, I've found that it's more likely for an application to be re-written in another language e.g. Ruby to Elixir than actually migrating the data from one database to another e.g. MySQL to PostgreSQL.
 
@@ -44,7 +44,7 @@ And then, the data needs to be migrated e.g. `pgloader` is an amazing tool that 
 
 ![At least you tried](https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy.gif)
 
-## My ORM has a flat learning curve unlike SQL
+## "My ORM has a flat learning curve unlike SQL"
 
 SQL is different. It's a functional language and most programmers are used to imperative languages. It's also hard to master.
 
@@ -138,7 +138,7 @@ and our result would be already formatted:
  Vs.                     | 00:46:17.674
 ```
 
-## My ORM optimizes queries
+## "My ORM optimizes queries"
 
 Good ORMs do optimize queries. Usually they optimize queries for the most common cases. However, if the problem we're solving is not covered by these optimizations, it can be a real head-scratcher.
 
