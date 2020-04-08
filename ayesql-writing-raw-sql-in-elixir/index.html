@@ -57,7 +57,7 @@
   "headline": "AyeSQL: Writing Raw SQL in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2020-03-31T00:00:00+00:00",
-  "dateModified": "2020-04-03T07:55:25+00:00",
+  "dateModified": "2020-04-08T07:36:30+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -95,7 +95,7 @@
 "/>
     <div class="header-info-child author">Alex de Sousa
 </div>
-    <div class="header-info-child read-time">8 min read</div>
+    <div class="header-info-child read-time">9 min read</div>
     <a class="header-info-child share-button share-twitter"
        href="https://twitter.com/intent/tweet?text=Sometimes+good%27ol+SQL+is+better+than+any+abstraction.&url=https://thebroken.link/ayesql-writing-raw-sql-in-elixir/&via=thebroken_link"
        target="_blank">
@@ -267,7 +267,24 @@
          alt="Ergast Developer API database"/>Ergast Developer API database</p>
 </span></p>
 
-<p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. Using Ecto, we could do something like this:</p>
+<p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:</p>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
+<span class="p">(</span>
+    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="k">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="n">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
+           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
+           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FILTER</span><span class="p">(</span><span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">accidents</span>
+      <span class="k">FROM</span> <span class="n">f1db</span><span class="p">.</span><span class="n">results</span>
+      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">status</span> <span class="k">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
+      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">races</span> <span class="k">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
+  <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">season</span>
+<span class="p">)</span>
+  <span class="k">SELECT</span> <span class="n">season</span><span class="p">,</span>
+         <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">percentage</span>
+    <span class="k">FROM</span> <span class="n">accidents</span>
+   <span class="k">WHERE</span> <span class="n">season</span> <span class="k">BETWEEN</span> <span class="mi">1974</span> <span class="k">AND</span> <span class="mi">1990</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">season</span>
+</code></pre></div>
+<p>Now, when translating this query to Ecto, we&#39;ll have to use fragments:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># NOTE: The schema definition is omitted.</span>
 
 <span class="n">from</span> <span class="o">=</span> <span class="m">1974</span>
@@ -294,34 +311,35 @@
 
 <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 </code></pre></div>
-<p>The code above is hard to read, hard to write and error prone. A maintenance nightmare.</p>
+<p>The code above is hard to read, hard to write and error prone. Yet we don&#39;t have any performance improvements in our query. A maintenance nightmare.</p>
 
-<p><img src="https://media.giphy.com/media/kUo4mBl85jDos/giphy.gif" alt="Nightmare"></p>
+<p>We could re-write the previous Ecto query differently by encapsulating them in Elixir macros and then importing our custom DSL e.g:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">CustomDSL</span> <span class="k">do</span>
+  <span class="kn">import</span> <span class="no">Ecto</span><span class="o">.</span><span class="no">Query</span>
 
-<p>Probably we could re-write the previous SQL query differently to avoid using fragments. However, that&#39;s a valid and performant solution to our problem. Re-writing this query for the sake of readability could end up with:</p>
+  <span class="k">defmacro</span> <span class="n">year</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">do</span>
+    <span class="kn">quote</span> <span class="k">do</span>
+      <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div>
+<p>But again, we wouldn&#39;t get any improvements performance-wise. Just readability... in Ecto. It was perfectly readable in SQL.</p>
+
+<p>The consequences are clear. Developers need knowledge of:</p>
 
 <ul>
-<li>A subpar solution.</li>
-<li>Wasting time we could have invested in something else.</li>
+<li>The specific SQL dialect (in this case PostgreSQL dialect).</li>
+<li>Ecto&#39;s API and its limitations.</li>
+<li>Elixir&#39;s macros for fragment encapsulation.</li>
 </ul>
 
-<p>In contrast, the query seems hard to maintain in Ecto, but it&#39;s perfectly fine and understandable in SQL:</p>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
-<span class="p">(</span>
-    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="k">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="n">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
-           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
-           <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FILTER</span><span class="p">(</span><span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">accidents</span>
-      <span class="k">FROM</span> <span class="n">f1db</span><span class="p">.</span><span class="n">results</span>
-      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">status</span> <span class="k">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
-      <span class="k">JOIN</span> <span class="n">f1db</span><span class="p">.</span><span class="n">races</span> <span class="k">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
-  <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">season</span>
-<span class="p">)</span>
-  <span class="k">SELECT</span> <span class="n">season</span><span class="p">,</span>
-         <span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="p">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">AS</span> <span class="n">percentage</span>
-    <span class="k">FROM</span> <span class="n">accidents</span>
-   <span class="k">WHERE</span> <span class="n">season</span> <span class="k">BETWEEN</span> <span class="mi">1974</span> <span class="k">AND</span> <span class="mi">1990</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="n">season</span>
-</code></pre></div>
+<p>Additionally, now they need to maintain a new custom DSL API with its documentation. If we only have a few of this complex queries in our project, is it worthy?</p>
+
+<p>What&#39;s worse, after the refactor, we could end up with a subpar solution or wasting our time entirely.</p>
+
 <h2 id="raw-sql">Raw SQL</h2>
 
 <p>So far we&#39;ve seen ORMs and language mappers are good for general problems we might encounter. However, some other problems are better left in raw SQL.</p>
