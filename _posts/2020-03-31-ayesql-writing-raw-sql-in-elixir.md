@@ -177,14 +177,34 @@ To overcome this limitation, Ecto introduces the concept of _fragments_. Fragmen
     caption = "Ergast Developer API database"
     %}
 
-Let's say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. Using Ecto, we could do something like this:
+Let's say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:
+
+```sql
+WITH accidents AS
+(
+    SELECT EXTRACT(year from races.date) AS season,
+           COUNT(*) AS participants,
+           COUNT(*) FILTER(WHERE status = 'Accident') AS accidents
+      FROM f1db.results
+      JOIN f1db.status USING(statusid)
+      JOIN f1db.races USING(raceid)
+  GROUP BY season
+)
+  SELECT season,
+         ROUND(100.0 * accidents / participants, 2) AS percentage
+    FROM accidents
+   WHERE season BETWEEN 1974 AND 1990
+ORDER BY season
+```
+
+Now, when translating this query to Ecto, we'll have to use fragments:
 
 ```elixir
 # NOTE: The schema definition is omitted.
 
 from = 1974
 to = 1990
-
+    
 accidents =
   from re in Result,
     join: st in assoc(re, :status),
@@ -207,34 +227,35 @@ query =
 F1.Repo.all(query)
 ```
 
-The code above is hard to read, hard to write and error prone. A maintenance nightmare.
+The code above is hard to read, hard to write and error prone. Yet we don't have any performance improvements in our query. A maintenance nightmare.
 
-![Nightmare](https://media.giphy.com/media/kUo4mBl85jDos/giphy.gif)
+We could re-write the previous Ecto query differently by encapsulating them in Elixir macros and then importing our custom DSL e.g:
 
-Probably we could re-write the previous SQL query differently to avoid using fragments. However, that's a valid and performant solution to our problem. Re-writing this query for the sake of readability could end up with:
+```elixir
+defmodule CustomDSL do
+  import Ecto.Query
 
-- A subpar solution.
-- Wasting time we could have invested in something else.
+  defmacro year(date) do
+    quote do
+      fragment("EXTRACT(year from ?)", unquote(date))
+    end
+  end
 
-In contrast, the query seems hard to maintain in Ecto, but it's perfectly fine and understandable in SQL:
-
-```sql
-WITH accidents AS
-(
-    SELECT EXTRACT(year from races.date) AS season,
-           COUNT(*) AS participants,
-           COUNT(*) FILTER(WHERE status = 'Accident') AS accidents
-      FROM f1db.results
-      JOIN f1db.status USING(statusid)
-      JOIN f1db.races USING(raceid)
-  GROUP BY season
-)
-  SELECT season,
-         ROUND(100.0 * accidents / participants, 2) AS percentage
-    FROM accidents
-   WHERE season BETWEEN 1974 AND 1990
-ORDER BY season
+  ...
+end
 ```
+
+But again, we wouldn't get any improvements performance-wise. Just readability... in Ecto. It was perfectly readable in SQL.
+
+The consequences are clear. Developers need knowledge of:
+
+- The specific SQL dialect (in this case PostgreSQL dialect).
+- Ecto's API and its limitations.
+- Elixir's macros for fragment encapsulation.
+
+Additionally, now they need to maintain a new custom DSL API with its documentation. If we only have a few of this complex queries in our project, is it worthy?
+
+What's worse, after the refactor, we could end up with a subpar solution or wasting our time entirely.
 
 ## Raw SQL
 
