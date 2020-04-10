@@ -127,7 +127,7 @@ _publish_ button no matter what. Pressure is good.
 
 Writing is hard. Writing requires practice. The more you practice, the easier it gets. Just do it!
 
-![](https://media.giphy.com/media/qDPg6HNz2NfAk/giphy.gif)
+![Just do it!](https://media.giphy.com/media/qDPg6HNz2NfAk/giphy.gif)
 
 Happy writing!
 
