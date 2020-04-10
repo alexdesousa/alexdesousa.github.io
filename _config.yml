@@ -20,5 +20,6 @@ redcarpet:
     "strikethrough",
     "no_intra_emphasis",
     "superscript",
-    "with_toc_data"
+    "with_toc_data",
+    "tables"
   ]
