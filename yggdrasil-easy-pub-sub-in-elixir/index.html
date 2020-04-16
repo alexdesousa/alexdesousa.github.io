@@ -57,7 +57,7 @@
   "headline": "Yggdrasil: Easy Pub-Sub in Elixir",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2019-07-06T00:00:00+00:00",
-  "dateModified": "2020-03-12T22:34:29+00:00",
+  "dateModified": "2020-04-16T16:18:08+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -95,7 +95,7 @@
 "/>
     <div class="header-info-child author">Alex de Sousa
 </div>
-    <div class="header-info-child read-time">7 min read</div>
+    <div class="header-info-child read-time">10 min read</div>
     <a class="header-info-child share-button share-twitter"
        href="https://twitter.com/intent/tweet?text=An+overview+of+Yggdrasil+capabilities&url=https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/&via=thebroken_link"
        target="_blank">
@@ -105,7 +105,7 @@
   <p class="article-image-caption">
     <img class="article-image"
          src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/system.png"
-         alt="Our System"/></p>
+         alt="Our System"/>Our System</p>
 </span>
 In words, our system:</p>
 
@@ -145,7 +145,8 @@ In words, our system:</p>
 <li><a href="#I">Chapter I: Meet Yggdrasil</a></li>
 <li><a href="#II">Chapter II: Yggdrasil and PostgreSQL Notifications</a></li>
 <li><a href="#III">Chapter III: Yggdrasil and RabbitMQ Subscriptions</a></li>
-<li><a href="#IV">In the end: One API to Rule Them All</a></li>
+<li><a href="#IV">Chapter IV: Yggdrasil as Distributed PubSub</a></li>
+<li><a href="#V">In the end: One API to Rule Them All</a></li>
 </ul>
 
 <div class="chapter" style="background-color: var(--deep-blue);">
@@ -384,7 +385,7 @@ data.</p>
   <p class="article-image-caption">
     <img class="article-image"
          src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/rabbitmq-connection.png"
-         alt="RabbitMQ channel multiplexing"/></p>
+         alt="RabbitMQ channel multiplexing"/>A regular RabbitMQ connection</p>
 </span>
 The rule of thumb would be to use:</p>
 
@@ -416,7 +417,7 @@ The rule of thumb would be to use:</p>
   <p class="article-image-caption">
     <img class="article-image"
          src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/rabbitmq-exchange.png"
-         alt="RabbitMQ exchange routing"/></p>
+         alt="RabbitMQ exchange routing"/>A RabbitMQ exchange</p>
 </span>
 In the previous image:</p>
 
@@ -490,8 +491,148 @@ In the previous image:</p>
 
 <div class="chapter" style="background-color: var(--deep-blue);">
     <div class="chapter-content">
-      <strong style="color: white;">IN THE END:</strong>
+      <strong style="color: white;">CHAPTER IV:</strong>
       <h2 id="IV"
+          class="chapter-title"
+          style="color: white;">Yggdrasil as Distributed PubSub</h2>
+      <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
+           alt="CHAPTER IV: Yggdrasil as Distributed PubSub"/>
+    </div>
+
+<p></div></p>
+
+<p>Yggdrasil&#39;s default adapter supports multi-node subscriptions out-of-the-box thanks to <a href="https://github.com/phoenixframework/phoenix_pubsub">Phoenix PubSub</a>. This distributed capabilities can be extended to any adapter compatible with Yggdrasil v5.0 without writing a single line of extra code.</p>
+
+<p><img src="https://media.giphy.com/media/Qtpdtlk9rpb8PKK0ih/giphy.gif" alt="Spock is interested!"></p>
+
+<h2 id="before-we-start">Before We Start</h2>
+
+<p>I&#39;ve used <a href="https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix">this example project</a> for the code in this article. You can skip this section safely as long as you remember the following:</p>
+
+<ul>
+<li><code>Basic</code> project has only Yggdrasil.</li>
+<li><code>Rabbit</code> project has Yggdrasil for RabbitMQ.</li>
+<li>A RabbitMQ server is available.</li>
+<li>The host name is called <code>matrix</code>. Your machine&#39;s will be different.</li>
+</ul>
+
+<p>If you want to follow along with the examples in this article, you can download the example project using the following command:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone <span class="se">\</span>
+  <span class="nt">--depth</span> 2 <span class="se">\</span>
+  <span class="nt">-b</span> blog <span class="se">\</span>
+  https://github.com/alexdesousa/alexdesousa.github.io.git examples <span class="o">&amp;&amp;</span> <span class="se">\</span>
+<span class="nb">cd </span>examples <span class="o">&amp;&amp;</span> <span class="se">\</span>
+git filter-branch <span class="se">\</span>
+  <span class="nt">--prune-empty</span> <span class="se">\</span>
+  <span class="nt">--subdirectory-filter</span> examples/matrix HEAD
+</code></pre></div>
+<p>In the folder you&#39;ll find:</p>
+
+<ul>
+<li><a href="https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/basic">Basic project</a> that has a basic version of <a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a>.</li>
+<li><a href="https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/rabbit">Rabbit project</a> that has <a href="https://github.com/gmtprime/yggdrasil_rabbitmq">Yggdrasil for RabbitMQ</a>.</li>
+<li>A docker compose with a RabbitMQ server:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   <span class="nv">$ </span><span class="nb">cd </span>rabbit <span class="o">&amp;&amp;</span> docker-compose up
+</code></pre></div>
+<p><img src="https://media.giphy.com/media/bKnEnd65zqxfq/giphy.gif" alt="Make it so"></p>
+
+<h2 id="basic-message-distribution">Basic Message Distribution</h2>
+
+<p>Yggdrasil&#39;s default adapter piggybacks on Phoenix PubSub for the message delivery, inheriting its distributed capabilities e.g. let&#39;s say we have the following:</p>
+
+<ul>
+<li>The node <code>:neo@matrix</code> using <code>Basic</code> project:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   <span class="nv">$ </span>iex <span class="nt">--sname</span> neo <span class="nt">-S</span> mix
+</code></pre></div>
+<ul>
+<li>The node <code>:smith@matrix</code> also using <code>Basic</code> project:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   <span class="nv">$ </span>iex <span class="nt">--sname</span> smith <span class="nt">-S</span> mix
+</code></pre></div>
+<ul>
+<li>Both nodes are interconnected:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+   <span class="no">true</span>
+</code></pre></div>
+<p>Then <code>:smith@matrix</code> can subscribe to any channel where <code>:neo@matrix</code> is publishing messages e.g:</p>
+
+<p>In <code>:smith@matrix</code>, we subscribe to the channel <code>&quot;private&quot;</code>:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">)</span>
+<span class="ss">:ok</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>In <code>:neo@matrix</code>, we publish a message in the channel <code>&quot;private&quot;</code>:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>Finally, we can flush <code>:smith@matrix</code> mailbox and find our message:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>Distributed pubsub as simple as that.</p>
+
+<p><img src="https://media.giphy.com/media/dWy2WwcB3wvX8QA1Iu/giphy.gif" alt="Easy"></p>
+
+<h2 id="bridged-message-distribution">Bridged Message Distribution</h2>
+
+<p>The bridge adapter makes a <em>bridge</em> between any Yggdrasil adapter and the default adapter. This allows adapters to inherit the distributed capabilities of the default adapter e.g. let&#39;s say we have the following:</p>
+
+<ul>
+<li>The node <code>:neo@matrix</code> using <code>Basic</code> project:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   <span class="nv">$ </span>iex <span class="nt">--sname</span> neo <span class="nt">-S</span> mix
+</code></pre></div>
+<ul>
+<li>The node <code>:trinity@matrix</code> using <code>Rabbit</code> project:</li>
+</ul>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">   <span class="nv">$ </span>iex <span class="nt">--sname</span> trinity <span class="nt">-S</span> mix
+</code></pre></div>
+<ul>
+<li>The node <code>:trinity@matrix</code> has access to a RabbitMQ server.</li>
+<li>Both nodes are interconnected:</li>
+</ul>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+   <span class="no">true</span>
+</code></pre></div>
+<p>So our final infrastructure would look like the following:<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/bridge-adapter-example.png"
+         alt="A node using a bridge adapter to connect to RabbitMQ"/>A node using a bridge adapter to connect to RabbitMQ</p>
+</span>
+Now that our nodes are connected, every adapter is available to them.</p>
+
+<p>Through <code>:trinity@matrix</code>, the node <code>:neo@matrix</code> can now subscribe to
+a RabbitMQ exchange:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+<span class="ss">:ok</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>Or even publish messages:</p>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<span class="ss">:ok</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<span class="ss">:ok</span>
+</code></pre></div>
+<p>The good thing about this feature is that it works with any adapter that supports Yggdrasil v5.0.</p>
+
+<p><img src="https://media.giphy.com/media/1zRd5ZNo0s6kLPifL1/giphy.gif" alt="The future is now!"></p>
+
+<div class="chapter" style="background-color: var(--deep-blue);">
+    <div class="chapter-content">
+      <strong style="color: white;">IN THE END:</strong>
+      <h2 id="V"
           class="chapter-title"
           style="color: white;">One API to Rule Them All</h2>
       <img src="/assets/img/yggdrasil-easy-pub-sub-in-elixir/chapter.png"
