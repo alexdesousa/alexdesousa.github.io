@@ -30,9 +30,22 @@ user.age = 17
 
 ![Magic!](https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif)
 
-> The contents of this article are a mix between my work experience and the great insights [Mastering PostgreSQL in Application Development](https://www.goodreads.com/book/show/36555832-mastering-postgresql-in-application-development) book provides.
->
-> The code for this article can be found [here](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/f1)
+## Before we start
+
+The contents of this article are a mix between my work experience and the great insights [Mastering PostgreSQL in Application Development](https://www.goodreads.com/book/show/36555832-mastering-postgresql-in-application-development) book provides.
+
+The code for this article can be found [here](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix) and it can be downloaded with the following command:
+
+```bash
+git clone \
+  --depth 2 \
+  -b blog \
+  https://github.com/alexdesousa/alexdesousa.github.io.git examples && \
+cd examples && \
+git filter-branch \
+  --prune-empty \
+  --subdirectory-filter examples/f1 HEAD
+```
 
 ## "My ORM abstracts several SQL dialects"
 
@@ -204,7 +217,7 @@ Now, when translating this query to Ecto, we'll have to use fragments:
 
 from = 1974
 to = 1990
-    
+
 accidents =
   from re in Result,
     join: st in assoc(re, :status),
