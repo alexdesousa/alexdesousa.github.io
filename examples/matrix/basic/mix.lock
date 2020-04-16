@@ -1,0 +1,8 @@
+%{
+  "exreg": {:hex, :exreg, "0.1.0", "377c8cde927e299e3648b19bd7eaf09ec1e3ba02761b0fef5ad75c8df2fd29cf", [:mix], [], "hexpm", "3230b3bf7fa3a01dcf672b7c592e17626c6d5b2b693c8198ed9ce406ab2c827a"},
+  "jason": {:hex, :jason, "1.2.0", "10043418c42d2493d0ee212d3fddd25d7ffe484380afad769a0a38795938e448", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "116747dbe057794c3a3e4e143b7c8390b29f634e16c78a7f59ba75bfa6852e7f"},
+  "phoenix_pubsub": {:hex, :phoenix_pubsub, "1.1.2", "496c303bdf1b2e98a9d26e89af5bba3ab487ba3a3735f74bf1f4064d2a845a3e", [:mix], [], "hexpm", "1f13f9f0f3e769a667a6b6828d29dec37497a082d195cc52dbef401a9b69bf38"},
+  "poolboy": {:hex, :poolboy, "1.5.2", "392b007a1693a64540cead79830443abf5762f5d30cf50bc95cb2c1aaafa006b", [:rebar3], [], "hexpm", "dad79704ce5440f3d5a3681c8590b9dc25d1a561e8f5a9c995281012860901e3"},
+  "skogsra": {:hex, :skogsra, "2.2.3", "f2bb73ecd6c035cdd2971ac9dd6d5489a6481df2c09bd42708ff8157764dd296", [:mix], [{:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: true]}, {:yamerl, "~> 0.7", [hex: :yamerl, repo: "hexpm", optional: true]}], "hexpm", "fac34683a9b00832acbd5967fa5fb56aa8dff4ce1fdc408230a54177a979ba1d"},
+  "yggdrasil": {:hex, :yggdrasil, "5.0.2", "f76d0e7caa5adbfe769e1f67f2455bc80733d52081d788d38951b94100edb49c", [:mix], [{:exreg, "~> 0.1", [hex: :exreg, repo: "hexpm", optional: false]}, {:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}, {:phoenix_pubsub, "~> 1.1", [hex: :phoenix_pubsub, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: false]}, {:skogsra, "~> 2.2", [hex: :skogsra, repo: "hexpm", optional: false]}], "hexpm", "cc33a68e9fa56b0bc20b4ad9cd4d280e7ea75f03c3d84acc7463c6adc5da491c"},
+}
