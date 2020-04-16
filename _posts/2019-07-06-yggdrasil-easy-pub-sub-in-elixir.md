@@ -9,7 +9,11 @@ author: Alex de Sousa
 
 When I started coding in Elixir (around 2016), I was working for a financial company. Our product automatically invested money in the Forex market by copying traders' actions (_market orders_) in real time. We had the following:
 
-{%- include image.html  src = "system.png" alt = "Our System" -%}
+{%- include image.html
+    src = "system.png"
+    alt = "Our System"
+    caption = "Our System"
+    -%}
 
 In words, our system:
 
@@ -51,9 +55,14 @@ If we could generalize those three actions into an API, we could then implement 
    image = "chapter.png"
 %}
 {% include toc.html
+   title = "Yggdrasil as Distributed PubSub"
+   number = "IV"
+   image = "chapter.png"
+%}
+{% include toc.html
    chapter = "In the end"
    title = "One API to Rule Them All"
-   number = "IV"
+   number = "V"
    image = "chapter.png"
 %}
 
@@ -286,7 +295,11 @@ One of the features I really like about RabbitMQ is its queue routing. Its flexi
 
 RabbitMQ uses not only **connections**, but virtual connections called **channels**. The idea of channels is to introduce multiplexing in a single connection. A small system could establish only one connection with RabbitMQ while opening a channel for every single execution thread e.g:
 
-{%- include image.html  src = "rabbitmq-connection.png" alt = "RabbitMQ channel multiplexing" -%}
+{%- include image.html
+    src = "rabbitmq-connection.png"
+    alt = "RabbitMQ channel multiplexing"
+    caption = "A regular RabbitMQ connection"
+    -%}
 
 The rule of thumb would be to use:
 
@@ -310,7 +323,10 @@ Additionally, routing keys support wildcards, for example: `spain.barcelona.*` w
 
 It's easier to see these concepts with an image example:
 
-{%- include image.html  src = "rabbitmq-exchange.png" alt = "RabbitMQ exchange routing" -%}
+{%- include image.html
+    src = "rabbitmq-exchange.png"
+    alt = "RabbitMQ exchange routing"
+    caption = "A RabbitMQ exchange" -%}
 
 In the previous image:
 
@@ -382,7 +398,6 @@ end
 
 ### Lost Messages
 
-
 Yggdrasil will acknowledge the messages as soon as they arrive to the adapter, then it will broadcast them to all the subscribers. If the adapter is alive while the subscribers are restarting/failing, some messages might be lost.
 
 Though it's possible to overcome this problem with exclusive queues, this feature is not implemented yet.
@@ -391,6 +406,162 @@ Though it's possible to overcome this problem with exclusive queues, this featur
 
 {% include chapter.html
    number = 4 %}
+
+Yggdrasil's default adapter supports multi-node subscriptions out-of-the-box thanks to [Phoenix PubSub](https://github.com/phoenixframework/phoenix_pubsub). This distributed capabilities can be extended to any adapter compatible with Yggdrasil v5.0 without writing a single line of extra code.
+
+![Spock is interested!](https://media.giphy.com/media/Qtpdtlk9rpb8PKK0ih/giphy.gif)
+
+## Before We Start
+
+I've used [this example project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix) for the code in this article. You can skip this section safely as long as you remember the following:
+
+- `Basic` project has only Yggdrasil.
+- `Rabbit` project has Yggdrasil for RabbitMQ.
+- A RabbitMQ server is available.
+- The host name is called `matrix`. Your machine's will be different.
+
+If you want to follow along with the examples in this article, you can download the example project using the following command:
+
+```bash
+git clone \
+  --depth 2 \
+  -b blog \
+  https://github.com/alexdesousa/alexdesousa.github.io.git examples && \
+cd examples && \
+git filter-branch \
+  --prune-empty \
+  --subdirectory-filter examples/matrix HEAD
+```
+
+In the folder you'll find:
+
+- [Basic project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/basic) that has a basic version of [Yggdrasil](https://github.com/gmtprime/yggdrasil).
+- [Rabbit project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/rabbit) that has [Yggdrasil for RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
+- A docker compose with a RabbitMQ server:
+
+   ```bash
+   $ cd rabbit && docker-compose up
+   ```
+
+![Make it so](https://media.giphy.com/media/bKnEnd65zqxfq/giphy.gif)
+
+## Basic Message Distribution
+
+Yggdrasil's default adapter piggybacks on Phoenix PubSub for the message delivery, inheriting its distributed capabilities e.g. let's say we have the following:
+
+- The node `:neo@matrix` using `Basic` project:
+
+   ```bash
+   $ iex --sname neo -S mix
+   ```
+
+- The node `:smith@matrix` also using `Basic` project:
+
+   ```bash
+   $ iex --sname smith -S mix
+   ```
+
+- Both nodes are interconnected:
+
+   ```elixir
+   iex(smith@matrix)1> Node.connect(:neo@matrix)
+   true
+   ```
+
+Then `:smith@matrix` can subscribe to any channel where `:neo@matrix` is publishing messages e.g:
+
+In `:smith@matrix`, we subscribe to the channel `"private"`:
+
+```elixir
+iex(smith@matrix)2> Yggdrasil.subscribe(name: "private")
+:ok
+iex(smith@matrix)3> flush()
+{:Y_CONNECTED, %Yggdrasil.Channel{...}}
+:ok
+```
+
+In `:neo@matrix`, we publish a message in the channel `"private"`:
+
+```elixir
+iex(neo@matrix)1> channel = [name: "private"]
+iex(neo@matrix)2> Yggdrasil.publish(channel, "What's the Matrix?")
+:ok
+```
+
+Finally, we can flush `:smith@matrix` mailbox and find our message:
+
+```elixir
+iex(smith@matrix)4> flush()
+{:Y_EVENT, %Yggdrasil.Channel{...}, "What's the Matrix?"}
+:ok
+```
+
+Distributed pubsub as simple as that.
+
+![Easy](https://media.giphy.com/media/dWy2WwcB3wvX8QA1Iu/giphy.gif)
+
+## Bridged Message Distribution
+
+The bridge adapter makes a _bridge_ between any Yggdrasil adapter and the default adapter. This allows adapters to inherit the distributed capabilities of the default adapter e.g. let's say we have the following:
+
+- The node `:neo@matrix` using `Basic` project:
+
+   ```bash
+   $ iex --sname neo -S mix
+   ```
+
+- The node `:trinity@matrix` using `Rabbit` project:
+
+   ```bash
+   $ iex --sname trinity -S mix
+   ```
+
+- The node `:trinity@matrix` has access to a RabbitMQ server.
+- Both nodes are interconnected:
+
+   ```elixir
+   iex(trinity@matrix)1> Node.connect(:neo@matrix)
+   true
+   ```
+
+So our final infrastructure would look like the following:
+
+{%- include image.html
+    src = "bridge-adapter-example.png"
+    alt = "A node using a bridge adapter to connect to RabbitMQ"
+    caption = "A node using a bridge adapter to connect to RabbitMQ"
+    -%}
+
+Now that our nodes are connected, every adapter is available to them.
+
+Through `:trinity@matrix`, the node `:neo@matrix` can now subscribe to
+a RabbitMQ exchange:
+
+```elixir
+iex(neo@matrix)1> channel = [name: {"amq.topic", "private"}, adapter: :rabbitmq]
+iex(neo@matrix)2> Yggdrasil.subscribe(channel)
+:ok
+iex(neo@matrix)3> flush()
+{:Y_CONNECTED, %Yggdrasil.Channel{...}}
+:ok
+```
+
+Or even publish messages:
+
+```elixir
+iex(neo@matrix)4> Yggdrasil.publish(channel, "What's the Matrix?")
+:ok
+iex(neo@matrix)3> flush()
+{:Y_EVENT, %Yggdrasil.Channel{...}, "What's the Matrix?"}
+:ok
+```
+
+The good thing about this feature is that it works with any adapter that supports Yggdrasil v5.0.
+
+![The future is now!](https://media.giphy.com/media/1zRd5ZNo0s6kLPifL1/giphy.gif)
+
+{% include chapter.html
+   number = 5 %}
 
 [Yggdrasil](https://github.com/gmtprime/yggdrasil) hides the complexity of a pub/sub and let's you focus in what really matters: **messages**.
 
