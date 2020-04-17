@@ -57,7 +57,7 @@
   "headline": "My Worst Bug",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2020-04-17T00:00:00+00:00",
-  "dateModified": "2020-04-17T17:01:59+00:00",
+  "dateModified": "2020-04-17T17:11:09+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -119,7 +119,7 @@
 
 <p>I was desperate, so I compiled the DLL with debug symbols and then I de-compiled it using <a href="http://www.ollydbg.de/">OllyDBG</a>.</p>
 
-<p>I started reading the DLL assembly code ... <strong>for a week and a half</strong>! Reading assembly was horrible. I consider switching careers. But then I got to the instruction that failed! Eureka! I couldn&#39;t believe it! It felt good to finally understand the bug!</p>
+<p>I started reading the DLL assembly code ... <strong>for a week and a half</strong>! Reading assembly was horrible. I considered switching careers. But then I got to the instruction that failed! Eureka! I couldn&#39;t believe it! It felt good to finally understand the bug!</p>
 
 <p><img src="https://media.giphy.com/media/WR2W4OIee3YBQbIbID/giphy.gif" alt="Eureka!"></p>
 
@@ -148,13 +148,13 @@
 If RapidJSON needed to store an integer, a string and a boolean value, then it could fail randomly depending on the length of the string. e.g. given the integer <code>42</code> and the boolean <code>true</code>:</p>
 
 <ul>
-<li>For the string <code>Hey</code> would succeed:<span class="article-image">
+<li>For the string <code>Hey</code>, it would succeed:<span class="article-image">
 <p class="article-image-caption">
 <img class="article-image"
      src="/assets/img/my-worst-bug/memory_allocation_success.png"
      alt="Memory allocation success."/>Memory allocation success.</p>
 </span></li>
-<li>For the string <code>Hi</code> would fail:<span class="article-image">
+<li>For the string <code>Hi</code>, it would fail:<span class="article-image">
 <p class="article-image-caption">
 <img class="article-image"
      src="/assets/img/my-worst-bug/memory_allocation_fail.png"
@@ -175,7 +175,7 @@ A debugging nightmare!</li>
 
 <p><img src="https://media.giphy.com/media/3o7TKCEuECLAqDYEY8/giphy.gif" alt="Nightmare!"></p>
 
-<p>I hope whatever bug you&#39;re dealing with at the moment gets solve soon!</p>
+<p>I hope whatever bug you&#39;re dealing with at the moment gets solved soon!</p>
 </article><hr><div class="bio-info">
     <img class="bio-info-child bio-avatar"
          src="/assets/img/handle/alex.jpg"
