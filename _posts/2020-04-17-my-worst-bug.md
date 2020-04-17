@@ -22,7 +22,7 @@ After several days of testing, I realized the production server always died with
 
 I was desperate, so I compiled the DLL with debug symbols and then I de-compiled it using [OllyDBG](http://www.ollydbg.de/).
 
-I started reading the DLL assembly code ... **for a week and a half**! Reading assembly was horrible. I consider switching careers. But then I got to the instruction that failed! Eureka! I couldn't believe it! It felt good to finally understand the bug!
+I started reading the DLL assembly code ... **for a week and a half**! Reading assembly was horrible. I considered switching careers. But then I got to the instruction that failed! Eureka! I couldn't believe it! It felt good to finally understand the bug!
 
 ![Eureka!](https://media.giphy.com/media/WR2W4OIee3YBQbIbID/giphy.gif)
 
@@ -48,7 +48,7 @@ It's easier to see with an image:
 
 If RapidJSON needed to store an integer, a string and a boolean value, then it could fail randomly depending on the length of the string. e.g. given the integer `42` and the boolean `true`:
 
-- For the string `Hey` would succeed:
+- For the string `Hey`, it would succeed:
 
 {%- include image.html
     src = "memory_allocation_success.png"
@@ -56,7 +56,7 @@ If RapidJSON needed to store an integer, a string and a boolean value, then it c
     caption = "Memory allocation success."
     -%}
 
-- For the string `Hi` would fail:
+- For the string `Hi`, it would fail:
 
 {%- include image.html
     src = "memory_allocation_fail.png"
@@ -78,4 +78,4 @@ Now I avoid C/C++ at all costs!
 
 ![Nightmare!](https://media.giphy.com/media/3o7TKCEuECLAqDYEY8/giphy.gif)
 
-I hope whatever bug you're dealing with at the moment gets solve soon!
+I hope whatever bug you're dealing with at the moment gets solved soon!
