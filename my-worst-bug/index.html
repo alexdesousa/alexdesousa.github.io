@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head><!-- general -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Debugging C/C++ can sometimes be a nightmare." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa
+" />
+
+<!-- title -->
+<title>My Worst Bug | Alex de Sousa's Blog</title>
+
+<!--  canonical -->
+<link rel="canonical" href="https://thebroken.link/my-worst-bug/"/>
+
+<!-- favicon -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+
+<!-- Google card -->
+<meta itemprop="description" content="Debugging C/C++ can sometimes be a nightmare." />
+<meta itemprop="image" content="https://thebroken.link/assets/img/my-worst-bug/bug.png" />
+
+<!-- Facebook card -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Alex de Sousa's Blog" />
+<meta property="og:title" content="My Worst Bug" />
+<meta property="og:image" content="https://thebroken.link/assets/img/my-worst-bug/bug.png" />
+<meta property="og:url" content="https://thebroken.link/my-worst-bug/" />
+<meta property="og:description" content="Debugging C/C++ can sometimes be a nightmare." />
+
+<!-- Twitter card -->
+<meta name="twitter:title" content="My Worst Bug" />
+<meta name="twitter:description" content="Debugging C/C++ can sometimes be a nightmare." />
+<meta name="twitter:image" content="https://thebroken.link/assets/img/my-worst-bug/bug.png" />
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="Alex de Sousa's Blog">
+<meta name="twitter:site" content="@thebroken_link">
+
+<!-- styles --><link rel="stylesheet"
+      href="/assets/css/article.css?version=20191116"><!-- metadata --><script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/my-worst-bug/"
+  },
+  "headline": "My Worst Bug",
+  "image": ["https://thebroken.link/assets/img/logo.png"],
+  "datePublished": "2020-04-17T00:00:00+00:00",
+  "dateModified": "2020-04-17T16:45:36+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa"
+  },
+  "description": "Debugging C/C++ can sometimes be a nightmare."
+}
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
+  </script><script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body>
+    <div class="page">
+      <div class="navigation"><a class="navigation-logo" href="/">
+  <img class="logo-image"
+       alt="Alex de Sousa's Blog"
+       src="/assets/img/logo.png"/>
+</a>
+<nav class="navigation-bar"><a href="/"
+       class="nav-link-inactive">Blog</a><a href="/cv/"
+       class="nav-link-inactive">CV</a></nav>
+</div>
+      <div class="content">
+        <article class="article"><div class="header">
+  <h1 class="title">My Worst Bug</h1><div class="header-info">
+    <img class="header-info-child avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="header-info-child author">Alex de Sousa
+</div>
+    <div class="header-info-child read-time">1 min read</div>
+    <a class="header-info-child share-button share-twitter"
+       href="https://twitter.com/intent/tweet?text=Debugging+C%2FC%2B%2B+can+sometimes+be+a+nightmare.&url=https://thebroken.link/my-worst-bug/&via=thebroken_link"
+       target="_blank">
+    </a>
+  </div></div>
+<p>I was building a small plugin in C++ for an MT4 Server (ForEx trading server). The output of the project was a Windows DLL. Using the servers protocol, I managed to get JSON strings and parse them with <a href="https://rapidjson.org/">RapidJSON</a>. Everything ran smoothly in my virtual machine and in some experimental servers. Even Valgrind couldn&#39;t find memory leaks. I thought the plugin was ready for production...</p>
+
+<p><strong>Oh boy was I so wrong!</strong></p>
+
+<blockquote>
+<p><strong>Note</strong>: RapidJSON is an amazing library and if I would need to parse JSON in C/C++ again, I would use it without hesitation.</p>
+</blockquote>
+
+<p><img src="https://media.giphy.com/media/EimNpKJpihLY4/giphy.gif" alt="Fail!"></p>
+
+<h2 id="debugging-the-problem">Debugging The Problem</h2>
+
+<p>Once I deployed the plugin, everything seemed fine... until the next day! A nasty segmentation fault killed the server. The plugin made us loose some money and I had to roll back the deploy.</p>
+
+<p>After several days of testing, I realized the production server always died with the same set of data. I was able to pinpoint the error to RapidJSON. Something weird was happening when the memory was allocated, but none of the tools I was using to debug this were reporting any problems.</p>
+
+<p>I was desperate, so I compiled the DLL with debugging symbols and then I de-compiled it using <a href="http://www.ollydbg.de/">OllyDBG</a>.</p>
+
+<p>I started reading the DLL assembly code ... <strong>for a week and a half</strong>! Reading assembly was horrible. I consider switching careers. But then I got to the instruction that failed! Eureka! I couldn&#39;t believe it! It felt good to finally understand the bug!</p>
+
+<p><img src="https://media.giphy.com/media/WR2W4OIee3YBQbIbID/giphy.gif" alt="Eureka!"></p>
+
+<h2 id="the-bug">The Bug!</h2>
+
+<p>The problem was RapidJSON&#39;s custom allocator:</p>
+
+<ul>
+<li>Compressed the data in memory.</li>
+<li>Allocated only what it needed.</li>
+</ul>
+
+<p>The production machine architecture:</p>
+
+<ul>
+<li>Allocated the memory RapidJSON asked for.</li>
+<li>Ignored the way RapidJSON wanted the data to be structured.</li>
+</ul>
+
+<p>It&#39;s easier to see with an image:<span class="article-image">
+  <p class="article-image-caption">
+    <img class="article-image"
+         src="/assets/img/my-worst-bug/memory_allocation.png"
+         alt="RapidJSON Custom Allocation Vs. What The Machine Actually Did"/>RapidJSON Custom Allocation Vs. What The Machine Actually Did</p>
+</span>
+If RapidJSON needed to store an integer, a string and a boolean value, then it
+could fail randomly depending on the length of the string:</p>
+
+<ul>
+<li>For <code>42</code>, <code>Hey</code> and <code>true</code> would succeed.<span class="article-image">
+<p class="article-image-caption">
+<img class="article-image"
+     src="/assets/img/my-worst-bug/memory_allocation_success.png"
+     alt="Memory allocation success."/>Memory allocation success.</p>
+</span></li>
+<li>For <code>42</code>, <code>Hi</code> and <code>true</code> would fail.<span class="article-image">
+<p class="article-image-caption">
+<img class="article-image"
+     src="/assets/img/my-worst-bug/memory_allocation_fail.png"
+     alt="Memory allocation fail."/>Memory allocation fail.</p>
+</span>
+A debugging nightmare!</li>
+</ul>
+
+<h2 id="the-solution">The Solution</h2>
+
+<p>I just made RapidJSON use the machine&#39;s allocator instead of the custom one. Spent two weeks debugging something to change a single word in the code!</p>
+
+<p><img src="https://media.giphy.com/media/10PDlC02A1L5Cw/giphy.gif" alt="I&#39;m an idiot!"></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Now I avoid C/C++ at all costs!</p>
+
+<p><img src="https://media.giphy.com/media/3o7TKCEuECLAqDYEY8/giphy.gif" alt="Nightmare!"></p>
+
+<p>I hope whatever bug you&#39;re dealing with at the moment gets solve soon!</p>
+</article><hr><div class="bio-info">
+    <img class="bio-info-child bio-avatar"
+         src="/assets/img/handle/alex.jpg"
+         alt="Alex de Sousa
+"/>
+    <div class="bio-info-child author">Alex de Sousa
+</div>
+    <div class="bio-info-child bio-description"><a href="https://refillaqua.com">Refill Aqua</a> co-founder. Elixir alchemist. Tech enthusiast.
+</div>
+  </div><div class="boxes"><!-- Previous article --><div class="box">
+  <img class="box-child box-image"
+       alt="My Road to 8 Week Streak"
+       src="https://thebroken.link/assets/img/my-road-to-8-week-streak/pen.jpg"/>
+  <span class="box-child box-read-time">3 min read</span>
+  <a class="box-child box-title nav-link-inactive"
+     href="/my-road-to-8-week-streak/">My Road to 8 Week Streak</a>
+  <span class="box-child box-description">Writing is hard. Writing requires practice.</span>
+</div>
+</div></div>
+      <div class="footer"><div class="footer-copyright">
+  <span class="by-alex-de-sousa"> Copyright 2020 Alex de Sousa</span>
+</div>
+<div class="footer-social-media">
+  <a href="https://github.com/alexdesousa">
+    <img class="social-media github"
+        src="/assets/img/social/github.png"
+        alt="Twitter"/>
+  </a>
+  <a href="https://twitter.com/thebroken_link">
+    <img class="social-media twitter"
+        src="/assets/img/social/twitter.png"
+        alt="Twitter"/>
+  </a>
+</div>
+</div>
+    </div>
+  </body>
+</html>
