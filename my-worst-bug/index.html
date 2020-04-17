@@ -57,7 +57,7 @@
   "headline": "My Worst Bug",
   "image": ["https://thebroken.link/assets/img/logo.png"],
   "datePublished": "2020-04-17T00:00:00+00:00",
-  "dateModified": "2020-04-17T16:45:36+00:00",
+  "dateModified": "2020-04-17T17:01:59+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa"
@@ -101,12 +101,12 @@
        target="_blank">
     </a>
   </div></div>
-<p>I was building a small plugin in C++ for an MT4 Server (ForEx trading server). The output of the project was a Windows DLL. Using the servers protocol, I managed to get JSON strings and parse them with <a href="https://rapidjson.org/">RapidJSON</a>. Everything ran smoothly in my virtual machine and in some experimental servers. Even Valgrind couldn&#39;t find memory leaks. I thought the plugin was ready for production...</p>
+<p>I was building a small plugin in C++ for an MT4 Server (ForEx trading server). The output of the project was a Windows DLL. Using the server&#39;s protocol, I managed to get JSON strings and parse them with <a href="https://rapidjson.org/">RapidJSON</a>. Everything ran smoothly in my virtual machine and in some development servers. Even Valgrind couldn&#39;t find memory leaks. I thought the plugin was ready for production...</p>
 
 <p><strong>Oh boy was I so wrong!</strong></p>
 
 <blockquote>
-<p><strong>Note</strong>: RapidJSON is an amazing library and if I would need to parse JSON in C/C++ again, I would use it without hesitation.</p>
+<p><strong>Note</strong>: RapidJSON is an amazing library and if I need to parse JSON in C/C++ again, I would use it without hesitation.</p>
 </blockquote>
 
 <p><img src="https://media.giphy.com/media/EimNpKJpihLY4/giphy.gif" alt="Fail!"></p>
@@ -117,7 +117,7 @@
 
 <p>After several days of testing, I realized the production server always died with the same set of data. I was able to pinpoint the error to RapidJSON. Something weird was happening when the memory was allocated, but none of the tools I was using to debug this were reporting any problems.</p>
 
-<p>I was desperate, so I compiled the DLL with debugging symbols and then I de-compiled it using <a href="http://www.ollydbg.de/">OllyDBG</a>.</p>
+<p>I was desperate, so I compiled the DLL with debug symbols and then I de-compiled it using <a href="http://www.ollydbg.de/">OllyDBG</a>.</p>
 
 <p>I started reading the DLL assembly code ... <strong>for a week and a half</strong>! Reading assembly was horrible. I consider switching careers. But then I got to the instruction that failed! Eureka! I couldn&#39;t believe it! It felt good to finally understand the bug!</p>
 
@@ -125,7 +125,7 @@
 
 <h2 id="the-bug">The Bug!</h2>
 
-<p>The problem was RapidJSON&#39;s custom allocator:</p>
+<p>The problem was that RapidJSON&#39;s custom allocator:</p>
 
 <ul>
 <li>Compressed the data in memory.</li>
@@ -145,17 +145,16 @@
          src="/assets/img/my-worst-bug/memory_allocation.png"
          alt="RapidJSON Custom Allocation Vs. What The Machine Actually Did"/>RapidJSON Custom Allocation Vs. What The Machine Actually Did</p>
 </span>
-If RapidJSON needed to store an integer, a string and a boolean value, then it
-could fail randomly depending on the length of the string:</p>
+If RapidJSON needed to store an integer, a string and a boolean value, then it could fail randomly depending on the length of the string. e.g. given the integer <code>42</code> and the boolean <code>true</code>:</p>
 
 <ul>
-<li>For <code>42</code>, <code>Hey</code> and <code>true</code> would succeed.<span class="article-image">
+<li>For the string <code>Hey</code> would succeed:<span class="article-image">
 <p class="article-image-caption">
 <img class="article-image"
      src="/assets/img/my-worst-bug/memory_allocation_success.png"
      alt="Memory allocation success."/>Memory allocation success.</p>
 </span></li>
-<li>For <code>42</code>, <code>Hi</code> and <code>true</code> would fail.<span class="article-image">
+<li>For the string <code>Hi</code> would fail:<span class="article-image">
 <p class="article-image-caption">
 <img class="article-image"
      src="/assets/img/my-worst-bug/memory_allocation_fail.png"
@@ -166,7 +165,7 @@ A debugging nightmare!</li>
 
 <h2 id="the-solution">The Solution</h2>
 
-<p>I just made RapidJSON use the machine&#39;s allocator instead of the custom one. Spent two weeks debugging something to change a single word in the code!</p>
+<p>I just made RapidJSON use the machine&#39;s allocator instead of the custom one. Spent two weeks debugging something and changed just a single word in the code!</p>
 
 <p><img src="https://media.giphy.com/media/10PDlC02A1L5Cw/giphy.gif" alt="I&#39;m an idiot!"></p>
 
