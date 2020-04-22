@@ -6,6 +6,10 @@ description: Debugging C/C++ can sometimes be a nightmare.
 handle: alex
 ---
 
+Some bugs pull you to the abyss and leave you there. They're the Balrog to our Gandalf. Once you beat them though, you're wiser and more powerful!
+
+![Gandalf falling!](https://media.giphy.com/media/rBblrZDuvOaJi/giphy.gif)
+
 I was building a small plugin in C++ for an MT4 Server (ForEx trading server). The output of the project was a Windows DLL. Using the server's protocol, I managed to get JSON strings and parse them with [RapidJSON](https://rapidjson.org/). Everything ran smoothly in my virtual machine and in some development servers. Even Valgrind couldn't find memory leaks. I thought the plugin was ready for production...
 
 **Oh boy was I so wrong!**
