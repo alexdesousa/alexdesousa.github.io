@@ -1,3 +1,24 @@
+contractbook:
+  cover:
+    icon: "job"
+    source: "/assets/img/cv/contractbook.jpg"
+    profile: "https://unsplash.com/@nickkarvounis"
+    author: "Nick Karvouns"
+  job:
+    type: "Remote"
+    beginning: "May 2020"
+    ending: "Present"
+    title: "Senior Software Developer"
+    website: "https://contractbook.com"
+    name: "Contractbook ApS"
+  description:
+    - "I was hired to be part of the team building a new product focused on the Legal Industry"
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "postgresql"
+    - "zapier"
+    - "ci/cd"
 asolvi:
   cover:
     icon: "job"
@@ -7,7 +28,7 @@ asolvi:
   job:
     type: "Remote"
     beginning: "September 2019"
-    ending: "Present"
+    ending: "May 2020"
     title: "Senior Software Developer"
     website: "https://asolvi.com"
     name: "Asolvi AS"
