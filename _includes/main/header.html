@@ -1,0 +1,19 @@
+{%- comment -%}
+Main page header.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="flex w-full p-0 m-0 bg-bottom bg-cover"
+     style="background-image: url('/assets/images/cover.jpg'); height: 60vh; max-height: 460px">
+  <div class="flex flex-wrap flex-grow content-center container px-6 mx-auto text-center break-normal">
+    <span class="w-full text-2xl font-bold md:tracking-wider md:text-4xl text-{{- swatch -}}-100">
+      {%- include main/logo.html -%}
+      {{- site.data.defaults.t[include.lang].blog_name -}}
+    </span>
+    <h1 class="w-full px-2 py-4 text-base font-medium tracking-widest uppercase text-{{- swatch -}}-100 md:text-lg">
+      {{- site.data.defaults.t[include.lang].page.title -}}
+    </h1>
+  </div>
+</div>

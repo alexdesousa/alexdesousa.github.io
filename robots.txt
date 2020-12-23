@@ -1,3 +1,3 @@
-User-agent: *
-Allow: /
-Sitemap: https://thebroken.link/sitemap.xml
+---
+---
+{%- include utils/robots.txt -%}

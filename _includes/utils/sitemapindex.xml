@@ -1,0 +1,12 @@
+{%- comment -%}
+Site map index.
+{%- endcomment -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {%- for lang in site.data.languages.list %}
+  <!-- {{- lang -}} -->
+  <sitemap>
+    <loc>{{-site.url-}}/sitemap_{{- lang -}}.xml</loc>
+  </sitemap>
+  {%- endfor %}
+</sitemapindex>

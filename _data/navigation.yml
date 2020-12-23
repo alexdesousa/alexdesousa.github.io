@@ -1,4 +1,5 @@
-- name: Blog
-  link: /
-- name: CV
-  link: /cv/
+- name: "Alex de Sousa's CV"
+  link: "https://thebroken.link/cv/"
+  t:
+    en: "Alex de Sousa's CV"
+    es: "CV de Alex de Sousa"

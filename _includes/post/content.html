@@ -1,0 +1,18 @@
+{%- comment -%}
+Post content.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="container max-w-5xl mx-auto -mt-16 md:-mt-20 lg:-mt-32">
+  <div class="mx-0 sm:mx-6">
+    <div id="post-content" class="w-full p-8 bg-white text-{{- swatch -}}-900 prose max-w-none md:p-16">
+      {% include utils/soundcloud.html number = page.soundcloud lang = include.lang %}
+      {{ content }}
+    </div>
+    {%- include post/content/author.html lang = include.lang -%}
+    {%- include main/content/subscribe.html lang = include.lang -%}
+    {%- include post/content/preview.html lang = include.lang -%}
+  </div>
+</div>

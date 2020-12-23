@@ -1,0 +1,13 @@
+{%- comment -%}
+Displays page title.
+
+Options:
+  - lang: Page language.
+  - title: Page title.
+{%- endcomment -%}
+<title>
+  {{- include.title
+      | append: " | "
+      | append: site.data.defaults.t[include.lang].blog_name
+  -}}
+</title>

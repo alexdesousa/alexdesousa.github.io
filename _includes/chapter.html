@@ -1,46 +1,22 @@
-{%- if include.number -%}
-  {%- assign chapter = toc_chapter[include.number] -%}
-  {%- assign number = toc_number[include.number] -%}
-  {%- assign title = toc_title[include.number] -%}
-  {%- assign image = toc_image[include.number] -%}
-  {%- assign background_color = toc_background_color[include.number] -%}
-  {%- assign color = toc_color[include.number] -%}
-  <div class="chapter" style="background-color: {{ background_color }};">
-    <div class="chapter-content">
-      <strong style="color: {{ color }};">
-        {{- chapter -}}
-      </strong>
-      <h2 id="{{- number -}}"
-          class="chapter-title"
-          style="color: {{ color }};">
-        {{- title -}}
-      </h2>
-      <img src="{{- image -}}"
-           alt="{{- chapter }} {{ title -}}"/>
-    </div>
+{%- comment -%}
+Adds a chapter header.
+{%- endcomment -%}
+{%- assign chapter_index = chapter_index
+  | default: -1
+  | plus: 1
+-%}
+{%- if chapter_index < toc_index -%}
+  <div class="chapter">
+    <h2 id="{{ chapter_index }}">
+      {{ toc_title[chapter_index] }}
+    </h2>
+    <img class="w-48 md:w-64 h-auto"
+         style="filter: invert(100%);"
+         src="{{ toc_image[chapter_index] }}"
+         alt="{{ toc_title[chapter_index] }}"/>
   </div>
-{%- endif -%}
-
-{%- if include.background_color -%}
-  {%- assign background_color = include.background_color -%}
 {%- else -%}
-  {%- assign background_color = "var(--deep-blue)" -%}
-{%- endif -%}
-{%- if include.color -%}
-  {%- assign color = include.color -%}
-{%- else -%}
-  {%- assign color = "white" -%}
-{%- endif -%}
-{%- if include.number -%}
-  {%- assign chapter = "CHAPTER "
-      | append: include.number
-      | append: ":"
-  -%}
-{%- endif -%}
-{%- if include.image -%}
-  {%- assign image = "/assets/img"
-    | append: page.id
-    | append: "/"
-    | append: include.image
-  -%}
+  <h2 class="font-bold text-red-500">
+    There's no table of contents entry for this chapter
+  </h2>
 {%- endif -%}

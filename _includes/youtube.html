@@ -1,10 +1,16 @@
 {%- comment -%}
-  Receives a YouTube link.
+Displays an embedded YouTube video.
+
+Options:
+  - link: Link to the YouTube video.
 {%- endcomment -%}
 {%- assign link = include.link | split: "?v=" | last -%}
-<iframe class="youtube-video"
-        src="https://www.youtube.com/embed/{{- link -}}"
-        frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-</iframe>
+<p>
+  <div class="youtube-video">
+    <iframe src="https://www.youtube.com/embed/{{- link -}}"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+    </iframe>
+  </div>
+</p>

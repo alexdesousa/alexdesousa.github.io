@@ -1,0 +1,37 @@
+{%- assign lang = page.lang | default: "en" -%}
+<!DOCTYPE html>
+<html lang="{{- lang -}}">
+  <head>
+    {%- include main/head.html lang = lang -%}
+    {%- assign scroll_color = site.data.defaults.scroll_color | default: "#9FCFD9" -%}
+    {%- assign highlight_theme = site.data.defaults.highlight_theme | default: "manni" %}
+    <link rel="stylesheet" href="/assets/css/pygments/{{- highlight_theme -}}.css" />
+    <style>
+      #progress-bar {
+        --scroll: 0%;
+        background: linear-gradient(to right, {{ scroll_color }} var(--scroll), transparent 0);
+        height: 0.25rem;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="font-sans leading-normal tracking-normal bg-gray-100">
+    {%- include post/navigation.html lang = lang -%}
+    {%- include post/header.html lang = lang -%}
+    {%- include post/content.html lang = lang -%}
+    {%- include main/footer.html lang = lang -%}
+
+    <script>
+      document.addEventListener('scroll', function() {
+        const scrollTop = document.documentElement['scrollTop'] || document.body['scrollTop'];
+        const scrollHeight = document.documentElement['scrollHeight'] || document.body['scrollHeight'];
+        const scrollBottom = scrollHeight - document.documentElement.clientHeight;
+        const scroll = scrollTop / scrollBottom * 100;
+
+        document
+          .getElementById('progress-bar')
+          .style.setProperty('--scroll', `${scroll}%`);
+      }, {passive: true});
+    </script>
+  </body>
+</html>

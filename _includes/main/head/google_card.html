@@ -1,0 +1,9 @@
+{%- comment -%}
+Displays Google card meta tags.
+
+Options
+  - preview_image: Image preview in card.
+  - description: Page description.
+{%- endcomment -%}
+<meta itemprop="description" content="{{- include.description -}}" />
+<meta itemprop="image" content="{{- include.preview_image -}}" />

@@ -1,17 +1,16 @@
 {%- comment -%}
-  Receives the link to the image relative to the article.
-{%- endcomment -%}
-{%- assign article_image = include.src
-    | prepend: "/"
-    | prepend: page.id
-    | prepend: "/assets/img"
--%}
+Image with caption.
 
-<span class="article-image">
-  <p class="article-image-caption">
-    <img class="article-image"
-         src="{{- article_image -}}"
-         alt="{{- include.alt -}}"/>
-    {{- include.caption -}}
-  </p>
-</span>
+Options:
+  - src: Image URL.
+  - alt: Image alt text.
+  - caption: Image caption.
+{%- endcomment -%}
+<p>
+  <figure class="flex flex-col items-center w-full h-auto mx-auto">
+    <img src="{{ page.id }}/{{ include.src }}" alt="{{ include.alt }}" />
+    <figcaption class="text-center">
+      {{ include.caption | markdownify }}
+    </figcaption>
+  </figure>
+</p>

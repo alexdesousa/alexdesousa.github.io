@@ -1,0 +1,52 @@
+url: "{{- site.data.defaults.url }}"
+permalink: /:title/
+plugins:
+  - jekyll-last-modified-at
+markdown: redcarpet
+exclude: [
+  "Gemfile",
+  "Gemfile.lock",
+  "README.md",
+  "tailwind.config.js",
+  "package.json",
+  "package-lock.json",
+  "postcss.config.js",
+  "css",
+  "node_modules",
+  "profiles",
+  "examples",
+  "runblog.sh",
+  ".logo",
+  ".cover"
+]
+redcarpet:
+  extensions: [
+    "tables",
+    "strikethrough",
+    "no_intra_emphasis",
+    "superscript",
+    "with_toc_data"
+  ]
+mini_magick:
+  logo:
+    source: ".logo"
+    destination: "assets/images/"
+  cover:
+    source: ".cover"
+    destination: "assets/images/"
+    resize: "1080"
+  profile:
+    source: "profiles"
+    destination: "assets/images/profile/"
+    resize: "100"
+  {% for post in site.posts %}
+  {%- assign name = post.id | remove_first: "/" -%}
+  {{ name }}:
+    source: "_posts/{{ name }}/"
+    destination: "/{{ name }}/"
+    resize: "800"
+  {{ name }}-small:
+    source: "_posts/{{ name }}/"
+    destination: "/{{ name }}/small/"
+    resize: "400"
+  {% endfor -%}

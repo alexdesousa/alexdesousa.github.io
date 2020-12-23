@@ -1,10 +1,13 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "managing-dotfiles-with-ansible"
 title: "Managing Dotfiles with Ansible"
-description: A small tutorial on how to use Ansible to manage your dotfiles.
+description: "A small tutorial on how to use Ansible to manage your dotfiles."
+image: dots.jpg
+image_link: "https://unsplash.com/photos/flRN6KYpl1A"
+image_author: "Josh Riemer"
 handle: alex
-image: dots.png
-author: Alex de Sousa
 ---
 
 When developers get tired of configuring again and again our machines, we tend to create a dotfiles repository.

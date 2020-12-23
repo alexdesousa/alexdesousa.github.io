@@ -1,0 +1,43 @@
+{%- comment -%}
+Post previews.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- assign current = page -%}
+{%- for i in (1..site.posts.size) -%}
+  {%- if current.next and current.next.lang == include.lang -%}
+    {%- assign next = current.next -%}
+    {%- break -%}
+  {%- elsif current.next -%}
+    {%- assign current = current.next -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign current = page -%}
+{%- for i in (1..site.posts.size) -%}
+  {%- if current.previous and current.previous.lang == include.lang -%}
+    {%- assign previous = current.previous -%}
+    {%- break -%}
+  {%- elsif current.previous -%}
+    {%- assign current = current.previous -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if previous or next -%}
+<div class="flex flex-wrap justify-center py-6">
+  {%- if next -%}
+  {%- include main/content/small_card.html
+      lang = include.lang
+      post = next
+      lg = "w-5/12"
+  -%}
+  {%- endif -%}
+
+  {%- if previous -%}
+  {%- include main/content/small_card.html
+      lang = include.lang
+      post = previous
+      lg = "w-5/12"
+  -%}
+  {%- endif -%}
+</div>
+{%- endif -%}

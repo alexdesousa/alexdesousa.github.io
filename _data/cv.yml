@@ -1,7 +1,7 @@
 contractbook:
   cover:
     icon: "job"
-    source: "/assets/img/cv/contractbook.jpg"
+    source: "/cv/contractbook.jpg"
     profile: "https://unsplash.com/@nickkarvounis"
     author: "Nick Karvouns"
   job:
@@ -22,7 +22,7 @@ contractbook:
 asolvi:
   cover:
     icon: "job"
-    source: "/assets/img/cv/asolvi.jpg"
+    source: "/cv/asolvi.jpg"
     profile: "https://unsplash.com/@simowilliams"
     author: "Simon Williams"
   job:
@@ -48,7 +48,7 @@ asolvi:
 refill_aqua:
   cover:
     icon: "project"
-    source: "/assets/img/cv/refill_aqua.jpg"
+    source: "/cv/refill_aqua.jpg"
     profile: "https://unsplash.com/@benjagremler"
     author: "Benjamín Gremler"
   job:
@@ -72,7 +72,7 @@ refill_aqua:
 blog:
   cover:
     icon: "project"
-    source: "/assets/img/cv/blog.jpg"
+    source: "/cv/blog.jpg"
     profile: "https://unsplash.com/@jjying"
     author: "JJ Ying"
   job:
@@ -92,7 +92,7 @@ blog:
 derivco:
   cover:
     icon: "job"
-    source: "/assets/img/cv/derivco.jpg"
+    source: "/cv/derivco.jpg"
     profile: "https://unsplash.com/@upmanis"
     author: "Kaspars Upmanis"
   job:
@@ -115,7 +115,7 @@ derivco:
 ayesql:
   cover:
     icon: "project"
-    source: "/assets/img/cv/ayesql.jpg"
+    source: "/cv/ayesql.jpg"
     profile: "https://unsplash.com/@arstyy"
     author: "Austin Neill"
   job:
@@ -136,7 +136,7 @@ ayesql:
 1bitcloud:
   cover:
     icon: "job"
-    source: "/assets/img/cv/1bitcloud.jpg"
+    source: "/cv/1bitcloud.jpg"
     profile: "https://unsplash.com/@zombience"
     author: "Ryan Spencer"
   job:
@@ -163,7 +163,7 @@ ayesql:
 skogsra:
   cover:
     icon: "project"
-    source: "/assets/img/cv/skogsra.jpg"
+    source: "/cv/skogsra.jpg"
     profile: "https://unsplash.com/@szmigieldesign"
     author: "Łukasz Szmigiel"
   job:
@@ -183,7 +183,7 @@ skogsra:
 yggdrasil:
   cover:
     icon: "project"
-    source: "/assets/img/cv/yggdrasil.jpg"
+    source: "/cv/yggdrasil.jpg"
     profile: "https://unsplash.com/@toddquackenbush"
     author: "Todd Quackenbush"
   job:
@@ -206,7 +206,7 @@ yggdrasil:
 gmtprime_remote:
   cover:
     icon: "job"
-    source: "/assets/img/cv/gmtprime_remote.jpg"
+    source: "/cv/gmtprime_remote.jpg"
     profile: "https://unsplash.com/@rutherford2020"
     author: "Steele Rutherford"
   job:
@@ -235,7 +235,7 @@ gmtprime_remote:
 upc:
   cover:
     icon: "education"
-    source: "/assets/img/cv/upc.jpg"
+    source: "/cv/upc.jpg"
     profile: "https://unsplash.com/@johanmouchet"
     author: "Johan Mouchet"
   job:
@@ -257,7 +257,7 @@ upc:
 barcelona:
   cover:
     icon: "travel"
-    source: "/assets/img/cv/barcelona.jpg"
+    source: "/cv/barcelona.jpg"
     profile: "https://unsplash.com/@nilsnedel"
     author: "Nils Nedel"
   job:
@@ -276,7 +276,7 @@ barcelona:
 gmtprime_onsite:
   cover:
     icon: "job"
-    source: "/assets/img/cv/gmtprime_onsite.jpg"
+    source: "/cv/gmtprime_onsite.jpg"
     profile: "https://www.flickr.com/people/danielito311/"
     author: "Daniel"
   job:
@@ -300,7 +300,7 @@ gmtprime_onsite:
 github:
   cover:
     icon: "project"
-    source: "/assets/img/cv/github.jpg"
+    source: "/cv/github.jpg"
     profile: "https://unsplash.com/@swimstaralex"
     author: "Alexander Sinn"
   job:
@@ -321,7 +321,7 @@ github:
 usb:
   cover:
     icon: "education"
-    source: "/assets/img/cv/usb.jpg"
+    source: "/cv/usb.jpg"
     profile: "https://usb.ve"
     author: "Unknown"
   job:

@@ -1,0 +1,35 @@
+<div class="py-6 cv-page-layout">
+  <div class="px-2 md:px-0 tab-wrap">
+    <!-- tabs -->
+    <input type="radio"
+           id="timeline"
+           name="navigation"
+           class="cv-tab-item" checked/>
+    <label for="timeline">Timeline</label>
+
+    <input type="radio"
+           id="projects"
+           name="navigation"
+           class="cv-tab-item"/>
+    <label for="projects">My Projects</label>
+
+    <input type="radio"
+           id="contact"
+           name="navigation"
+           class="cv-tab-item"/>
+    <label for="contact">Contact</label>
+
+    <!-- content -->
+    <div class="cv-tab-content">
+      {%- include cv/timeline.html -%}
+    </div>
+
+    <div class="cv-tab-content">
+      {%- include cv/projects.html -%}
+    </div>
+
+    <div class="cv-tab-content">
+      {%- include cv/contact.html -%}
+    </div>
+  </div>
+</div>

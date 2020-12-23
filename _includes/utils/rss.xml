@@ -1,0 +1,47 @@
+{%- comment -%}
+Generates a RSS feed.
+{%- endcomment -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:media="http://search.yahoo.com/mrss/"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     version="2.0">
+  {%- for lang in site.data.languages.list %}
+  <channel>
+    <title>{{ site.data.defaults.t[lang].blog_name -}}</title>
+    <description>{{- site.date.defaults.t[lang].page.title -}}</description>
+    <link>{{- site.url -}}</link>
+    <language>{{- lang -}}</language>
+    <image>
+      <url>{{- site.url -}}/assets/favicon/android-chrome-512x512.png</url>
+      <title>{{ site.data.defaults.t[lang].blog_name -}}</title>
+      <link>{{- site.url -}}</link>
+    </image>
+    <lastBuildDate>{{- page.last_modified_at | date_to_rfc822 -}}</lastBuildDate>
+    <atom:link href="{{- site.url -}}/rss.xml" rel="self" type="application/rss+xml"/>
+    {%- for author in site.data.authors.list -%}
+      {%- assign posts = site.posts
+          | where:"handle", author
+          | where:"lang", lang
+      -%}
+      {%- assign length = posts | size -%}
+      {%- if length > 0 %}
+        {%- for post in posts %}
+        <item>
+          <title>{{- post.title -}}</title>
+          <description>{{ post.description }}</description>
+          <guid>{{- site.url -}}{{- post.id -}}/</guid>
+          <dc:creator>{{- site.data.authors[author].name -}}</dc:creator>
+          <pubDate>{{- post.date | date_to_rfc822 -}}</pubDate>
+          <link>{{- site.url -}}{{- post.id -}}/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown-->{{- post.content -}}<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        {%- endfor %}
+      {%- endif %}
+    {%- endfor -%}
+  </channel>
+  {%- endfor -%}
+</rss>

@@ -1,10 +1,13 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "oath-do-not-loose-your-keys"
 title: "Oath: Don't Loose Your Keys!"
-description: A ZSH plugin for handling your keys.
+description: "A ZSH plugin for handling your keys."
+image: keys.jpg
+image_link: "https://unsplash.com/photos/8fs1X0JFgFE"
+image_author: "Chunlea Ju"
 handle: alex
-image: keys.png
-author: Alex de Sousa
 ---
 
 Recently, I needed to reset my phone. I spent some time backing up my pictures and documents. Everything was going great. But then, I hit a roadblock.

@@ -1,0 +1,12 @@
+en:
+  lang: "en"
+  alt: "🇬🇧"
+  link: "/en/"
+  name: "English"
+es:
+  lang: "es"
+  alt: "🇪🇸"
+  link: "/es/"
+  name: "Castellano"
+list:
+  - "en"

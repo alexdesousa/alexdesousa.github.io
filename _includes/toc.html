@@ -1,123 +1,90 @@
-{%- comment -%}
-  Default initialization.
+{%- comment-%}
+Table of contents.
+
+Options:
+  - title: Chapter title.
+  - prefix: Chapter title prefix.
+  - is_decimal: Whether it should use decimal numeral for chapter number or not.
+  - image: Chapter header image.
 {%- endcomment -%}
-{%- if include.background_color -%}
-  {%- assign background_color = include.background_color -%}
-{%- else -%}
-  {%- assign background_color = "var(--deep-blue)" -%}
-{%- endif -%}
-{%- if include.color -%}
-  {%- assign color = include.color -%}
-{%- else -%}
-  {%- assign color = "white" -%}
-{%- endif -%}
+
 {%- comment -%}
-  Mandatory arguments.
+Globals
 {%- endcomment -%}
-{%- if include.number -%}
-  {%- assign number = include.number -%}
-  {%- assign chapter = "Chapter "
-      | append: include.number
-      | append: ":"
-      | upcase
-  -%}
-{%- endif -%}
-{%- if include.chapter -%}
-  {%- assign chapter = include.chapter
-      | append: ":"
-      | upcase
-  -%}
-{%- endif -%}
-{%- if include.image -%}
-  {%- assign image = "/assets/img"
-    | append: page.id
-    | append: "/"
-    | append: include.image
-  -%}
-{%- endif -%}
+{%- assign toc_index = toc_index
+    | default: 0
+    | plus: 1
+-%}
+
 {%- comment -%}
-  Table of Contents initializations.
+Chapter image.
 {%- endcomment -%}
-{%- if toc_title -%}
-  {%- assign toc_title = toc_title
-      | join: "|"
-      | append: "|"
-      | append: include.title
-      | split: "|"
-  -%}
-{%- else -%}
-  {%- assign toc_title = "|"
-      | append: include.title
-      | split: "|"
-  -%}
-{%- endif -%}
-{%- if toc_background_color -%}
-  {%- assign toc_background_color = toc_background_color
-      | join: "|"
-      | append: "|"
-      | append: background_color
-      | split: "|"
-  -%}
-{%- else -%}
-  {%- assign toc_background_color = "|"
-      | append: background_color
-      | split: "|"
-  -%}
-{%- endif -%}
-{%- if toc_color -%}
-  {%- assign toc_color = toc_color
-      | join: "|"
-      | append: "|"
-      | append: color
-      | split: "|"
-  -%}
-{%- else -%}
-  {%- assign toc_color = "|"
-      | append: color
-      | split: "|"
-  -%}
-{%- endif -%}
-{%- if toc_number -%}
-  {%- assign toc_number = toc_number
-      | join: "|"
-      | append: "|"
-      | append: number
-      | split: "|"
-  -%}
-{%- else -%}
-  {%- assign toc_number = "|"
-      | append: number
-      | split: "|"
-  -%}
-{%- endif -%}
-{%- if toc_chapter -%}
-  {%- assign toc_chapter = toc_chapter
-      | join: "|"
-      | append: "|"
-      | append: chapter
-      | split: "|"
-  -%}
-{%- else -%}
-  {%- assign toc_chapter = "|"
-      | append: chapter
-      | split: "|"
-  -%}
-{%- endif -%}
+{%- assign image = include.image
+    | default: "/assets/images/chapter.png"
+-%}
+
 {%- if toc_image -%}
-  {%- assign toc_image = toc_image
-      | join: "|"
-      | append: "|"
-      | append: image
-      | split: "|"
-  -%}
+  {%- assign image = image | split: "|" -%}
+  {%- assign toc_image = toc_image | concat: image -%}
 {%- else -%}
-  {%- assign toc_image = "|"
-      | append: image
-      | split: "|"
-  -%}
+  {%- assign toc_image = image | split: "|" -%}
 {%- endif -%}
-{%- if include.chapter -%}
-- [{{ include.chapter }}: {{ include.title }}](#{{ number }})
+
+{%- comment -%}
+Number creation.
+{%- endcomment -%}
+{%- assign number = toc_index -%}
+{%- if include.is_decimal -%}
 {%- else -%}
-- [Chapter {{ number }}: {{ include.title }}](#{{ number }})
+  {%- assign number = number | roman -%}
 {%- endif -%}
+
+{%- comment -%}
+Prefix creation.
+{%- endcomment -%}
+
+{%- if include.prefix -%}
+  {%- assign prefix = include.prefix -%}
+{%- else -%}
+  {%- assign prefix = site.data.defaults.t[page.lang].chapter_prefix
+      | append: " "
+      | append: number
+      -%}
+{%- endif -%}
+
+{%- comment -%}
+Reference creation.
+{%- endcomment -%}
+
+{%- assign ref = include.title | default: prefix -%}
+
+{%- comment -%}
+Title creation.
+{%- endcomment -%}
+{%- if include.title and prefix != "" -%}
+  {%- assign title = prefix
+      | append: ": "
+      | append: include.title
+  -%}
+{%- elsif include.title -%}
+  {%- assign title = include.title -%}
+{%- elsif prefix != "" -%}
+  {%- assign title = prefix -%}
+{%- else -%}
+  {%- assign title = "Missing title: add prefix or title options" -%}
+{%- endif -%}
+
+{%- if toc_ref -%}
+  {%- assign ref = ref | split: "|" -%}
+  {%- assign toc_ref = toc_ref | concat: ref -%}
+{%- else -%}
+  {%- assign toc_ref = ref | split: "|" -%}
+{%- endif -%}
+
+{%- if toc_title -%}
+  {%- assign title = title | split: "|" -%}
+  {%- assign toc_title = toc_title | concat: title -%}
+{%- else -%}
+  {%- assign toc_title = title | split: "|" -%}
+{%- endif -%}
+- [{{title}}](#{{ toc_index | minus: 1 }})

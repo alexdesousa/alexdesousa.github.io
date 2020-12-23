@@ -1,8 +1,12 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "ayesql-writing-raw-sql-in-elixir"
 title: "AyeSQL: Writing Raw SQL in Elixir"
-image: ship.png
-description: Sometimes good'ol SQL is better than any abstraction.
+description: "Sometimes good'ol SQL is better than any abstraction."
+image: ship.jpg
+image_link: "https://unsplash.com/photos/emH2e5SBifE"
+image_author: "Austin Neill"
 handle: alex
 ---
 
@@ -79,7 +83,7 @@ Given the following subset of tables from the [Chinook database](https://github.
     src = "music.png"
     alt = "Chinook database subset"
     caption = "Chinook database subset"
-    %}
+%}
 
 We want to know the _duration of every album Pearl Jam has ever made_ (or at least the ones listed in the database). In an OO language we would do something like:
 
@@ -188,7 +192,7 @@ To overcome this limitation, Ecto introduces the concept of _fragments_. Fragmen
     src = "f1.png"
     alt = "Ergast Developer API database"
     caption = "Ergast Developer API database"
-    %}
+%}
 
 Let's say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:
 

@@ -1,0 +1,24 @@
+{%- comment -%}
+Prints read time.
+
+Options:
+  - lang: Page language.
+  - post: Post.
+{%- endcomment -%}
+{%- assign post = include.post
+    | default: page
+-%}
+{%- assign words = post.content
+    | number_of_words
+-%}
+{%- if words < 300 -%}
+  {{- "1 "
+      | append: site.data.defaults.t[include.lang].minute_read
+  -}}
+{%- else -%}
+  {{- words
+      | divided_by: 300
+      | append: " "
+      | append: site.data.defaults.t[include.lang].minute_read
+  -}}
+{%- endif -%}

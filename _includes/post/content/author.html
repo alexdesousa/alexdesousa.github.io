@@ -1,0 +1,20 @@
+{%- comment -%}
+Post's author bio.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="flex items-center w-full p-8 font-sans md:p-16">
+  <img class="w-24 h-24 mr-4 rounded-full"
+       src="/assets/images/profile/{{- page.handle -}}.jpg"
+       alt="{{- site.data.defaults.t[include.lang].avatar_of }} {{ site.data.authors[page.handle].name -}}"/>
+  <div class="flex-1">
+    <p class="text-base font-bold leading-none text-{{- swatch -}}-900 md:text-xl">
+      {{- site.data.authors[page.handle].name -}}
+    </p>
+    <p class="mt-2 text-xs text-gray-700 md:text-base">
+      {{- site.data.authors[page.handle].bio[include.lang] -}}
+    </p>
+  </div>
+</div>

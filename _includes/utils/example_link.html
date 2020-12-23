@@ -1,0 +1,8 @@
+{%- comment -%}
+Creates an example link.
+
+Options:
+  - text: Link text.
+  - path: Path to example folder
+{%- endcomment -%}
+[{{- include.text -}}]({{- site.data.defaults.repo -}}/tree/{{- site.data.defaults.branch -}}/{{- site.data.defaults.examples -}}/{{- include.path -}})

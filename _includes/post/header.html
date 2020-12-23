@@ -1,0 +1,29 @@
+{%- comment -%}
+Header for blog posts.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="container w-full mx-auto pt-8 text-center md:pt-16">
+  <p class="text-sm font-bold text-{{- swatch -}}-600 md:text-base">
+  {{- site.data.defaults.t[page.lang].written_by }} {{ site.data.authors[page.handle].name -}}
+  </p>
+  <h1 class="text-3xl font-bold break-normal md:text-5xl text-{{- swatch -}}-900">
+    {{- page.title -}}
+  </h1>
+</div>
+
+<div class="container text-sm text-right w-full max-w-6xl mx-auto mt-8 bg-white bg-cover rounded"
+     style="background-image:url('{{- page.id -}}/{{- page.image -}}'); height: 75vh; background-position: center;">
+  {%- if page.image_link -%}
+  <a class="p-2 rounded-bl-md bg-{{- swatch -}}-100 text-{{- swatch -}}-900 hover:underline"
+      href="{{- page.image_link -}}">
+    {% if page.image_author %}
+      {{ site.data.defaults.t[page.lang].cover_by }} {{ page.image_author -}}
+    {% else %}
+      {{ site.data.defaults.t[page.lang].cover_source }}
+    {% endif %}
+  </a>
+  {%- endif -%}
+</div>

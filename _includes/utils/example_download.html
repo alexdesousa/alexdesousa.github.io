@@ -1,0 +1,9 @@
+{%- comment -%}
+Download example block code.
+
+Options:
+  - path: Path to example.
+{%- endcomment -%}
+```bash
+$ git clone --depth 2 -b blog {{ site.data.defaults.repo }} examples && cd {{ site.data.defaults.examples }} && git filter-branch --prune-empty --subdirectory-filter {{ site.data.defaults.examples -}}/{{- include.path }} HEAD
+```

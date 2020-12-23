@@ -51,9 +51,11 @@ Ruby, it's easy enough to use without any previous Ruby knowledge. I just
 followed the [step-by-step tutorial](https://jekyllrb.com/docs/step-by-step/01-setup/)
 they had in the project's page.
 
-The theme was built by me. It tries to resemble Medium's simplicity. All
-Jekyll's templates, markdown files, and CSS files can be found in the `blog`
-branch.
+The theme was inspired by [Ghostwind](https://github.com/tailwindtoolbox/Ghostwind)
+and uses _TailwindCSS_ for the styling.
+
+I tried to keep the JS to the minimum in order to make the page as light as
+possible.
 
 My `Gemfile` looks like the following:
 
@@ -61,8 +63,14 @@ My `Gemfile` looks like the following:
 source "https://rubygems.org"
 
 gem "jekyll"
-gem "redcarpet"
 gem "html-proofer"
+
+group :jekyll_plugins do
+  gem "redcarpet"
+  gem "jekyll-last-modified-at"
+  gem "jekyll-minimagick"
+  gem "jekyll-roman"
+end
 ```
 
 ## Why Travis CI?
@@ -76,9 +84,13 @@ automatically builds and deploys the site to the `master` branch. My
 language: ruby
 rvm:
   - 2.6
+before_install:
+  - nvm install 12.14.1
 install:
   - gem install bundler
   - bundle install
+  - npm install
+  - NODE_ENV=production npm run build
 script:
   - bundle exec jekyll build
   - bundle exec htmlproofer ./_site --disable-external
@@ -108,7 +120,6 @@ $ asdf install           # Installs Ruby.
 $ gem install bundler    # Installs bundler.
 $ bundle install         # Installs Jekyll dependencies.
 $ npm install            # Installs CSS dependencies.
-$ npm run build          # Generates CSS.
 ```
 
 Before you do the previous, make sure you installed the following using `asdf`:
@@ -119,8 +130,8 @@ Before you do the previous, make sure you installed the following using `asdf`:
 ## Running the Server
 
 Jekyll comes with a testing server that runs in
-[localhost:4000](http://localhost:4000) e.g:
+[localhost:4000](http://localhost:4000/en/) e.g:
 
 ```bash
-$ bundle exec jekyll serve
+$ ./runblog.sh
 ```

@@ -1,9 +1,12 @@
+{%- assign lang = page.lang | default: "en" -%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
 <!DOCTYPE html>
-<html lang="{%- include language.html -%}">
+<html lang="{{- lang -}}">
   <head>
-    {%- include head.html -%}
+    {%- include main/head.html lang = lang -%}
   </head>
-  <body class="antialiased text-gray-900">
-    {{- content -}}
+  <body class="antialiased text-{{- swatch -}}-900">
+    {%- include cv/header.html name = "Alex de Sousa" -%}
+    {%- include cv/tabs.html -%}
   </body>
 </html>

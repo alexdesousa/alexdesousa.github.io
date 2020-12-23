@@ -1,10 +1,13 @@
 ---
-layout: article
-title: Syntax highlighting in Jekyll
-description: Using Redcarpet markdown renderer to add pygments to Jekyll
+layout: post
+lang: en
+ref: "syntax-highlighting-in-jekyll"
+title: "Syntax highlighting in Jekyll"
+description: "Using Redcarpet markdown renderer to add pygments to Jekyll"
+image: jekyll.jpg
+image_link: "https://unsplash.com/photos/wTXvFDfKL2s"
+image_author: "Clem Around The Corner"
 handle: alex
-image: jekyll.png
-author: Alex de Sousa
 ---
 
 This is mainly a programming blog. Big part of picking a static site generator

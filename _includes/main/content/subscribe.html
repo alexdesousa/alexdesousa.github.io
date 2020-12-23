@@ -1,0 +1,33 @@
+{%- comment -%}
+Subscribe component.
+
+Options:
+  - lang: Page language.
+{%- endcomment -%}
+{%- if site.data.defaults.newsletter %}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="p-4 mx-6 my-6 font-sans text-center rounded-md bg-{{- swatch -}}-900 md:container md:mx-0 md:p-24">
+  <h2 class="text-2xl font-bold break-normal md:text-4xl text-{{- swatch -}}-100">
+    {{- site.data.defaults.t[include.lang].subscribe_to -}}
+  </h2>
+  <h3 class="text-base font-normal font-bold break-normal text-{{- swatch -}}-300 md:text-xl">
+    {{- site.data.defaults.t[include.lang].get_latest_posts -}}
+  </h3>
+  <div class="w-full pt-4 text-center">
+    <form action="#">
+      <div class="flex flex-col flex-wrap max-w-xl p-1 pr-0 mx-auto md:justify-center md:flex-row">
+        <input class="p-3 text-gray-600 rounded shadow appearance-none md:mr-2 focus:outline-none"
+               type="email"
+               placeholder="{{- site.data.defaults.t[include.lang].email_placeholder-}}" />
+        <input class="hidden"
+               type="password"
+               placeholder="honeypot" />
+        <button type="submit"
+                class="p-3 mt-4 text-base font-semibold tracking-wider text-white uppercase rounded shadow appearance-none md:mt-0 bg-{{- swatch -}}-600 md:inline-block hover:bg-{{- swatch -}}-400">
+          {{- site.data.defaults.t[include.lang].subscribe -}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{%- endif -%}

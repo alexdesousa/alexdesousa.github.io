@@ -1,0 +1,25 @@
+{%- comment -%}
+Refill aqua white logo.
+
+Options:
+  - classes: HTML classes
+{%- endcomment -%}
+{%- assign classes = include.classes
+    | default: "w-16 h-16"
+-%}
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<svg
+  class="inline stroke-current text-{{- swatch -}}-100 {{ classes -}}"
+   viewBox="0 0 69.572713 69.572715">
+  <g>
+    <path
+       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+  </g>
+</svg>

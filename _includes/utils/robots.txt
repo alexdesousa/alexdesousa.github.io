@@ -1,0 +1,6 @@
+{%- comment -%}
+Robots txt.
+{%- endcomment -%}
+User-agent: *
+Allow: /
+Sitemap: {{ site.url -}}/sitemap.xml

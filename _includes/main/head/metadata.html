@@ -1,0 +1,51 @@
+{%- comment -%}
+Displays metadata.
+
+Options
+  - author: Author of the page.
+  - title: Page title.
+  - description: Page description.
+{%- endcomment -%}
+
+{%- assign date_published = page.date
+   | default: site.time
+   | date_to_xmlschema
+-%}
+
+{%- assign page_url = page.url
+    | replace: 'index.html', ''
+    | prepend: site.baseurl
+    | prepend: site.url
+-%}
+
+{%- assign logo_url = site.url
+    | append: "/assets/images/logo.png"
+-%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{- page_url -}}"
+  },
+  "headline": "{{- include.title -}}",
+  "image": ["{{- logo_url -}}"],
+  "datePublished": "{{- date_published -}}",
+  "dateModified": "{{- date_published -}}",
+  "author": {
+    "@type": "Person",
+    "name": "{{- include.author -}}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{- site.data.defaults.organization -}}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{- logo_url -}}"
+    }
+  },
+  "description": "{{- include.description -}}"
+}
+</script>

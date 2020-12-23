@@ -1,8 +1,12 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "my-road-to-8-week-streak"
 title: "My Road to 8 Week Streak"
+description: "Writing is hard. Writing requires practice."
 image: pen.jpg
-description: Writing is hard. Writing requires practice.
+image_link: "https://unsplash.com/photos/SXn-fWj0Ht4"
+image_author: "Nicolas Thomas"
 handle: alex
 ---
 9 weeks ago, I challenged myself to consistently write an article every week for at least 8 weeks. Today, I can say I did it. It was hard. Not the hardest thing I've done, but hard nonetheless.
@@ -75,11 +79,11 @@ Additionally to those quantitative metrics, I also took into consideration wheth
 
 I created a spreadsheet in Google Sheets and with [this script](https://gist.github.com/alexdesousa/a23552ed2995a865895f53a4fd844c6b) I periodically gathered the data. This approach was inspired by/stolen from [this article](https://dev.to/pluralsight/pulling-your-dev-to-stats-into-a-google-sheet-56dh).
 
-{%- include image.html
+{% include image.html
     src = "spreadsheet.png"
     alt = "My data"
     caption = "Spreadsheet with my data"
--%}
+%}
 
 
 I wasn't that rigorous with Twitter metrics, but I still kept them in mind when writing a tweet sharing my next article:

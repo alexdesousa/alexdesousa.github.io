@@ -1,0 +1,13 @@
+default:
+  name: "The Broken Link"
+  bio:
+    en: "Thoughts and ramblings of an Elixir Alchemist."
+    es: "Thoughts and ramblings of an Elixir Alchemist."
+alex:
+  name: "Alex de Sousa"
+  bio:
+    en: "Refill Aqua co-founder. Elixir alchemist. Tech enthusiast."
+    es: "Co-fundador de Refill Aqua. Alquimista de Elixir. Entusiasta de la tecnología."
+list:
+  - "default"
+  - "alex"

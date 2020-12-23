@@ -1,0 +1,20 @@
+{%- assign lang = page.lang | default: "en" -%}
+<!DOCTYPE html>
+<html lang="{{- lang -}}">
+  <head>
+    {%- include main/head.html lang = lang -%}
+  </head>
+  <body class="font-sans leading-normal tracking-normal bg-gray-200">
+    {%- include main/header.html lang = lang -%}
+    {%- include main/content.html lang = lang -%}
+    {%- include main/footer.html lang = lang -%}
+    <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+    <script>
+      //Init tooltips
+      tippy('.avatar')
+      tippy('.navigation-link')
+    </script>
+  </body>
+</html>
+

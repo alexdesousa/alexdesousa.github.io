@@ -1,4 +1,5 @@
-<div class="card md:m-6">
+{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
+<div class="cv-card md:m-6">
   <div class="flex w-full h-64"
        style="
     background-image: url('{{- include.data.cover.source -}}');
@@ -6,7 +7,7 @@
     background-size: cover;
     background-blend-mode: multiply;">
     <div class="self-start justify-start p-2 m-2 bg-white rounded-full">
-      <svg class="w-6 h-6 text-purple-700 fill-current"
+      <svg class="w-6 h-6 text-{{- swatch -}}-700 fill-current"
            xmlns="http://www.w3.org/2000/svg"
            viewBox="0 0 20 20">
         {%- if include.data.cover.icon == "job" -%}
@@ -21,9 +22,9 @@
       </svg>
     </div>
     <div class="flex self-end justify-end w-full">
-      <span class="px-2 py-1 text-xs font-normal text-purple-700 bg-white rounded-t">
+      <span class="px-2 py-1 text-xs font-normal text-{{- swatch -}}-700 bg-white rounded-tl">
         Photo by
-        <a class="ml-1 font-semibold hover:underline"
+        <a class="cv-link ml-1"
            target="_blank"
            href="{{- include.data.cover.profile -}}">
           {{- include.data.cover.author -}}
@@ -31,7 +32,7 @@
       </span>
     </div>
   </div>
-  <div class="card-content">
+  <div class="cv-card-content">
     <div class="text-xs font-semibold tracking-wider text-gray-600 uppercase">
       {{- include.data.job.type }} &bull;
       {{ include.data.job.beginning }} - {{ include.data.job.ending -}}
@@ -40,7 +41,7 @@
     <h2 class="text-lg font-semibold">
       {{- include.data.job.title }}
       {%- if include.data.job.name %} at
-      <a class="text-purple-700 hover:text-purple-500"
+      <a class="cv-link"
          target="_blank"
          href="{{- include.data.job.website -}}">
         {{ include.data.job.name -}}
@@ -48,9 +49,9 @@
       {%- endif -%}
     </h2>
 
-    <div class="read-more lg:hidden">read more</div>
+    <div class="cv-read-more lg:hidden">read more</div>
 
-    <div class="card-content-description">
+    <div class="cv-card-content-description">
       {%- for line in include.data.description -%}
       <p class="pt-2 text-sm leading-6">
         {{- line -}}
@@ -60,7 +61,7 @@
 
     <div class="flex flex-wrap pt-4">
     {%- for tag in include.data.stack -%}
-      <span class="inline-block px-3 py-1 mb-1 mr-2 text-sm font-semibold text-purple-900 bg-purple-200 rounded-full">
+      <span class="inline-block px-3 py-1 mb-1 mr-2 text-sm font-semibold text-{{- swatch -}}-900 bg-{{- swatch -}}-200 rounded-full">
         #{{- tag -}}
       </span>
     {%- endfor -%}

@@ -1,10 +1,13 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "skogsra-simplifying-your-elixir-configuration"
 title: "Skogsrå: Simplifying Your Elixir Configuration"
-description: Improving Elixir configurations for small and large projects.
-handle: alex
+description: "Improving Elixir configurations for small and large projects."
 image: skogsra.jpg
-author: Alex de Sousa
+image_link: "https://unsplash.com/photos/jFCViYFYcus"
+image_author: "Lukasz Szmigiel"
+handle: alex
 ---
 
 Once an Elixir project is large enough, maintaining config files and configuration variables becomes a nightmare:

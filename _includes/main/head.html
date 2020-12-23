@@ -1,0 +1,62 @@
+{%- comment -%}
+Builds the head of the page.
+{%- endcomment -%}
+
+{%- assign author = page.handle
+    | default: site.data.defaults.t[lang].page.author
+-%}
+
+{%- assign title = page.title
+    | default: site.data.defaults.t[lang].page.title
+-%}
+
+{%- assign description = page.description
+    | default: site.data.defaults.t[lang].page.description
+-%}
+
+{%- assign preview_image = "/assets/images/preview.jpg" -%}
+{%- if page.image -%}
+  {%- assign preview_image = page.id
+      | append: "/"
+      | append: page.image
+  -%}
+{%- endif -%}
+
+{%- include main/head/general.html
+    author = author
+    description = description
+-%}
+
+{%- include main/head/title.html
+    lang = lang
+    title = title
+-%}
+
+{%- include main/head/canonical.html -%}
+{%- include main/head/favicon.html -%}
+
+{%- include main/head/google_card.html
+    preview_image = preview_image
+    description = description
+-%}
+
+{%- include main/head/facebook_card.html
+    lang = lang
+    preview_image = preview_image
+    title = title
+    description = description
+-%}
+
+{%- include main/head/twitter_card.html
+    preview_image = preview_image
+    title = title
+    description = description
+-%}
+
+{%- include main/head/metadata.html
+    author = author
+    title = title
+    description = description
+-%}
+{%- include main/head/google_analytics.html -%}
+{%- include main/head/assets.html -%}

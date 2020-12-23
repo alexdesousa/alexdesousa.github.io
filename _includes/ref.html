@@ -1,0 +1,12 @@
+{%- comment -%}
+Utility to reference chapters automatically.
+
+Options:
+  - title: Chapter title.
+{%- endcomment -%}
+{%- assign max_index = toc_index | minus: 1 -%}
+{%- for i in (0..max_index) -%}
+  {%- if toc_ref[i] == include.title -%}
+    [{{- toc_title[i] -}}](#{{- i -}})
+  {%- endif -%}
+{%- endfor -%}

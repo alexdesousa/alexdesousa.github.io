@@ -1,19 +1,22 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "yggdrasil-easy-pub-sub-in-elixir"
 title: "Yggdrasil: Easy Pub-Sub in Elixir"
-description: An overview of Yggdrasil capabilities
+description: "An overview of Yggdrasil's capabilities."
+image: tree.jpg
+image_link: "https://unsplash.com/photos/XBxQZLNBM0Q"
+image_author: "Todd Quackenbush"
 handle: alex
-image: tree.png
-author: Alex de Sousa
 ---
 
 When I started coding in Elixir (around 2016), I was working for a financial company. Our product automatically invested money in the Forex market by copying traders' actions (_market orders_) in real time. We had the following:
 
-{%- include image.html
+{% include image.html
     src = "system.png"
     alt = "Our System"
     caption = "Our System"
-    -%}
+%}
 
 In words, our system:
 
@@ -41,28 +44,23 @@ If we could generalize those three actions into an API, we could then implement 
 
 {% include toc.html
    title = "Meet Yggdrasil"
-   number = "I"
    image = "chapter.png"
 %}
 {% include toc.html
    title = "Yggdrasil and PostgreSQL Notifications"
-   number = "II"
    image = "chapter.png"
 %}
 {% include toc.html
    title = "Yggdrasil and RabbitMQ Subscriptions"
-   number = "III"
    image = "chapter.png"
 %}
 {% include toc.html
    title = "Yggdrasil as Distributed PubSub"
-   number = "IV"
    image = "chapter.png"
 %}
 {% include toc.html
-   chapter = "In the end"
+   prefix = "In the end"
    title = "One API to Rule Them All"
-   number = "V"
    image = "chapter.png"
 %}
 
@@ -413,7 +411,7 @@ Yggdrasil's default adapter supports multi-node subscriptions out-of-the-box tha
 
 ## Before We Start
 
-I've used [this example project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix) for the code in this article. You can skip this section safely as long as you remember the following:
+I've used {% include utils/example_link.html text = "this example project" path = "matrix" %} for the code in this article. You can skip this section safely as long as you remember the following:
 
 - `Basic` project has only Yggdrasil.
 - `Rabbit` project has Yggdrasil for RabbitMQ.
@@ -422,21 +420,14 @@ I've used [this example project](https://github.com/alexdesousa/alexdesousa.gith
 
 If you want to follow along with the examples in this article, you can download the example project using the following command:
 
-```bash
-git clone \
-  --depth 2 \
-  -b blog \
-  https://github.com/alexdesousa/alexdesousa.github.io.git examples && \
-cd examples && \
-git filter-branch \
-  --prune-empty \
-  --subdirectory-filter examples/matrix HEAD
-```
+{% include utils/example_download.html path = "matrix" %}
 
 In the folder you'll find:
 
-- [Basic project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/basic) that has a basic version of [Yggdrasil](https://github.com/gmtprime/yggdrasil).
-- [Rabbit project](https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix/rabbit) that has [Yggdrasil for RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
+- {% include utils/example_link.html text = "Basic project" path = "matrix/basic" %}
+  that has a basic version of [Yggdrasil](https://github.com/gmtprime/yggdrasil).
+- {% include utils/example_link.html text = "Rabbit project" path = "matrix/rabbit" %}
+  that has [Yggdrasil for RabbitMQ](https://github.com/gmtprime/yggdrasil_rabbitmq).
 - A docker compose with a RabbitMQ server:
 
    ```bash

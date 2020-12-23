@@ -3,10 +3,14 @@ rvm:
   - 2.6
 before_install:
   - nvm install 12.14.1
+  - sudo apt-get update
+  - sudo apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev
+
 install:
   - gem install bundler
   - bundle install
   - npm install
+  - bundle exec jekyll build
   - NODE_ENV=production npm run build
 script:
   - bundle exec jekyll build

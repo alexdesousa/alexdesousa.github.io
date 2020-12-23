@@ -1,8 +1,12 @@
 ---
-layout: article
+layout: post
+lang: en
+ref: "my-worst-bug"
 title: "My Worst Bug"
-image: bug.png
-description: Debugging C/C++ can sometimes be a nightmare.
+description: "Debugging C/C++ can sometimes be a nightmare."
+image: bug.jpg
+image_link: "https://unsplash.com/photos/mrL7QWWkciE"
+image_author: "Guillaume de Germain"
 handle: alex
 ---
 
@@ -44,29 +48,29 @@ The production machine architecture:
 
 It's easier to see with an image:
 
-{%- include image.html
+{% include image.html
     src = "memory_allocation.png"
     alt = "RapidJSON Custom Allocation Vs. What The Machine Actually Did"
     caption = "RapidJSON Custom Allocation Vs. What The Machine Actually Did"
-    -%}
+%}
 
 If RapidJSON needed to store an integer, a string and a boolean value, then it could fail randomly depending on the length of the string. e.g. given the integer `42` and the boolean `true`:
 
 - For the string `Hey`, it would succeed:
 
-{%- include image.html
+{% include image.html
     src = "memory_allocation_success.png"
     alt = "Memory allocation success."
     caption = "Memory allocation success."
-    -%}
+%}
 
 - For the string `Hi`, it would fail:
 
-{%- include image.html
+{% include image.html
     src = "memory_allocation_fail.png"
     alt = "Memory allocation fail."
     caption = "Memory allocation fail."
-    -%}
+%}
 
 A debugging nightmare!
 
