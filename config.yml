@@ -4,7 +4,6 @@ plugins:
   - jekyll-last-modified-at
 markdown: redcarpet
 exclude: [
-  "CNAME",
   "Gemfile",
   "Gemfile.lock",
   "README.md",
@@ -37,14 +36,6 @@ mini_magick:
     source: "profiles"
     destination: "assets/images/profile/"
     resize: "100"
-  simplifying-audit-trail-with-postgresql:
-    source: "_posts/simplifying-audit-trail-with-postgresql/"
-    destination: "/simplifying-audit-trail-with-postgresql/"
-    resize: "800"
-  simplifying-audit-trail-with-postgresql-small:
-    source: "_posts/simplifying-audit-trail-with-postgresql/"
-    destination: "/simplifying-audit-trail-with-postgresql/small/"
-    resize: "400"
   my-worst-bug:
     source: "_posts/my-worst-bug/"
     destination: "/my-worst-bug/"

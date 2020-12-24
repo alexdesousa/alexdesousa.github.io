@@ -14,19 +14,8 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Thu, 24 Dec 2020 11:41:07 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 24 Dec 2020 11:49:01 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
-        <item>
-          <title>Audit Trail Simplified</title>
-          <description>A simple way of keeping an audit trail in our PostgreSQL tables.</description>
-          <guid>https://thebroken.link/simplifying-audit-trail-with-postgresql/</guid>
-          <dc:creator>Alex de Sousa</dc:creator>
-          <pubDate>Sun, 08 Nov 2020 00:00:00 +0000</pubDate>
-          <link>https://thebroken.link/simplifying-audit-trail-with-postgresql/</link>
-          <content:encoded>
-            <![CDATA[<!--kg-card-begin: markdown--><!--kg-card-end: markdown-->]]>
-          </content:encoded>
-        </item>
         <item>
           <title>My Worst Bug</title>
           <description>Debugging C/C++ can sometimes be a nightmare.</description>
