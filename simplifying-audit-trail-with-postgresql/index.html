@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="A simple way of keeping an audit trail in our PostgreSQL tables." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="alex" />
+<title>Audit Trail Simplified | The Broken Link</title>
+<link rel="canonical" href="https://thebroken.link/simplifying-audit-trail-with-postgresql/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+<meta itemprop="description" content="A simple way of keeping an audit trail in our PostgreSQL tables." />
+<meta itemprop="image" content="/assets/images/preview.jpg" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="The Broken Link" />
+<meta property="og:title" content="Audit Trail Simplified" />
+<meta property="og:image" content="https://thebroken.link/assets/images/preview.jpg" />
+<meta property="og:url" content="https://thebroken.link/simplifying-audit-trail-with-postgresql/" />
+<meta property="og:description" content="A simple way of keeping an audit trail in our PostgreSQL tables." />
+<meta name="twitter:title" content="Audit Trail Simplified"/>
+<meta name="twitter:description" content="A simple way of keeping an audit trail in our PostgreSQL tables." />
+<meta name="twitter:image" content="https://thebroken.link/assets/images/preview.jpg" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image:alt" content="A simple way of keeping an audit trail in our PostgreSQL tables."/>
+<meta name="twitter:site" content="@thebroken_link">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/simplifying-audit-trail-with-postgresql/"
+  },
+  "headline": "Audit Trail Simplified",
+  "image": ["https://thebroken.link/assets/images/logo.png"],
+  "datePublished": "2020-11-08T00:00:00+00:00",
+  "dateModified": "2020-11-08T00:00:00+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "alex"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Broken Link",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebroken.link/assets/images/logo.png"
+    }
+  },
+  "description": "A simple way of keeping an audit trail in our PostgreSQL tables."
+}
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
+</script><link rel="stylesheet" href="/assets/css/tailwind.css"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
+      rel="stylesheet"
+      integrity="sha384-xyZLiqnBEFn1hDkS8VeG/YHoqOjS/ucimT8TI6GDr9+ZP1UNbZr6d/q0ldMi/xvL"
+      crossorigin="anonymous"/>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+
+    <link rel="stylesheet" href="/assets/css/pygments/monokai.css" />
+    <style>
+      #progress-bar {
+        --scroll: 0%;
+        background: linear-gradient(to right, #9E7BEA var(--scroll), transparent 0);
+        height: 0.25rem;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="font-sans leading-normal tracking-normal bg-gray-100"><nav class="sticky top-0 z-50 flex flex-col w-full mt-0">
+  <div class="flex justify-center w-full bg-elixir-900">
+    <div class="container flex p-2 bg-elixir-900">
+      <div class="container flex items-center mx-auto">
+        <div class="flex font-extrabold text-white">
+          <a class="hover:no-underline" href="https://thebroken.link/en/">
+            <span class="text-base font-bold md:tracking-wider text-elixir-100 hover:text-white"><svg
+  class="inline stroke-current text-elixir-100 w-6 h-6"
+   viewBox="0 0 69.572713 69.572715">
+  <g>
+    <path
+       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+  </g>
+</svg>
+The Broken Link</span>
+          </a>
+        </div>
+        <div class="flex pl-2 text-sm md:pl-4">
+          <ul class="flex items-center justify-between flex-1 list-reset md:flex-none"></ul>
+        </div>
+      </div>
+      <div class="flex items-center justify-end w-1/2 align-baseline">
+        <p class="hidden py-4 mr-3 text-sm font-bold text-center text-elixir-100 md:block">
+          <span class="pr-1">Share this</span> 👉
+        </p>
+        <a class="inline-block w-8 h-8 p-2 text-center no-underline text-elixir-100 hover:text-white hover:text-underline md:h-auto md:w-16 md:p-4"
+           href="https://twitter.com/intent/tweet?text=A+simple+way+of+keeping+an+audit+trail+in+our+PostgreSQL+tables.&url=https%3A%2F%2Fthebroken.link%2Fsimplifying-audit-trail-with-postgresql&via=thebroken_link">
+          <svg class="h-8 fill-current" viewBox="0 0 32 32">
+            <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
+            </path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="progress-bar"></div>
+</nav>
+<div class="container w-full mx-auto pt-8 text-center md:pt-16">
+  <p class="text-sm font-bold text-elixir-600 md:text-base">Written by Alex de Sousa</p>
+  <h1 class="text-3xl font-bold break-normal md:text-5xl text-elixir-900">Audit Trail Simplified</h1>
+</div>
+
+<div class="container text-sm text-right w-full max-w-6xl mx-auto mt-8 bg-white bg-cover rounded"
+     style="background-image:url('/simplifying-audit-trail-with-postgresql/'); height: 75vh;"></div>
+<div class="container max-w-5xl mx-auto -mt-8 md:-mt-32 lg:-mt-64">
+  <div class="mx-0 sm:mx-6">
+    <div id="post-content" class="w-full p-8 bg-white text-elixir-900 prose max-w-none md:p-16">
+      
+      
+    </div><div class="flex items-center w-full p-8 font-sans md:p-16">
+  <img class="w-24 h-24 mr-4 rounded-full"
+       src="/assets/images/profile/alex.jpg"
+       alt="Avatar of Alex de Sousa"/>
+  <div class="flex-1">
+    <p class="text-base font-bold leading-none text-elixir-900 md:text-xl">Alex de Sousa</p>
+    <p class="mt-2 text-xs text-gray-700 md:text-base">Refill Aqua co-founder. Elixir alchemist. Tech enthusiast.</p>
+  </div>
+</div>
+<div class="flex flex-wrap justify-center py-6"><div class="flex flex-col w-full p-6 md:w-1/2 lg:w-5/12">
+  <div class="flex-1 overflow-hidden bg-white rounded-t rounded-b-none shadow-lg">
+    <a href="/my-worst-bug" class="flex flex-wrap no-underline hover:no-underline">
+      <div class="w-full h-64 bg-center bg-cover"
+           style="background-image:url('/my-worst-bug/small/bug.jpg'">
+      </div>
+      <p class="w-full px-6 pt-6 pb-3 text-xs text-gray-600 md:text-sm">Alex de Sousa</p>
+      <h2 class="w-full px-6 mb-4 text-xl font-bold text-gray-900">My Worst Bug</h2>
+      <p class="px-6 mb-5 font-serif text-base text-gray-800">Debugging C/C++ can sometimes be a nightmare.</p>
+    </a>
+  </div>
+  <div class="flex-none p-6 mt-auto overflow-hidden bg-white rounded-t-none rounded-b shadow-lg">
+    <div class="flex items-center justify-between">
+      <img class="w-8 h-8 mr-4 rounded-full avatar"
+           data-tippy-content="Alex de Sousa"
+           src="/assets/images/profile/alex.jpg"
+           alt="Avatar of Alex de Sousa"/>
+      <p class="text-xs text-gray-600 md:text-sm">1 min read</p>
+    </div>
+  </div>
+</div>
+</div></div>
+</div>
+<footer class="bg-elixir-900">
+  <div class="container flex items-center max-w-6xl px-2 py-8 mx-auto">
+    <div class="flex flex-wrap items-center w-full mx-auto">
+      <div class="flex justify-center w-full font-extrabold text-white md:w-1/2 md:justify-start">
+        <a class="no-underline hover:text-gray-900 hover:no-underline"
+           href="/en">
+          <span class="text-base text-elixir-100"><svg
+  class="inline stroke-current text-elixir-100 w-6 h-6"
+   viewBox="0 0 69.572713 69.572715">
+  <g>
+    <path
+       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+    <path
+       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+  </g>
+</svg>
+The Broken Link</span>
+        </a>
+      </div>
+      <div class="flex content-center justify-between w-full pt-2 md:w-1/2 md:justify-end">
+        <ul class="flex items-center justify-center flex-1 list-reset md:flex-none"><li>
+            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
+               data-tippy-content="Alex de Sousa's CV"
+               href="https://thebroken.link/cv/">Alex de Sousa's CV</a>
+          </li>
+          <li>
+            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
+               data-tippy-content="@thebroken_link"
+               href="https://twitter.com/thebroken_link">
+              <svg class="h-6 fill-current" viewBox="0 0 32 32">
+                <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
+                </path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
+               data-tippy-content="@alexdesousa"
+               href="https://github.com/alexdesousa/">
+              <svg class="h-6 fill-current" viewBox="0 0 512 512">
+                <g>
+                  <path d="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
+          c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
+          c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
+          c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136
+          c-4.187,0.767-9.469,1.092-15.846,1c-6.374-0.089-12.991-0.757-19.842-1.999c-6.854-1.231-13.229-4.086-19.13-8.559
+          c-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559
+          c-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-0.951-2.568-2.098-3.711-3.429c-1.142-1.331-1.997-2.663-2.568-3.997
+          c-0.572-1.335-0.098-2.43,1.427-3.289c1.525-0.859,4.281-1.276,8.28-1.276l5.708,0.853c3.807,0.763,8.516,3.042,14.133,6.851
+          c5.614,3.806,10.229,8.754,13.846,14.842c4.38,7.806,9.657,13.754,15.846,17.847c6.184,4.093,12.419,6.136,18.699,6.136
+          c6.28,0,11.704-0.476,16.274-1.423c4.565-0.952,8.848-2.383,12.847-4.285c1.713-12.758,6.377-22.559,13.988-29.41
+          c-10.848-1.14-20.601-2.857-29.264-5.14c-8.658-2.286-17.605-5.996-26.835-11.14c-9.235-5.137-16.896-11.516-22.985-19.126
+          c-6.09-7.614-11.088-17.61-14.987-29.979c-3.901-12.374-5.852-26.648-5.852-42.826c0-23.035,7.52-42.637,22.557-58.817
+          c-7.044-17.318-6.379-36.732,1.997-58.24c5.52-1.715,13.706-0.428,24.554,3.853c10.85,4.283,18.794,7.952,23.84,10.994
+          c5.046,3.041,9.089,5.618,12.135,7.708c17.705-4.947,35.976-7.421,54.818-7.421s37.117,2.474,54.823,7.421l10.849-6.849
+          c7.419-4.57,16.18-8.758,26.262-12.565c10.088-3.805,17.802-4.853,23.134-3.138c8.562,21.509,9.325,40.922,2.279,58.24
+          c15.036,16.18,22.559,35.787,22.559,58.817c0,16.178-1.958,30.497-5.853,42.966c-3.9,12.471-8.941,22.457-15.125,29.979
+          c-6.191,7.521-13.901,13.85-23.131,18.986c-9.232,5.14-18.182,8.85-26.84,11.136c-8.662,2.286-18.415,4.004-29.263,5.146
+          c9.894,8.562,14.842,22.077,14.842,40.539v60.237c0,3.422,1.19,6.279,3.572,8.562c2.379,2.279,6.136,2.95,11.276,1.995
+          c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906
+          C438.536,184.851,428.728,148.168,409.132,114.573z"/>
+                </g>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+      document.addEventListener('scroll', function() {
+        const scrollTop = document.documentElement['scrollTop'] || document.body['scrollTop'];
+        const scrollHeight = document.documentElement['scrollHeight'] || document.body['scrollHeight'];
+        const scrollBottom = scrollHeight - document.documentElement.clientHeight;
+        const scroll = scrollTop / scrollBottom * 100;
+
+        document
+          .getElementById('progress-bar')
+          .style.setProperty('--scroll', `${scroll}%`);
+      }, {passive: true});
+    </script>
+  </body>
+</html>
