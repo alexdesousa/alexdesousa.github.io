@@ -28,6 +28,9 @@ redcarpet:
     "with_toc_data"
   ]
 mini_magick:
+  logo:
+    source: ".logo"
+    destination: "assets/images/"
   cover:
     source: ".cover"
     destination: "assets/images/"
