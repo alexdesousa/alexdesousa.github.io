@@ -1506,7 +1506,7 @@ the application configuration is not found:</p>
   </figure>
 </p>
 
-<p>In words, our system:</p>
+<p>In other words, our system:</p>
 
 <ol>
 <li><strong>Subscribed</strong> to PostgreSQL for receiving <em>trader actions</em>.</li>
