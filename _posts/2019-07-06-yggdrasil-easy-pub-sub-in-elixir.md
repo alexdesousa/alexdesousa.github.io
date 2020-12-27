@@ -18,7 +18,7 @@ When I started coding in Elixir (around 2016), I was working for a financial com
     caption = "Our System"
 %}
 
-In words, our system:
+In other words, our system:
 
 1. **Subscribed** to PostgreSQL for receiving _trader actions_.
 2. **Published** to RabbitMQ for:
