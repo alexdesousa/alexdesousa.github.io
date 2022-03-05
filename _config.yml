@@ -39,13 +39,13 @@ mini_magick:
     source: "profiles"
     destination: "assets/images/profile/"
     resize: "100"
-  simplifying-audit-trail-with-postgresql:
-    source: "_posts/simplifying-audit-trail-with-postgresql/"
-    destination: "/simplifying-audit-trail-with-postgresql/"
+  realtime-decentralized-price-quotes:
+    source: "_posts/realtime-decentralized-price-quotes/"
+    destination: "/realtime-decentralized-price-quotes/"
     resize: "800"
-  simplifying-audit-trail-with-postgresql-small:
-    source: "_posts/simplifying-audit-trail-with-postgresql/"
-    destination: "/simplifying-audit-trail-with-postgresql/small/"
+  realtime-decentralized-price-quotes-small:
+    source: "_posts/realtime-decentralized-price-quotes/"
+    destination: "/realtime-decentralized-price-quotes/small/"
     resize: "400"
   my-worst-bug:
     source: "_posts/my-worst-bug/"
