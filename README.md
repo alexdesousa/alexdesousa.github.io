@@ -85,7 +85,7 @@ language: ruby
 rvm:
   - 2.6
 before_install:
-  - nvm install 12.14.1
+  - nvm install 17.3.0
 install:
   - gem install bundler
   - bundle install
@@ -124,8 +124,8 @@ $ npm install            # Installs CSS dependencies.
 
 Before you do the previous, make sure you installed the following using `asdf`:
 
-- NodeJS 12.14.1
-- Ruby 2.6.3
+- NodeJS 17.3.0
+- Ruby 2.6.9
 
 ## Running the Server
 
