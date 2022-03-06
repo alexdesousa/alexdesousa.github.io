@@ -73,43 +73,6 @@ group :jekyll_plugins do
 end
 ```
 
-## Why Travis CI?
-
-_Travis CI_ is actually the technology that glues both _Github Pages_ and
-_Jekyll_ together. Every time I push changes to the `blog` branch, it
-automatically builds and deploys the site to the `master` branch. My
-`.travis.yml` file is as follows:
-
-```yaml
-language: ruby
-rvm:
-  - 2.6
-before_install:
-  - nvm install 17.3.0
-install:
-  - gem install bundler
-  - bundle install
-  - npm install
-  - NODE_ENV=production npm run build
-script:
-  - bundle exec jekyll build
-  - bundle exec htmlproofer ./_site --disable-external
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: blog
-  local-dir: _site
-  target-branch: master
-```
-
-> **Note**: The `$GITHUB_TOKEN` is an access token that allows _Travis CI_ to
-> commit the contents of `_site/` to the `target-branch`. You can generate your
-> own token [here](https://github.com/settings/tokens).
-
 ## Building the Project
 
 [This project](https://github.com/alexdesousa/alexdesousa.github.io) depends on

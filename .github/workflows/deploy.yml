@@ -1,0 +1,75 @@
+name: The Broken Link Checks
+
+on:
+  push:
+    branches: [ blog ]
+
+jobs:
+  build:
+    name: "Build The Broken Link"
+    runs-on: ubuntu-latest
+    env:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LANGUAGE: en_US.UTF-8
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Update apt dependencies"
+        run: sudo apt-get update
+      - name: "Install Imagemagick"
+        run: sudo apt-get install -y imagemagick libmagickcore-dev libmagickwand-dev locales locales-all
+      - uses: ruby/setup-ruby@v1
+        name: "Setup Ruby"
+        with:
+          ruby-version: 2.6
+      - name: "Get Bundler"
+        run: gem install bundler
+      - name: "Install Bundler dependencies"
+        run: bundle install
+      - uses: actions/setup-node@v2
+        name: "Setup NodeJS"
+        with:
+          node-version: '16'
+      - name: "Get Node dependencies"
+        run: npm install
+      - name: "Build Config"
+        run: bundle exec jekyll build
+      - name: "Build CSS"
+        run: npm run build
+        env:
+          NODE_ENV: production
+      - name: "Build blog"
+        run: bundle exec jekyll build
+      - name: "Check HTML"
+        run: bundle exec htmlproofer ./_site --disable-external
+      - uses: actions/upload-artifact@v2
+        name: "Upload built site"
+        with:
+          name: "the-broken-link"
+          path: _site
+  deploy:
+    name: "Deploy The Broken Link"
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        name: "Checkout to master branch"
+        with:
+          ref: master
+      - uses: actions/download-artifact@v2
+        name: "Download built site"
+        with:
+          name: "the-broken-link"
+          path: ~/the-broken-link
+      - name: "Copy files"
+        run: cp -a ~/the-broken-link/. .
+      - name: "Set git email"
+        run: git config --global user.email "bot@thebroken.link"
+      - name: "Set git name"
+        run: git config --global user.name "The Broken Link Bot"
+      - name: "Add files"
+        run: git add .
+      - name: "Commit changes"
+        run: git commit -m "The Broken Link deployed"
+      - name: "Push changes"
+        run: git push origin master
