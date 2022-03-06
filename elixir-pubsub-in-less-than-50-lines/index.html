@@ -171,13 +171,13 @@ The Broken Link</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">)</span>
    <span class="ss">:ok</span>
-   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="s2">"Some message"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>A <code>subscriber</code> will receive the messages in its mailbox:</li>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-   <span class="sd">"</span><span class="s2">Some message"</span>
+   <span class="s2">"Some message"</span>
    <span class="ss">:ok</span>
 </code></pre></div>
 <ul>
@@ -283,11 +283,11 @@ The Broken Link</span>
    iex<span class="o">(</span>trinity@matrix<span class="o">)</span>1&gt; Node.connect<span class="o">(</span>:neo@matrix<span class="o">)</span> <span class="c"># Connects both nodes</span>
 </code></pre></div>
 <p>Now <code>:neo@matrix</code> can subscribe to <code>:mainframe</code> channel:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>And <code>:trinity@matrix</code> can send a message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Wake up, Neo..."</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">,</span> <span class="s2">"Wake up, Neo..."</span><span class="p">)</span>
 <span class="ss">:ok</span> 
 </code></pre></div>
 <blockquote>
@@ -295,8 +295,8 @@ The Broken Link</span>
 </blockquote>
 
 <p>Finally, <code>:neo@matrix</code> should receive the message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="sd">"</span><span class="s2">Wake up, Neo..."</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="s2">"Wake up, Neo..."</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>And that&#39;s it. A powerful pubsub in a few lines of code thanks to <code>:pg2</code>.</p>

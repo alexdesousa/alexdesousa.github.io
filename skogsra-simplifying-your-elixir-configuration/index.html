@@ -169,8 +169,8 @@ The Broken Link</span>
 
 <p>We&#39;ll elaborate using the the following example:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
-  <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
-  <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+  <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"localhost"</span><span class="p">,</span>
+  <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
 </code></pre></div>
 <p>The previous code is:</p>
 
@@ -194,16 +194,16 @@ The Broken Link</span>
 
 <p>The following, though a bit more verbose, would be the equivalent to the previous config:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
-  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+  <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
 
-  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="nv">@doc</span> <span class="s2">"My hostname"</span>
   <span class="k">def</span> <span class="n">hostname</span> <span class="k">do</span>
-    <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span>
+    <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"localhost"</span>
   <span class="k">end</span>
 
-  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="nv">@doc</span> <span class="s2">"My port"</span>
   <span class="k">def</span> <span class="n">port</span> <span class="k">do</span>
-    <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+    <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -242,18 +242,18 @@ The Broken Link</span>
 
 <p>The previous example can be re-written as follows:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
-  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+  <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"My hostname"</span>
   <span class="n">app_env</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:hostname</span><span class="p">,</span>
-    <span class="ss">default:</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HOSTNAME"</span>
+    <span class="ss">default:</span> <span class="s2">"localhost"</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"HOSTNAME"</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"My port"</span>
   <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
-    <span class="ss">default:</span> <span class="m">80</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span>
+    <span class="ss">default:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"PORT"</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>This module will have these functions:</p>
@@ -286,7 +286,7 @@ The Broken Link</span>
 <span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Config</span>
 
 <span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
-  <span class="ss">port:</span> <span class="m">4000</span>
+  <span class="ss">port:</span> <span class="mi">4000</span>
 </code></pre></div></li>
 <li><p>From the default value, if it exists (In this case, it would return the integer <code>80</code>).</p></li>
 </ol>
@@ -334,13 +334,13 @@ The Broken Link</span>
     <span class="n">list</span> <span class="o">=</span>
       <span class="n">value</span>
       <span class="o">|&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">~r/,/</span><span class="p">)</span>
-      <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">trim</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
-      <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">trim</span><span class="o">/</span><span class="mi">1</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="o">/</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">list</span><span class="p">}</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">when</span> <span class="n">is_list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">do</span>
-    <span class="k">if</span> <span class="no">Enum</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">is_integer</span><span class="o">/</span><span class="m">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">value</span><span class="p">},</span> <span class="k">else</span><span class="p">:</span> <span class="ss">:error</span>
+    <span class="k">if</span> <span class="no">Enum</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">is_integer</span><span class="o">/</span><span class="mi">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">value</span><span class="p">},</span> <span class="k">else</span><span class="p">:</span> <span class="ss">:error</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">do</span>
@@ -352,23 +352,23 @@ The Broken Link</span>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Histogram buckets"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"Histogram buckets"</span>
   <span class="n">app_env</span> <span class="ss">:buckets</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">,</span>
     <span class="ss">type:</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HISTOGRAM_BUCKETS"</span>
+    <span class="ss">os_env:</span> <span class="s2">"HISTOGRAM_BUCKETS"</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Then it should be easy to retrieve our <code>buckets</code> from an OS environment variable:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">BUCKETS"</span><span class="p">)</span>
-<span class="sd">"</span><span class="s2">1, 10, 30, 60"</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"BUCKETS"</span><span class="p">)</span>
+<span class="s2">"1, 10, 30, 60"</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
 </code></pre></div>
 <p>or if the variable is not defined, from our application configuration:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
 </code></pre></div>
 <h2 id="required-variables">Required variables</h2>
 
@@ -376,20 +376,20 @@ The Broken Link</span>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Server port."</span>
+  <span class="nv">@envdoc</span> <span class="s2">"Server port."</span>
   <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"PORT"</span><span class="p">,</span>
     <span class="ss">required:</span> <span class="no">true</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The function <code>Myapp.Config.port()</code> will error if <code>PORT</code> is undefined and
 the application configuration is not found:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span>
 <span class="no">nil</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
 <span class="no">nil</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Variable port in app myapp is undefined"</span><span class="p">}</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="s2">"Variable port in app myapp is undefined"</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="strong-typing">Strong typing</h2>
 
@@ -397,9 +397,9 @@ the application configuration is not found:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">PostgreSQL hostname"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"PostgreSQL hostname"</span>
   <span class="n">app_env</span> <span class="ss">:db_port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="p">[</span><span class="ss">:postgres</span><span class="p">,</span> <span class="ss">:port</span><span class="p">],</span>
-    <span class="ss">default:</span> <span class="m">5432</span>
+    <span class="ss">default:</span> <span class="mi">5432</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The generated function <code>Myapp.Config.db_port/0</code> will have the following <code>@spec</code>:</p>

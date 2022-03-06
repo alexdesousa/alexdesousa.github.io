@@ -239,25 +239,25 @@ The Broken Link</span>
 <ul>
 <li>A process subscribes to <code>&quot;my_channel&quot;</code>:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">)</span>
    <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
    <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
 <ul>
 <li>A process (in this case the same process) publishes the message <code>&quot;my message&quot;</code> in <code>&quot;my_channel&quot;</code>.</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">],</span> <span class="s2">"my message"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>The message should be in the mailbox of the subscriber process:</li>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-   <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">}</span>
+   <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"my message"</span><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>The subscriber can unsubscribe from the channel to stop receiving messages:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">)</span>
    <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
    <span class="p">{</span><span class="ss">:Y_DISCONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -274,7 +274,7 @@ The Broken Link</span>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
 
   <span class="k">def</span> <span class="n">start_link</span> <span class="k">do</span>
-    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">]</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">]</span>
     <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">])</span>
   <span class="k">end</span>
 
@@ -287,8 +287,8 @@ The Broken Link</span>
 </code></pre></div>
 <p>This subscriber will print the message as it receives it:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">_pid</span><span class="p">}</span> <span class="o">=</span> <span class="no">Subscriber</span><span class="o">.</span><span class="n">start_link</span><span class="p">()</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
-<span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">],</span> <span class="s2">"my message"</span><span class="p">)</span>
+<span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="s2">"my_message"</span><span class="p">}</span>
 </code></pre></div>
 <blockquote>
 <p>An interesting side-effect is that now we can send messages to any process as long as they are subscribed to the right channel without needing to know the process PID or name.</p>
@@ -311,14 +311,14 @@ The Broken Link</span>
 <p>Creating notifications in PostgreSQL is very easy e.g. let&#39;s say we have a table for books:</p>
 <div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- User table creation</span>
 <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">books</span> <span class="p">(</span>
-  <span class="n">id</span> <span class="n">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
-  <span class="n">title</span> <span class="n">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>
+  <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">title</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>
 <span class="p">);</span>
 </code></pre></div>
 <p>and we want JSON notifications in the channel <code>new_books</code> every time a new book is created in our database e.g:</p>
 <div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Animal Farm"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Animal Farm"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p>The trigger could be implemented as follows:</p>
@@ -333,7 +333,7 @@ The Broken Link</span>
       <span class="s1">'title'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">title</span>
     <span class="p">);</span>
 
-    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">::</span><span class="n">TEXT</span><span class="p">);</span>
+    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">::</span><span class="nb">TEXT</span><span class="p">);</span>
     <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
   <span class="k">END</span><span class="p">;</span>
   <span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
@@ -364,7 +364,7 @@ The Broken Link</span>
 <p><a href="https://github.com/gmtprime/yggdrasil_postgres">Yggdrasil for PostgreSQL</a> is an adapter that supports all the features mentioned above while maintaining Yggdrasil&#39;s simple API e.g:</p>
 
 <p>For our example, we could subscribe to the database messages by doing the following:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">)</span>
 <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -373,7 +373,7 @@ The Broken Link</span>
 </code></pre></div>
 <p>We will get the following message in IEx:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">2</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">1984"</span><span class="p">}}</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="s2">"1984"</span><span class="p">}}</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Note</strong>: <code>Yggdrasil</code> comes with built-in message transformers. We&#39;ve used
@@ -387,7 +387,7 @@ data.</p>
 
   <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
     <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span>
+      <span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span>
       <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span>
       <span class="ss">transformer:</span> <span class="ss">:json</span>
     <span class="p">]</span>
@@ -396,15 +396,15 @@ data.</p>
   <span class="k">end</span>
 
   <span class="nv">@impl</span> <span class="no">true</span>
-  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="n">id</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="n">title</span><span class="p">},</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="n">id</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="n">title</span><span class="p">},</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
     <span class="o">...</span> <span class="n">handle</span> <span class="n">event</span> <span class="o">...</span>
     <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>It&#39;s also possbible to use <code>Yggdrasil.publish/2</code> with PostgreSQL:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">3</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">A Brave New World"</span><span class="p">}</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="s2">"A Brave New World"</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span>
 </code></pre></div>
 <p><img src="https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif" alt="Too easy!"></p>
 
@@ -492,7 +492,7 @@ In the previous image:</p>
 <p>The biggest difference with previous adapters is the channel name. Instead of being a string, it&#39;s a tuple with the exchange name and the routing key e.g:</p>
 
 <p>A subscriber would connect to the exchange <code>amq.topic</code> using the routing key <code>logs.*</code> as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.*"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">)</span>
 <span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -501,12 +501,12 @@ In the previous image:</p>
 </blockquote>
 
 <p>Then a publisher could send a message to the exchange <code>amq.topic</code> using <code>logs.info</code> as routing key:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">publisher</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.info"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">],</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">publisher</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.info"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">],</span> <span class="s2">"Some message"</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Finally, the subscriber would receive the message:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">}</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"Some message"</span><span class="p">}</span>
 </code></pre></div>
 <p>Additionally, the subscriber can be written using the <code>Yggdrasil</code> behaviour:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Logs</span><span class="o">.</span><span class="no">Subscriber</span> <span class="k">do</span>
@@ -514,7 +514,7 @@ In the previous image:</p>
 
   <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
     <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span>
+      <span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.*"</span><span class="p">},</span>
       <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span>
     <span class="p">]</span>
 
@@ -597,26 +597,26 @@ In the previous image:</p>
 <ul>
 <li>Both nodes are interconnected:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
    <span class="no">true</span>
 </code></pre></div>
 <p>Then <code>:smith@matrix</code> can subscribe to any channel where <code>:neo@matrix</code> is publishing messages e.g:</p>
 
 <p>In <code>:smith@matrix</code>, we subscribe to the channel <code>&quot;private&quot;</code>:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"private"</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>In <code>:neo@matrix</code>, we publish a message in the channel <code>&quot;private&quot;</code>:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="s2">"private"</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="s2">"What's the Matrix?"</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Finally, we can flush <code>:smith@matrix</code> mailbox and find our message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"What's the Matrix?"</span><span class="p">}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Distributed pubsub as simple as that.</p>
@@ -641,7 +641,7 @@ In the previous image:</p>
 <li>The node <code>:trinity@matrix</code> has access to a RabbitMQ server.</li>
 <li>Both nodes are interconnected:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
    <span class="no">true</span>
 </code></pre></div>
 <p>So our final infrastructure would look like the following:<p>
@@ -657,18 +657,18 @@ Now that our nodes are connected, every adapter is available to them.</p>
 
 <p>Through <code>:trinity@matrix</code>, the node <code>:neo@matrix</code> can now subscribe to
 a RabbitMQ exchange:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"private"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Or even publish messages:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="s2">"What's the Matrix?"</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"What's the Matrix?"</span><span class="p">}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>The good thing about this feature is that it works with any adapter that supports Yggdrasil v5.0.</p>

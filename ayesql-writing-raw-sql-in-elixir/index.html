@@ -297,7 +297,7 @@ git filter-branch <span class="se">\</span>
   <span class="n">from</span> <span class="n">al</span> <span class="ow">in</span> <span class="no">Album</span><span class="p">,</span>
     <span class="ss">inner_join:</span> <span class="n">ar</span> <span class="ow">in</span> <span class="no">Artist</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">al</span><span class="o">.</span><span class="n">artistId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">artistId</span><span class="p">,</span>
     <span class="ss">left_join:</span> <span class="n">tr</span> <span class="ow">in</span> <span class="no">Track</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">tr</span><span class="o">.</span><span class="n">albumId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">albumId</span><span class="p">,</span>
-    <span class="ss">where:</span> <span class="n">ar</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="sd">"</span><span class="s2">Pearl Jam"</span>
+    <span class="ss">where:</span> <span class="n">ar</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Pearl Jam"</span>
     <span class="ss">group_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
     <span class="ss">order_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
     <span class="ss">select:</span> <span class="p">%{</span><span class="ss">album:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="ss">duration:</span> <span class="n">sum</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">milliseconds</span><span class="p">)}</span>
@@ -325,7 +325,7 @@ git filter-branch <span class="se">\</span>
 <p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:</p>
 <div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
 <span class="p">(</span>
-    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="k">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="n">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
+    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="nb">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="nb">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
            <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
            <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FILTER</span><span class="p">(</span><span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">accidents</span>
       <span class="k">FROM</span> <span class="n">f1db</span><span class="p">.</span><span class="n">results</span>
@@ -342,26 +342,26 @@ git filter-branch <span class="se">\</span>
 <p>Now, when translating this query to Ecto, we&#39;ll have to use fragments:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># NOTE: The schema definition is omitted.</span>
 
-<span class="n">from</span> <span class="o">=</span> <span class="m">1974</span>
-<span class="n">to</span> <span class="o">=</span> <span class="m">1990</span>
+<span class="n">from</span> <span class="o">=</span> <span class="mi">1974</span>
+<span class="n">to</span> <span class="o">=</span> <span class="mi">1990</span>
 
 <span class="n">accidents</span> <span class="o">=</span>
   <span class="n">from</span> <span class="n">re</span> <span class="ow">in</span> <span class="no">Result</span><span class="p">,</span>
     <span class="ss">join:</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:status</span><span class="p">),</span>
     <span class="ss">join:</span> <span class="n">ra</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:race</span><span class="p">),</span>
-    <span class="ss">group_by:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">season"</span><span class="p">),</span>
+    <span class="ss">group_by:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"season"</span><span class="p">),</span>
     <span class="ss">select:</span> <span class="p">%{</span>
-      <span class="ss">season:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="n">ra</span><span class="o">.</span><span class="n">date</span><span class="p">),</span>
-      <span class="ss">participants:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*)"</span><span class="p">),</span>
-      <span class="ss">accidents:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*) FILTER(WHERE status = 'Accident')"</span><span class="p">)</span>
+      <span class="ss">season:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"EXTRACT(year from ?)"</span><span class="p">,</span> <span class="n">ra</span><span class="o">.</span><span class="n">date</span><span class="p">),</span>
+      <span class="ss">participants:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"COUNT(*)"</span><span class="p">),</span>
+      <span class="ss">accidents:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"COUNT(*) FILTER(WHERE status = 'Accident')"</span><span class="p">)</span>
     <span class="p">}</span>
 
 <span class="n">query</span> <span class="o">=</span>
   <span class="n">from</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">subquery</span><span class="p">(</span><span class="n">accidents</span><span class="p">),</span>
-    <span class="ss">where:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">? BETWEEN ? AND ?"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="o">^</span><span class="n">from</span><span class="p">,</span> <span class="o">^</span><span class="n">to</span><span class="p">),</span>
+    <span class="ss">where:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"? BETWEEN ? AND ?"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="o">^</span><span class="n">from</span><span class="p">,</span> <span class="o">^</span><span class="n">to</span><span class="p">),</span>
     <span class="ss">select:</span> <span class="p">%{</span>
       <span class="ss">season:</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span>
-      <span class="ss">percentage:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">ROUND(100.0 * ? / ?, 2)"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">accidents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">participants</span><span class="p">)</span>
+      <span class="ss">percentage:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"ROUND(100.0 * ? / ?, 2)"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">accidents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">participants</span><span class="p">)</span>
     <span class="p">}</span>
 
 <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
@@ -374,7 +374,7 @@ git filter-branch <span class="se">\</span>
 
   <span class="k">defmacro</span> <span class="n">year</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">do</span>
     <span class="kn">quote</span> <span class="k">do</span>
-      <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+      <span class="n">fragment</span><span class="p">(</span><span class="s2">"EXTRACT(year from ?)"</span><span class="p">,</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -419,7 +419,7 @@ git filter-branch <span class="se">\</span>
   ORDER BY season
   """</span>
 
-<span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="m">1974</span><span class="p">,</span> <span class="m">1990</span><span class="p">])</span>
+<span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="mi">1974</span><span class="p">,</span> <span class="mi">1990</span><span class="p">])</span>
 </code></pre></div>
 <p>There are some things I&#39;d like to point out from the previous code:</p>
 
@@ -430,17 +430,17 @@ git filter-branch <span class="se">\</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
     <span class="p">%</span><span class="no">Postgrex</span><span class="o">.</span><span class="no">Result</span><span class="p">{</span>
-      <span class="ss">columns:</span> <span class="p">[</span><span class="sd">"</span><span class="s2">season"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">percentage"</span><span class="p">],</span>
+      <span class="ss">columns:</span> <span class="p">[</span><span class="s2">"season"</span><span class="p">,</span> <span class="s2">"percentage"</span><span class="p">],</span>
       <span class="ss">command:</span> <span class="ss">:select</span><span class="p">,</span>
-      <span class="ss">connection_id:</span> <span class="m">206</span><span class="p">,</span>
+      <span class="ss">connection_id:</span> <span class="mi">206</span><span class="p">,</span>
       <span class="ss">messages:</span> <span class="p">[],</span>
-      <span class="ss">num_rows:</span> <span class="m">17</span><span class="p">,</span>
+      <span class="ss">num_rows:</span> <span class="mi">17</span><span class="p">,</span>
       <span class="ss">rows:</span> <span class="p">[</span>
-        <span class="p">[</span><span class="m">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
-        <span class="p">[</span><span class="m">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
-        <span class="p">[</span><span class="m">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
-        <span class="p">[</span><span class="m">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
-        <span class="p">[</span><span class="m">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
+        <span class="p">[</span><span class="mf">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
+        <span class="p">[</span><span class="mf">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
+        <span class="p">[</span><span class="mf">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
+        <span class="p">[</span><span class="mf">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
+        <span class="p">[</span><span class="mf">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
         <span class="o">...</span>
    <span class="p">}}</span>
 </code></pre></div>
@@ -478,7 +478,7 @@ git filter-branch <span class="se">\</span>
      <span class="no">GROUP</span> <span class="no">BY</span> <span class="n">season</span>
    <span class="p">)</span>
      <span class="no">SELECT</span> <span class="n">season</span><span class="p">,</span>
-            <span class="no">ROUND</span><span class="p">(</span><span class="m">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
+            <span class="no">ROUND</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
        <span class="no">FROM</span> <span class="n">accidents</span>
       <span class="no">WHERE</span> <span class="n">season</span> <span class="no">BETWEEN</span> <span class="ss">:from</span> <span class="no">AND</span> <span class="ss">:to</span>
    <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">season</span>
@@ -488,9 +488,9 @@ git filter-branch <span class="se">\</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: lib/f1/queries.ex</span>
 
-   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="m">3</span><span class="p">]</span>
+   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="mi">3</span><span class="p">]</span>
 
-   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="sd">"</span><span class="s2">query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
+   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="s2">"query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>Modify our configuration to run the queries by default:</li>
@@ -502,7 +502,7 @@ git filter-branch <span class="se">\</span>
    <span class="n">config</span> <span class="ss">:ayesql</span><span class="p">,</span> <span class="ss">run?:</span> <span class="no">true</span>
 </code></pre></div>
 <p>Then we can call our query as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="m">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="m">1990</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="mi">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="mi">1990</span><span class="p">)</span>
 <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
  <span class="p">[</span>
    <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;3.67&gt;, season: 1974.0},</span>

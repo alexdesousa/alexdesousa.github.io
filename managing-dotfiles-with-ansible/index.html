@@ -180,7 +180,7 @@ The Broken Link</span>
 <span class="nb">set</span> <span class="nt">-e</span>
 
 <span class="c"># Dotfiles' project root directory</span>
-<span class="nv">ROOTDIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="k">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>
+<span class="nv">ROOTDIR</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="si">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="si">)</span><span class="s2">"</span>
 <span class="c"># Host file location</span>
 <span class="nv">HOSTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$ROOTDIR</span><span class="s2">/hosts"</span>
 <span class="c"># Main playbook</span>
@@ -277,8 +277,8 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
   <span class="na">become_user</span><span class="pi">:</span> <span class="s">root</span>
   <span class="na">command</span><span class="pi">:</span> <span class="s">chsh -s /bin/zsh {{ lookup('env' 'USER') }}</span>
   <span class="na">register</span><span class="pi">:</span> <span class="s">zsh_for_user</span>
-  <span class="na">failed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc &gt;= 1</span>
-  <span class="na">changed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc == 0</span>
+  <span class="na">failed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc &gt;= </span><span class="m">1</span>
+  <span class="na">changed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc == </span><span class="m">0</span>
 
 <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checks for oh-my-zsh installation | stat</span>
   <span class="na">stat</span><span class="pi">:</span>

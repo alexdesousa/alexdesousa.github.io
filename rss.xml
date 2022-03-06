@@ -14,7 +14,7 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Sun, 27 Dec 2020 07:21:23 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 06 Mar 2022 13:43:49 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
           <title>My Worst Bug</title>
@@ -482,7 +482,7 @@ git filter-branch <span class="se">\</span>
   <span class="n">from</span> <span class="n">al</span> <span class="ow">in</span> <span class="no">Album</span><span class="p">,</span>
     <span class="ss">inner_join:</span> <span class="n">ar</span> <span class="ow">in</span> <span class="no">Artist</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">al</span><span class="o">.</span><span class="n">artistId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">artistId</span><span class="p">,</span>
     <span class="ss">left_join:</span> <span class="n">tr</span> <span class="ow">in</span> <span class="no">Track</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">tr</span><span class="o">.</span><span class="n">albumId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">albumId</span><span class="p">,</span>
-    <span class="ss">where:</span> <span class="n">ar</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="sd">"</span><span class="s2">Pearl Jam"</span>
+    <span class="ss">where:</span> <span class="n">ar</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"Pearl Jam"</span>
     <span class="ss">group_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
     <span class="ss">order_by:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span>
     <span class="ss">select:</span> <span class="p">%{</span><span class="ss">album:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="ss">duration:</span> <span class="n">sum</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">milliseconds</span><span class="p">)}</span>
@@ -510,7 +510,7 @@ git filter-branch <span class="se">\</span>
 <p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:</p>
 <div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
 <span class="p">(</span>
-    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="k">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="n">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
+    <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="nb">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="nb">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
            <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
            <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">FILTER</span><span class="p">(</span><span class="k">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="k">AS</span> <span class="n">accidents</span>
       <span class="k">FROM</span> <span class="n">f1db</span><span class="p">.</span><span class="n">results</span>
@@ -527,26 +527,26 @@ git filter-branch <span class="se">\</span>
 <p>Now, when translating this query to Ecto, we&#39;ll have to use fragments:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># NOTE: The schema definition is omitted.</span>
 
-<span class="n">from</span> <span class="o">=</span> <span class="m">1974</span>
-<span class="n">to</span> <span class="o">=</span> <span class="m">1990</span>
+<span class="n">from</span> <span class="o">=</span> <span class="mi">1974</span>
+<span class="n">to</span> <span class="o">=</span> <span class="mi">1990</span>
 
 <span class="n">accidents</span> <span class="o">=</span>
   <span class="n">from</span> <span class="n">re</span> <span class="ow">in</span> <span class="no">Result</span><span class="p">,</span>
     <span class="ss">join:</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:status</span><span class="p">),</span>
     <span class="ss">join:</span> <span class="n">ra</span> <span class="ow">in</span> <span class="n">assoc</span><span class="p">(</span><span class="n">re</span><span class="p">,</span> <span class="ss">:race</span><span class="p">),</span>
-    <span class="ss">group_by:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">season"</span><span class="p">),</span>
+    <span class="ss">group_by:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"season"</span><span class="p">),</span>
     <span class="ss">select:</span> <span class="p">%{</span>
-      <span class="ss">season:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="n">ra</span><span class="o">.</span><span class="n">date</span><span class="p">),</span>
-      <span class="ss">participants:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*)"</span><span class="p">),</span>
-      <span class="ss">accidents:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">COUNT(*) FILTER(WHERE status = 'Accident')"</span><span class="p">)</span>
+      <span class="ss">season:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"EXTRACT(year from ?)"</span><span class="p">,</span> <span class="n">ra</span><span class="o">.</span><span class="n">date</span><span class="p">),</span>
+      <span class="ss">participants:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"COUNT(*)"</span><span class="p">),</span>
+      <span class="ss">accidents:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"COUNT(*) FILTER(WHERE status = 'Accident')"</span><span class="p">)</span>
     <span class="p">}</span>
 
 <span class="n">query</span> <span class="o">=</span>
   <span class="n">from</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">subquery</span><span class="p">(</span><span class="n">accidents</span><span class="p">),</span>
-    <span class="ss">where:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">? BETWEEN ? AND ?"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="o">^</span><span class="n">from</span><span class="p">,</span> <span class="o">^</span><span class="n">to</span><span class="p">),</span>
+    <span class="ss">where:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"? BETWEEN ? AND ?"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="o">^</span><span class="n">from</span><span class="p">,</span> <span class="o">^</span><span class="n">to</span><span class="p">),</span>
     <span class="ss">select:</span> <span class="p">%{</span>
       <span class="ss">season:</span> <span class="n">a</span><span class="o">.</span><span class="n">season</span><span class="p">,</span>
-      <span class="ss">percentage:</span> <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">ROUND(100.0 * ? / ?, 2)"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">accidents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">participants</span><span class="p">)</span>
+      <span class="ss">percentage:</span> <span class="n">fragment</span><span class="p">(</span><span class="s2">"ROUND(100.0 * ? / ?, 2)"</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">accidents</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">participants</span><span class="p">)</span>
     <span class="p">}</span>
 
 <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
@@ -559,7 +559,7 @@ git filter-branch <span class="se">\</span>
 
   <span class="k">defmacro</span> <span class="n">year</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">do</span>
     <span class="kn">quote</span> <span class="k">do</span>
-      <span class="n">fragment</span><span class="p">(</span><span class="sd">"</span><span class="s2">EXTRACT(year from ?)"</span><span class="p">,</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
+      <span class="n">fragment</span><span class="p">(</span><span class="s2">"EXTRACT(year from ?)"</span><span class="p">,</span> <span class="kn">unquote</span><span class="p">(</span><span class="n">date</span><span class="p">))</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -604,7 +604,7 @@ git filter-branch <span class="se">\</span>
   ORDER BY season
   """</span>
 
-<span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="m">1974</span><span class="p">,</span> <span class="m">1990</span><span class="p">])</span>
+<span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="mi">1974</span><span class="p">,</span> <span class="mi">1990</span><span class="p">])</span>
 </code></pre></div>
 <p>There are some things I&#39;d like to point out from the previous code:</p>
 
@@ -615,17 +615,17 @@ git filter-branch <span class="se">\</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
     <span class="p">%</span><span class="no">Postgrex</span><span class="o">.</span><span class="no">Result</span><span class="p">{</span>
-      <span class="ss">columns:</span> <span class="p">[</span><span class="sd">"</span><span class="s2">season"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">percentage"</span><span class="p">],</span>
+      <span class="ss">columns:</span> <span class="p">[</span><span class="s2">"season"</span><span class="p">,</span> <span class="s2">"percentage"</span><span class="p">],</span>
       <span class="ss">command:</span> <span class="ss">:select</span><span class="p">,</span>
-      <span class="ss">connection_id:</span> <span class="m">206</span><span class="p">,</span>
+      <span class="ss">connection_id:</span> <span class="mi">206</span><span class="p">,</span>
       <span class="ss">messages:</span> <span class="p">[],</span>
-      <span class="ss">num_rows:</span> <span class="m">17</span><span class="p">,</span>
+      <span class="ss">num_rows:</span> <span class="mi">17</span><span class="p">,</span>
       <span class="ss">rows:</span> <span class="p">[</span>
-        <span class="p">[</span><span class="m">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
-        <span class="p">[</span><span class="m">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
-        <span class="p">[</span><span class="m">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
-        <span class="p">[</span><span class="m">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
-        <span class="p">[</span><span class="m">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
+        <span class="p">[</span><span class="mf">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
+        <span class="p">[</span><span class="mf">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
+        <span class="p">[</span><span class="mf">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
+        <span class="p">[</span><span class="mf">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
+        <span class="p">[</span><span class="mf">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
         <span class="o">...</span>
    <span class="p">}}</span>
 </code></pre></div>
@@ -663,7 +663,7 @@ git filter-branch <span class="se">\</span>
      <span class="no">GROUP</span> <span class="no">BY</span> <span class="n">season</span>
    <span class="p">)</span>
      <span class="no">SELECT</span> <span class="n">season</span><span class="p">,</span>
-            <span class="no">ROUND</span><span class="p">(</span><span class="m">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
+            <span class="no">ROUND</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
        <span class="no">FROM</span> <span class="n">accidents</span>
       <span class="no">WHERE</span> <span class="n">season</span> <span class="no">BETWEEN</span> <span class="ss">:from</span> <span class="no">AND</span> <span class="ss">:to</span>
    <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">season</span>
@@ -673,9 +673,9 @@ git filter-branch <span class="se">\</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: lib/f1/queries.ex</span>
 
-   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="m">3</span><span class="p">]</span>
+   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="mi">3</span><span class="p">]</span>
 
-   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="sd">"</span><span class="s2">query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
+   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="s2">"query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>Modify our configuration to run the queries by default:</li>
@@ -687,7 +687,7 @@ git filter-branch <span class="se">\</span>
    <span class="n">config</span> <span class="ss">:ayesql</span><span class="p">,</span> <span class="ss">run?:</span> <span class="no">true</span>
 </code></pre></div>
 <p>Then we can call our query as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="m">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="m">1990</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="mi">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="mi">1990</span><span class="p">)</span>
 <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
  <span class="p">[</span>
    <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;3.67&gt;, season: 1974.0},</span>
@@ -759,13 +759,13 @@ git filter-branch <span class="se">\</span>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">members</span> <span class="o">=</span> <span class="ss">:pg2</span><span class="o">.</span><span class="n">get_members</span><span class="p">(</span><span class="ss">:my_channel</span><span class="p">)</span>
    <span class="ss">:ok</span>
-   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">for</span> <span class="n">member</span> <span class="o">&lt;-</span> <span class="n">members</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="n">send</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="s2">"Some message"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>A <code>subscriber</code> will receive the messages in its mailbox:</li>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-   <span class="sd">"</span><span class="s2">Some message"</span>
+   <span class="s2">"Some message"</span>
    <span class="ss">:ok</span>
 </code></pre></div>
 <ul>
@@ -871,11 +871,11 @@ git filter-branch <span class="se">\</span>
    iex<span class="o">(</span>trinity@matrix<span class="o">)</span>1&gt; Node.connect<span class="o">(</span>:neo@matrix<span class="o">)</span> <span class="c"># Connects both nodes</span>
 </code></pre></div>
 <p>Now <code>:neo@matrix</code> can subscribe to <code>:mainframe</code> channel:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>And <code>:trinity@matrix</code> can send a message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Wake up, Neo..."</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">PubSub</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="ss">:mainframe</span><span class="p">,</span> <span class="s2">"Wake up, Neo..."</span><span class="p">)</span>
 <span class="ss">:ok</span> 
 </code></pre></div>
 <blockquote>
@@ -883,8 +883,8 @@ git filter-branch <span class="se">\</span>
 </blockquote>
 
 <p>Finally, <code>:neo@matrix</code> should receive the message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="sd">"</span><span class="s2">Wake up, Neo..."</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="s2">"Wake up, Neo..."</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>And that&#39;s it. A powerful pubsub in a few lines of code thanks to <code>:pg2</code>.</p>
@@ -947,7 +947,7 @@ git filter-branch <span class="se">\</span>
 <span class="nb">set</span> <span class="nt">-e</span>
 
 <span class="c"># Dotfiles' project root directory</span>
-<span class="nv">ROOTDIR</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="k">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="k">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="k">)</span><span class="s2">"</span>
+<span class="nv">ROOTDIR</span><span class="o">=</span><span class="s2">"</span><span class="si">$(</span><span class="nb">cd</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">dirname</span> <span class="s2">"</span><span class="k">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="k">}</span><span class="s2">"</span><span class="si">)</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">pwd</span><span class="si">)</span><span class="s2">"</span>
 <span class="c"># Host file location</span>
 <span class="nv">HOSTS</span><span class="o">=</span><span class="s2">"</span><span class="nv">$ROOTDIR</span><span class="s2">/hosts"</span>
 <span class="c"># Main playbook</span>
@@ -1044,8 +1044,8 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
   <span class="na">become_user</span><span class="pi">:</span> <span class="s">root</span>
   <span class="na">command</span><span class="pi">:</span> <span class="s">chsh -s /bin/zsh {{ lookup('env' 'USER') }}</span>
   <span class="na">register</span><span class="pi">:</span> <span class="s">zsh_for_user</span>
-  <span class="na">failed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc &gt;= 1</span>
-  <span class="na">changed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc == 0</span>
+  <span class="na">failed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc &gt;= </span><span class="m">1</span>
+  <span class="na">changed_when</span><span class="pi">:</span> <span class="s">zsh_for_user.rc == </span><span class="m">0</span>
 
 <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checks for oh-my-zsh installation | stat</span>
   <span class="na">stat</span><span class="pi">:</span>
@@ -1233,8 +1233,8 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 
 <p>We&#39;ll elaborate using the the following example:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
-  <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
-  <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+  <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"localhost"</span><span class="p">,</span>
+  <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
 </code></pre></div>
 <p>The previous code is:</p>
 
@@ -1258,16 +1258,16 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 
 <p>The following, though a bit more verbose, would be the equivalent to the previous config:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
-  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+  <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
 
-  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="nv">@doc</span> <span class="s2">"My hostname"</span>
   <span class="k">def</span> <span class="n">hostname</span> <span class="k">do</span>
-    <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">localhost"</span>
+    <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"localhost"</span>
   <span class="k">end</span>
 
-  <span class="nv">@doc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="nv">@doc</span> <span class="s2">"My port"</span>
   <span class="k">def</span> <span class="n">port</span> <span class="k">do</span>
-    <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="sd">"</span><span class="s2">80"</span><span class="p">)</span>
+    <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
@@ -1306,18 +1306,18 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 
 <p>The previous example can be re-written as follows:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
-  <span class="nv">@moduledoc</span> <span class="sd">"</span><span class="s2">My app config."</span>
+  <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My hostname"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"My hostname"</span>
   <span class="n">app_env</span> <span class="ss">:hostname</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:hostname</span><span class="p">,</span>
-    <span class="ss">default:</span> <span class="sd">"</span><span class="s2">localhost"</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HOSTNAME"</span>
+    <span class="ss">default:</span> <span class="s2">"localhost"</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"HOSTNAME"</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">My port"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"My port"</span>
   <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
-    <span class="ss">default:</span> <span class="m">80</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span>
+    <span class="ss">default:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"PORT"</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>This module will have these functions:</p>
@@ -1350,7 +1350,7 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 <span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Config</span>
 
 <span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
-  <span class="ss">port:</span> <span class="m">4000</span>
+  <span class="ss">port:</span> <span class="mi">4000</span>
 </code></pre></div></li>
 <li><p>From the default value, if it exists (In this case, it would return the integer <code>80</code>).</p></li>
 </ol>
@@ -1398,13 +1398,13 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
     <span class="n">list</span> <span class="o">=</span>
       <span class="n">value</span>
       <span class="o">|&gt;</span> <span class="no">String</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sr">~r/,/</span><span class="p">)</span>
-      <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">trim</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
-      <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="o">/</span><span class="m">1</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Stream</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="no">String</span><span class="o">.</span><span class="n">trim</span><span class="o">/</span><span class="mi">1</span><span class="p">)</span>
+      <span class="o">|&gt;</span> <span class="no">Enum</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="o">/</span><span class="mi">1</span><span class="p">)</span>
     <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">list</span><span class="p">}</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">when</span> <span class="n">is_list</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">do</span>
-    <span class="k">if</span> <span class="no">Enum</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">is_integer</span><span class="o">/</span><span class="m">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">value</span><span class="p">},</span> <span class="k">else</span><span class="p">:</span> <span class="ss">:error</span>
+    <span class="k">if</span> <span class="no">Enum</span><span class="o">.</span><span class="n">all?</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">is_integer</span><span class="o">/</span><span class="mi">1</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">value</span><span class="p">},</span> <span class="k">else</span><span class="p">:</span> <span class="ss">:error</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="n">cast</span><span class="p">(</span><span class="n">_</span><span class="p">)</span> <span class="k">do</span>
@@ -1416,23 +1416,23 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Histogram buckets"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"Histogram buckets"</span>
   <span class="n">app_env</span> <span class="ss">:buckets</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">,</span>
     <span class="ss">type:</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">HISTOGRAM_BUCKETS"</span>
+    <span class="ss">os_env:</span> <span class="s2">"HISTOGRAM_BUCKETS"</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>Then it should be easy to retrieve our <code>buckets</code> from an OS environment variable:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">BUCKETS"</span><span class="p">)</span>
-<span class="sd">"</span><span class="s2">1, 10, 30, 60"</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"BUCKETS"</span><span class="p">)</span>
+<span class="s2">"1, 10, 30, 60"</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
 </code></pre></div>
 <p>or if the variable is not defined, from our application configuration:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">30</span><span class="p">,</span> <span class="m">60</span><span class="p">]}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
 </code></pre></div>
 <h2 id="required-variables">Required variables</h2>
 
@@ -1440,20 +1440,20 @@ ansible-playbook <span class="nt">-i</span> <span class="s2">"</span><span class
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">Server port."</span>
+  <span class="nv">@envdoc</span> <span class="s2">"Server port."</span>
   <span class="n">app_env</span> <span class="ss">:port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">,</span>
-    <span class="ss">os_env:</span> <span class="sd">"</span><span class="s2">PORT"</span><span class="p">,</span>
+    <span class="ss">os_env:</span> <span class="s2">"PORT"</span><span class="p">,</span>
     <span class="ss">required:</span> <span class="no">true</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The function <code>Myapp.Config.port()</code> will error if <code>PORT</code> is undefined and
 the application configuration is not found:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="sd">"</span><span class="s2">PORT"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span>
 <span class="no">nil</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
 <span class="no">nil</span>
-<span class="n">iex</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="sd">"</span><span class="s2">Variable port in app myapp is undefined"</span><span class="p">}</span>
+<span class="n">iex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="s2">"Variable port in app myapp is undefined"</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="strong-typing">Strong typing</h2>
 
@@ -1461,9 +1461,9 @@ the application configuration is not found:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
-  <span class="nv">@envdoc</span> <span class="sd">"</span><span class="s2">PostgreSQL hostname"</span>
+  <span class="nv">@envdoc</span> <span class="s2">"PostgreSQL hostname"</span>
   <span class="n">app_env</span> <span class="ss">:db_port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="p">[</span><span class="ss">:postgres</span><span class="p">,</span> <span class="ss">:port</span><span class="p">],</span>
-    <span class="ss">default:</span> <span class="m">5432</span>
+    <span class="ss">default:</span> <span class="mi">5432</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>The generated function <code>Myapp.Config.db_port/0</code> will have the following <code>@spec</code>:</p>
@@ -1591,25 +1591,25 @@ the application configuration is not found:</p>
 <ul>
 <li>A process subscribes to <code>&quot;my_channel&quot;</code>:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">)</span>
    <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
    <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
 <ul>
 <li>A process (in this case the same process) publishes the message <code>&quot;my message&quot;</code> in <code>&quot;my_channel&quot;</code>.</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">],</span> <span class="s2">"my message"</span><span class="p">)</span>
 </code></pre></div>
 <ul>
 <li>The message should be in the mailbox of the subscriber process:</li>
 </ul>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-   <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">}</span>
+   <span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"my message"</span><span class="p">}</span>
 </code></pre></div>
 <ul>
 <li>The subscriber can unsubscribe from the channel to stop receiving messages:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">)</span>
    <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
    <span class="p">{</span><span class="ss">:Y_DISCONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -1626,7 +1626,7 @@ the application configuration is not found:</p>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
 
   <span class="k">def</span> <span class="n">start_link</span> <span class="k">do</span>
-    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">]</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">]</span>
     <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">])</span>
   <span class="k">end</span>
 
@@ -1639,8 +1639,8 @@ the application configuration is not found:</p>
 </code></pre></div>
 <p>This subscriber will print the message as it receives it:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">_pid</span><span class="p">}</span> <span class="o">=</span> <span class="no">Subscriber</span><span class="o">.</span><span class="n">start_link</span><span class="p">()</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">my_channel"</span><span class="p">],</span> <span class="sd">"</span><span class="s2">my message"</span><span class="p">)</span>
-<span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="sd">"</span><span class="s2">my_message"</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="ss">:ok</span> <span class="o">=</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"my_channel"</span><span class="p">],</span> <span class="s2">"my message"</span><span class="p">)</span>
+<span class="p">{</span><span class="ss">:mailbox</span><span class="p">,</span> <span class="s2">"my_message"</span><span class="p">}</span>
 </code></pre></div>
 <blockquote>
 <p>An interesting side-effect is that now we can send messages to any process as long as they are subscribed to the right channel without needing to know the process PID or name.</p>
@@ -1663,14 +1663,14 @@ the application configuration is not found:</p>
 <p>Creating notifications in PostgreSQL is very easy e.g. let&#39;s say we have a table for books:</p>
 <div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="c1">-- User table creation</span>
 <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">books</span> <span class="p">(</span>
-  <span class="n">id</span> <span class="n">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
-  <span class="n">title</span> <span class="n">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>
+  <span class="n">id</span> <span class="nb">SERIAL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span>
+  <span class="n">title</span> <span class="nb">TEXT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">UNIQUE</span>
 <span class="p">);</span>
 </code></pre></div>
 <p>and we want JSON notifications in the channel <code>new_books</code> every time a new book is created in our database e.g:</p>
 <div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Animal Farm"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Animal Farm"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <p>The trigger could be implemented as follows:</p>
@@ -1685,7 +1685,7 @@ the application configuration is not found:</p>
       <span class="s1">'title'</span><span class="p">,</span> <span class="k">NEW</span><span class="p">.</span><span class="n">title</span>
     <span class="p">);</span>
 
-    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">::</span><span class="n">TEXT</span><span class="p">);</span>
+    <span class="n">PERFORM</span> <span class="n">pg_notify</span><span class="p">(</span><span class="s1">'new_books'</span><span class="p">,</span> <span class="n">payload</span><span class="p">::</span><span class="nb">TEXT</span><span class="p">);</span>
     <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
   <span class="k">END</span><span class="p">;</span>
   <span class="err">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
@@ -1716,7 +1716,7 @@ the application configuration is not found:</p>
 <p><a href="https://github.com/gmtprime/yggdrasil_postgres">Yggdrasil for PostgreSQL</a> is an adapter that supports all the features mentioned above while maintaining Yggdrasil&#39;s simple API e.g:</p>
 
 <p>For our example, we could subscribe to the database messages by doing the following:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">)</span>
 <span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -1725,7 +1725,7 @@ the application configuration is not found:</p>
 </code></pre></div>
 <p>We will get the following message in IEx:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">2</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">1984"</span><span class="p">}}</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="s2">"1984"</span><span class="p">}}</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Note</strong>: <code>Yggdrasil</code> comes with built-in message transformers. We&#39;ve used
@@ -1739,7 +1739,7 @@ data.</p>
 
   <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
     <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span>
+      <span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span>
       <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span>
       <span class="ss">transformer:</span> <span class="ss">:json</span>
     <span class="p">]</span>
@@ -1748,15 +1748,15 @@ data.</p>
   <span class="k">end</span>
 
   <span class="nv">@impl</span> <span class="no">true</span>
-  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="n">id</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="n">title</span><span class="p">},</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
+  <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="n">id</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="n">title</span><span class="p">},</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
     <span class="o">...</span> <span class="n">handle</span> <span class="n">event</span> <span class="o">...</span>
     <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </code></pre></div>
 <p>It&#39;s also possbible to use <code>Yggdrasil.publish/2</code> with PostgreSQL:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="p">%{</span><span class="sd">"</span><span class="s2">id"</span> <span class="o">=&gt;</span> <span class="m">3</span><span class="p">,</span> <span class="sd">"</span><span class="s2">title"</span> <span class="o">=&gt;</span> <span class="sd">"</span><span class="s2">A Brave New World"</span><span class="p">}</span>
-<span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="n">message</span> <span class="o">=</span> <span class="p">%{</span><span class="s2">"id"</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">"title"</span> <span class="o">=&gt;</span> <span class="s2">"A Brave New World"</span><span class="p">}</span>
+<span class="n">iex</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="s2">"new_books"</span><span class="p">,</span> <span class="ss">adapter:</span> <span class="ss">:postgres</span><span class="p">,</span> <span class="ss">transformer:</span> <span class="ss">:json</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span>
 </code></pre></div>
 <p><img src="https://media.giphy.com/media/zcCGBRQshGdt6/giphy.gif" alt="Too easy!"></p>
 
@@ -1844,7 +1844,7 @@ In the previous image:</p>
 <p>The biggest difference with previous adapters is the channel name. Instead of being a string, it&#39;s a tuple with the exchange name and the routing key e.g:</p>
 
 <p>A subscriber would connect to the exchange <code>amq.topic</code> using the routing key <code>logs.*</code> as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.*"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">)</span>
 <span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </code></pre></div>
@@ -1853,12 +1853,12 @@ In the previous image:</p>
 </blockquote>
 
 <p>Then a publisher could send a message to the exchange <code>amq.topic</code> using <code>logs.info</code> as routing key:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">publisher</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.info"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">],</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">publisher</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">([</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.info"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">],</span> <span class="s2">"Some message"</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Finally, the subscriber would receive the message:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">subscriber</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">Some message"</span><span class="p">}</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"Some message"</span><span class="p">}</span>
 </code></pre></div>
 <p>Additionally, the subscriber can be written using the <code>Yggdrasil</code> behaviour:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Logs</span><span class="o">.</span><span class="no">Subscriber</span> <span class="k">do</span>
@@ -1866,7 +1866,7 @@ In the previous image:</p>
 
   <span class="k">def</span> <span class="n">start_link</span><span class="p">(</span><span class="n">options</span> <span class="p">\\</span> <span class="p">[])</span> <span class="k">do</span>
     <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">logs.*"</span><span class="p">},</span>
+      <span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"logs.*"</span><span class="p">},</span>
       <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span>
     <span class="p">]</span>
 
@@ -1949,26 +1949,26 @@ In the previous image:</p>
 <ul>
 <li>Both nodes are interconnected:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
    <span class="no">true</span>
 </code></pre></div>
 <p>Then <code>:smith@matrix</code> can subscribe to any channel where <code>:neo@matrix</code> is publishing messages e.g:</p>
 
 <p>In <code>:smith@matrix</code>, we subscribe to the channel <code>&quot;private&quot;</code>:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="ss">name:</span> <span class="s2">"private"</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>In <code>:neo@matrix</code>, we publish a message in the channel <code>&quot;private&quot;</code>:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="s2">"private"</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="s2">"What's the Matrix?"</span><span class="p">)</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Finally, we can flush <code>:smith@matrix</code> mailbox and find our message:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">smith</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"What's the Matrix?"</span><span class="p">}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Distributed pubsub as simple as that.</p>
@@ -1993,7 +1993,7 @@ In the previous image:</p>
 <li>The node <code>:trinity@matrix</code> has access to a RabbitMQ server.</li>
 <li>Both nodes are interconnected:</li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="n">iex</span><span class="p">(</span><span class="n">trinity</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="no">Node</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="ss">:neo</span><span class="nv">@matrix</span><span class="p">)</span>
    <span class="no">true</span>
 </code></pre></div>
 <p>So our final infrastructure would look like the following:<p>
@@ -2009,18 +2009,18 @@ Now that our nodes are connected, every adapter is available to them.</p>
 
 <p>Through <code>:trinity@matrix</code>, the node <code>:neo@matrix</code> can now subscribe to
 a RabbitMQ exchange:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="p">{</span><span class="sd">"</span><span class="s2">amq.topic"</span><span class="p">,</span> <span class="sd">"</span><span class="s2">private"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">]</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">1</span><span class="o">&gt;</span> <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span><span class="ss">name:</span> <span class="p">{</span><span class="s2">"amq.topic"</span><span class="p">,</span> <span class="s2">"private"</span><span class="p">},</span> <span class="ss">adapter:</span> <span class="ss">:rabbitmq</span><span class="p">]</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">2</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:Y_CONNECTED</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>Or even publish messages:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">4</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">)</span>
+<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">4</span><span class="o">&gt;</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="s2">"What's the Matrix?"</span><span class="p">)</span>
 <span class="ss">:ok</span>
-<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="m">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
-<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="sd">"</span><span class="s2">What's the Matrix?"</span><span class="p">}</span>
+<span class="n">iex</span><span class="p">(</span><span class="n">neo</span><span class="nv">@matrix</span><span class="p">)</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">flush</span><span class="p">()</span>
+<span class="p">{</span><span class="ss">:Y_EVENT</span><span class="p">,</span> <span class="p">%</span><span class="no">Yggdrasil</span><span class="o">.</span><span class="no">Channel</span><span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s2">"What's the Matrix?"</span><span class="p">}</span>
 <span class="ss">:ok</span>
 </code></pre></div>
 <p>The good thing about this feature is that it works with any adapter that supports Yggdrasil v5.0.</p>
@@ -2116,8 +2116,8 @@ I can do the following:</p>
 
 <span class="gh"># Lorem Ipsum</span>
 
-<span class="p">```</span><span class="nl">elixir</span>
-<span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="sd">"</span><span class="s2">Lorem Ipsum"</span>
+<span class="p">```</span><span class="nl">elixir
+</span><span class="no">IO</span><span class="o">.</span><span class="n">puts</span> <span class="s2">"Lorem Ipsum"</span>
 <span class="p">```</span></code></pre></figure>
 
 <h2 id="conclusion">Conclusion</h2>
