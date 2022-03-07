@@ -6,8 +6,8 @@ default:
 alex:
   name: "Alex de Sousa"
   bio:
-    en: "Refill Aqua co-founder. Elixir alchemist. Tech enthusiast."
-    es: "Co-fundador de Refill Aqua. Alquimista de Elixir. Entusiasta de la tecnología."
+    en: "Elixir alchemist. Tech enthusiast."
+    es: "Alquimista de Elixir. Entusiasta de la tecnología."
 list:
   - "default"
   - "alex"

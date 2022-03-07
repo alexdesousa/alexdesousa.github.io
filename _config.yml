@@ -39,13 +39,13 @@ mini_magick:
     source: "profiles"
     destination: "assets/images/profile/"
     resize: "100"
-  realtime-decentralized-price-quotes:
-    source: "_posts/realtime-decentralized-price-quotes/"
-    destination: "/realtime-decentralized-price-quotes/"
+  icon-2.0-realtime-decentralized-quote-prices:
+    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
+    destination: "/icon-2.0-realtime-decentralized-quote-prices/"
     resize: "800"
-  realtime-decentralized-price-quotes-small:
-    source: "_posts/realtime-decentralized-price-quotes/"
-    destination: "/realtime-decentralized-price-quotes/small/"
+  icon-2.0-realtime-decentralized-quote-prices-small:
+    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
+    destination: "/icon-2.0-realtime-decentralized-quote-prices/small/"
     resize: "400"
   my-worst-bug:
     source: "_posts/my-worst-bug/"
