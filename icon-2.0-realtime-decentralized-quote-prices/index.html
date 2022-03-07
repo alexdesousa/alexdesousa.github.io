@@ -149,7 +149,7 @@ interoperability proposition: <a href="https://medium.com/helloiconworld/blockch
 
 <p>At the time of publishing this article, the full <strong>BTP</strong> is not yet released.
 However, some of its features are already available to everyone. One of these
-features is a websocket to receive realtime updates on either (or both) block
+features is a websocket to receive realtime updates on either (or both) blocks
 produced and event logs emitted.</p>
 
 <p>This article will focus on how we can leverage this websocket connection to
@@ -174,7 +174,7 @@ using <code>mix new</code> or using a script e.g:</p>
 <span class="c1"># ... rest of the script ...</span>
 </code></pre></div>
 <p>You can also find the full script for getting <em>sICX/bnUSD</em> quotes
-<a href="https://gist.github.com/alexdesousa/e8cd1d64a62b74aed14f07b34ce811f3">here</a></p>
+<a href="https://gist.github.com/alexdesousa/e8cd1d64a62b74aed14f07b34ce811f3">here</a>.</p>
 
 <h2 id="quote-prices">Quote Prices</h2>
 
@@ -207,7 +207,7 @@ Environment) and one of these SCOREs handles all operations related to the
 decentralized exchange (DEx). The main DEx operation is swapping tokens e.g.
 we can use the contract to exchange our <strong>sICX</strong> with <strong>bnUSD</strong>.</p>
 
-<p>Furthermore, every time someone swaps an token, the SCORE will emit the
+<p>Furthermore, every time someone swaps a token, the SCORE will emit the
 following event:</p>
 <div class="highlight"><pre><code class="language-java" data-lang="java"><span class="nc">Swap</span><span class="o">(</span><span class="kt">int</span><span class="o">,</span><span class="nc">Address</span><span class="o">,</span><span class="nc">Address</span><span class="o">,</span><span class="nc">Address</span><span class="o">,</span><span class="nc">Address</span><span class="o">,</span><span class="nc">Address</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">,</span><span class="kt">int</span><span class="o">)</span>
 </code></pre></div>
@@ -250,9 +250,9 @@ in the <em>Mainnet</em>:</p>
 </code></pre></div>
 <h2 id="analyzing-the-swap-event">Analyzing the Swap Event</h2>
 
-<p>With the previous definition, we can start making some assumptions about the
-each event input and what things we need to get from them in order to have the
-price for <em>sICX/bnUSD</em> every time the event is emitted:</p>
+<p>With the previous definition, we can start making some assumptions about each
+event input and what things we need to get from them in order to have the price
+for <em>sICX/bnUSD</em> every time the event is emitted:</p>
 
 <ul>
 <li><code>_id</code> is the token pair identifier (<code>indexed</code> 1st position).</li>
@@ -292,47 +292,30 @@ addresses can help us figure out the actual pair name.</p>
 <a href="https://github.com/gmtprime/yggdrasil">Yggdrasil</a> adapter for ICON&#39;s websocket.
 Thus we can use an <em>Yggdrasil</em> process to subscribe to the <code>Swap</code> event. In this
 case, the most important part is to define out channel correctly:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="c1"># Our adapter should be :icon</span>
-  <span class="ss">adapter:</span> <span class="ss">:icon</span><span class="p">,</span>
-  <span class="ss">name:</span> <span class="p">%{</span>
-    <span class="c1"># We're only interested in events. If we're interested in blocks as well,</span>
-    <span class="c1"># then we can use :block</span>
-    <span class="ss">source:</span> <span class="ss">:event</span><span class="p">,</span>
-    <span class="ss">data:</span> <span class="p">%{</span>
-      <span class="c1"># Filter by Balanced DEx SCORE address</span>
-      <span class="ss">addr:</span> <span class="s2">"cxa0af3165c08318e988cb30993b3048335b94af6c"</span><span class="p">,</span>
-      <span class="c1"># The Swap event signature</span>
-      <span class="ss">event:</span> <span class="s2">"Swap(int,Address,Address,Address,Address,Address,int,int,int,int,int,int,int,int,int)"</span><span class="p">,</span>
-      <span class="c1"># And we filter by ID of the token pair, which in our case is 2</span>
-      <span class="ss">indexed:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="no">nil</span><span class="p">]</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div>
-<p>Once we have our channel defined, we can define our <em>Yggdrasil</em> process as
-follows:</p>
 <div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Quotes</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
+  <span class="n">alias</span> <span class="no">Icon</span><span class="o">.</span><span class="no">Schema</span><span class="o">.</span><span class="no">Types</span><span class="o">.</span><span class="no">EventLog</span>
 
-  <span class="k">def</span> <span class="n">start_link</span> <span class="k">do</span>
-    <span class="n">channel</span> <span class="o">=</span> <span class="p">[</span>
-      <span class="ss">adapter:</span> <span class="ss">:icon</span><span class="p">,</span>
-      <span class="ss">name:</span> <span class="p">%{</span>
-        <span class="ss">source:</span> <span class="ss">:event</span><span class="p">,</span>
-        <span class="ss">from_height:</span> <span class="mi">47_077_000</span><span class="p">,</span>
-        <span class="ss">data:</span> <span class="p">%{</span>
-          <span class="ss">addr:</span> <span class="s2">"cxa0af3165c08318e988cb30993b3048335b94af6c"</span><span class="p">,</span>
-          <span class="ss">event:</span> <span class="s2">"Swap(int,Address,Address,Address,Address,Address,int,int,int,int,int,int,int,int,int)"</span><span class="p">,</span>
-          <span class="ss">indexed:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="no">nil</span><span class="p">],</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-    <span class="p">]</span>
+  <span class="nv">@dex_contract</span> <span class="s2">"cxa0af3165c08318e988cb30993b3048335b94af6c"</span>
+  <span class="nv">@sicx_bnusd_id</span> <span class="mi">2</span>
+  <span class="nv">@signature</span> <span class="s2">"Swap(int,Address,Address,Address,Address,Address,int,int,int,int,int,int,int,int,int)"</span>
 
-    <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="n">channel</span><span class="p">])</span>
-  <span class="k">end</span>
+  <span class="nv">@channel</span> <span class="p">[</span>
+    <span class="ss">adapter:</span> <span class="ss">:icon</span><span class="p">,</span>
+    <span class="ss">name:</span> <span class="p">%{</span>
+      <span class="ss">source:</span> <span class="ss">:event</span><span class="p">,</span>
+      <span class="ss">data:</span> <span class="p">%{</span>
+        <span class="ss">addr:</span> <span class="nv">@dex_contract</span><span class="p">,</span>
+        <span class="ss">event:</span> <span class="nv">@signature</span><span class="p">,</span>
+        <span class="ss">indexed:</span> <span class="p">[</span><span class="nv">@sicx_bnusd_id</span><span class="p">,</span> <span class="no">nil</span><span class="p">]</span>
+      <span class="p">},</span>
+      <span class="ss">from_height:</span> <span class="mi">47_077_000</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
 
-  <span class="c1"># ... rest of the code ...</span>
+  <span class="k">def</span> <span class="n">start_link</span><span class="p">,</span> <span class="k">do</span><span class="p">:</span> <span class="no">Yggdrasil</span><span class="o">.</span><span class="n">start_link</span><span class="p">(</span><span class="bp">__MODULE__</span><span class="p">,</span> <span class="p">[</span><span class="nv">@channel</span><span class="p">])</span>
+
+  <span class="c1"># ... handle_event/3 definition ...</span>
 <span class="k">end</span>
 </code></pre></div>
 <blockquote>
@@ -348,8 +331,8 @@ want the latest price.</p>
 <p>The events we&#39;ll receive will have:</p>
 
 <ul>
-<li>The <code>timestamp</code> in microseconds in the 7th position of <code>data</code>.</li>
-<li>The <code>endingPrice</code> in loop (<code>price * 10¹⁸</code>) in the 12th position of <code>data</code>.</li>
+<li>The <code>_timestamp</code> in microseconds in the 7th position of <code>data</code>.</li>
+<li>The <code>_endingPrice</code> in the 12th position of <code>data</code> (<code>_endingPrice * 10¹⁸</code>).</li>
 </ul>
 
 <p>So we can now define our <code>handle_event/3</code> callback and finally print our quote
@@ -358,7 +341,7 @@ price in the console:</p>
   <span class="kn">use</span> <span class="no">Yggdrasil</span>
   <span class="n">alias</span> <span class="no">Icon</span><span class="o">.</span><span class="no">Schema</span><span class="o">.</span><span class="no">Types</span><span class="o">.</span><span class="no">EventLog</span>
 
-  <span class="c1"># ... rest of the code ...</span>
+  <span class="c1"># ... channel definition ...</span>
 
   <span class="nv">@impl</span> <span class="no">Yggdrasil</span>
   <span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="n">_channel</span><span class="p">,</span> <span class="p">%</span><span class="no">EventLog</span><span class="p">{}</span> <span class="o">=</span> <span class="n">swap_event</span><span class="p">,</span> <span class="n">_state</span><span class="p">)</span> <span class="k">do</span>
@@ -372,6 +355,7 @@ price in the console:</p>
     <span class="n">price</span> <span class="o">=</span> <span class="n">price</span> <span class="o">/</span> <span class="mi">1_000_000_000_000_000_000</span>
 
     <span class="no">IO</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s2">"[</span><span class="si">#{</span><span class="n">datetime</span><span class="si">}</span><span class="s2">] sICX/bnUSD price: </span><span class="si">#{</span><span class="n">price</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
     <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="no">nil</span><span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -397,10 +381,10 @@ price in the console:</p>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>Though BTP is not fully realeased, we can already start leveraging some of its
+<p>Though BTP is not fully released, we can already start leveraging some of its
 core features for our own advantage. Given ICON&#39;s block time is 3 seconds, this
 websocket connection gives us a tremendous advantage for building realtime bots
-for different purposes: from maximazing our yield to securing our favorite NFT
+for different purposes: from maximizing our yield to securing our favorite NFT
 latest drop.</p>
 
 <p><strong>ICON 2.0 definitely</strong> has a great advantage over many other <em>slow</em> blockchains
