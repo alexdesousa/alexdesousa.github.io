@@ -39,6 +39,14 @@ mini_magick:
     source: "profiles"
     destination: "assets/images/profile/"
     resize: "100"
+  icon-2.0-realtime-decentralized-quote-prices:
+    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
+    destination: "/icon-2.0-realtime-decentralized-quote-prices/"
+    resize: "800"
+  icon-2.0-realtime-decentralized-quote-prices-small:
+    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
+    destination: "/icon-2.0-realtime-decentralized-quote-prices/small/"
+    resize: "400"
   my-worst-bug:
     source: "_posts/my-worst-bug/"
     destination: "/my-worst-bug/"
