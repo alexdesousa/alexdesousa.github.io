@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>The Broken Link</title>
+    <description>Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015.</description>
+    <link>https://thebroken.link</link>
+    <atom:link href="https://thebroken.link/feed_en.xml" rel="self" type="application/rss+xml" />
+    <language>en</language>
+    <item>
+      <title>ICON 2.0: Realtime Decentralized Quote Prices</title>
+      <description>By leveraging one of ICON&apos;s BTP features, we get realtime quote prices from Balanced DEx</description>
+      <link>https://thebroken.link/icon-2.0-realtime-decentralized-quote-prices/</link>
+      <guid isPermaLink="true">https://thebroken.link/icon-2.0-realtime-decentralized-quote-prices/</guid>
+      <pubDate>Sat, 05 Mar 2022 00:00:00 +0000</pubDate>
+      <category>blockchain</category>
+    </item>
+    <item>
+      <title>My Worst Bug</title>
+      <description>Debugging C/C++ can sometimes be a nightmare.</description>
+      <link>https://thebroken.link/my-worst-bug/</link>
+      <guid isPermaLink="true">https://thebroken.link/my-worst-bug/</guid>
+      <pubDate>Fri, 17 Apr 2020 00:00:00 +0000</pubDate>
+      <category>c/c++</category>
+    </item>
+    <item>
+      <title>My Road to 8 Week Streak</title>
+      <description>Writing is hard. Writing requires practice.</description>
+      <link>https://thebroken.link/my-road-to-8-week-streak/</link>
+      <guid isPermaLink="true">https://thebroken.link/my-road-to-8-week-streak/</guid>
+      <pubDate>Fri, 10 Apr 2020 00:00:00 +0000</pubDate>
+      <category>personal</category>
+    </item>
+    <item>
+      <title>AyeSQL: Writing Raw SQL in Elixir</title>
+      <description>Sometimes good&apos;ol SQL is better than any abstraction.</description>
+      <link>https://thebroken.link/ayesql-writing-raw-sql-in-elixir/</link>
+      <guid isPermaLink="true">https://thebroken.link/ayesql-writing-raw-sql-in-elixir/</guid>
+      <pubDate>Tue, 31 Mar 2020 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+    </item>
+    <item>
+      <title>Elixir Pubsub In Less Than 50 Lines</title>
+      <description>A small Elixir pubsub implementation using built-in module :pg2</description>
+      <link>https://thebroken.link/elixir-pubsub-in-less-than-50-lines/</link>
+      <guid isPermaLink="true">https://thebroken.link/elixir-pubsub-in-less-than-50-lines/</guid>
+      <pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+    </item>
+    <item>
+      <title>Managing Dotfiles with Ansible</title>
+      <description>A small tutorial on how to use Ansible to manage your dotfiles.</description>
+      <link>https://thebroken.link/managing-dotfiles-with-ansible/</link>
+      <guid isPermaLink="true">https://thebroken.link/managing-dotfiles-with-ansible/</guid>
+      <pubDate>Thu, 19 Mar 2020 00:00:00 +0000</pubDate>
+      <category>devops</category>
+    </item>
+    <item>
+      <title>Oath: Don&apos;t Loose Your Keys!</title>
+      <description>A ZSH plugin for handling your keys.</description>
+      <link>https://thebroken.link/oath-dont-loose-your-keys/</link>
+      <guid isPermaLink="true">https://thebroken.link/oath-dont-loose-your-keys/</guid>
+      <pubDate>Thu, 12 Mar 2020 00:00:00 +0000</pubDate>
+      <category>devops</category>
+    </item>
+    <item>
+      <title>Skogsrå: Simplifying Your Elixir Configuration</title>
+      <description>Improving Elixir configurations for small and large projects.</description>
+      <link>https://thebroken.link/skogsra-simplifying-your-elixir-configuration/</link>
+      <guid isPermaLink="true">https://thebroken.link/skogsra-simplifying-your-elixir-configuration/</guid>
+      <pubDate>Wed, 12 Feb 2020 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+    </item>
+    <item>
+      <title>Yggdrasil: Easy Pub-Sub in Elixir</title>
+      <description>An overview of Yggdrasil&apos;s capabilities.</description>
+      <link>https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/</link>
+      <guid isPermaLink="true">https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/</guid>
+      <pubDate>Sat, 06 Jul 2019 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+    </item>
+    <item>
+      <title>Syntax highlighting in Jekyll</title>
+      <description>Using Redcarpet markdown renderer to add pygments to Jekyll</description>
+      <link>https://thebroken.link/syntax-highlighting-in-jekyll/</link>
+      <guid isPermaLink="true">https://thebroken.link/syntax-highlighting-in-jekyll/</guid>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0000</pubDate>
+      <category>jekyll</category>
+    </item>
+  </channel>
+</rss>

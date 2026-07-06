@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Sometimes good'ol SQL is better than any abstraction." />
 <meta name="robots" content="index, follow">
-<meta name="author" content="alex" />
+<meta name="author" content="Alex de Sousa" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
 <title>AyeSQL: Writing Raw SQL in Elixir | The Broken Link</title>
 <link rel="canonical" href="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/"/>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -17,8 +18,8 @@
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="theme-color" content="#FFFFFF">
 <meta itemprop="description" content="Sometimes good'ol SQL is better than any abstraction." />
-<meta itemprop="image" content="/ayesql-writing-raw-sql-in-elixir/ship.jpg" />
-<meta property="og:type" content="website" />
+<meta itemprop="image" content="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/ship.jpg" />
+<meta property="og:type" content="article" /><meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="The Broken Link" />
 <meta property="og:title" content="AyeSQL: Writing Raw SQL in Elixir" />
 <meta property="og:image" content="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/ship.jpg" />
@@ -28,130 +29,104 @@
 <meta name="twitter:description" content="Sometimes good'ol SQL is better than any abstraction." />
 <meta name="twitter:image" content="https://thebroken.link/ayesql-writing-raw-sql-in-elixir/ship.jpg" />
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image:alt" content="Sometimes good'ol SQL is better than any abstraction."/>
-<meta name="twitter:site" content="@etadelius">
-<script type="application/ld+json">
-{
+<meta name="twitter:image:alt" content="AyeSQL: Writing Raw SQL in Elixir"/>
+<script type="application/ld+json">{
   "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://thebroken.link/ayesql-writing-raw-sql-in-elixir/"
   },
   "headline": "AyeSQL: Writing Raw SQL in Elixir",
-  "image": ["https://thebroken.link/assets/images/logo.png"],
+  "image": ["https://thebroken.link/ayesql-writing-raw-sql-in-elixir/ship.jpg"],
   "datePublished": "2020-03-31T00:00:00+00:00",
-  "dateModified": "2020-03-31T00:00:00+00:00",
+  "dateModified": "2026-07-06T18:49:25+00:00",
   "author": {
     "@type": "Person",
-    "name": "alex"
+    "name": "Alex de Sousa",
+    "url": "https://thebroken.link/cv"
   },
   "publisher": {
     "@type": "Organization",
     "name": "The Broken Link",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://thebroken.link/assets/images/logo.png"
+      "url": "https://thebroken.link/profiles/alex.jpg"
     }
   },
   "description": "Sometimes good'ol SQL is better than any abstraction."
-}
-</script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
-</script><link rel="stylesheet" href="/assets/css/tailwind.css"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
-      rel="stylesheet"
-      integrity="sha384-xyZLiqnBEFn1hDkS8VeG/YHoqOjS/ucimT8TI6GDr9+ZP1UNbZr6d/q0ldMi/xvL"
-      crossorigin="anonymous"/>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
 <script type="text/javascript" src="/assets/js/app.js"></script>
-
-    <link rel="stylesheet" href="/assets/css/pygments/monokai.css" />
-    <style>
-      #progress-bar {
-        --scroll: 0%;
-        background: linear-gradient(to right, #9E7BEA var(--scroll), transparent 0);
-        height: 0.25rem;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body class="font-sans leading-normal tracking-normal bg-gray-100"><nav class="sticky top-0 z-50 flex flex-col w-full mt-0">
-  <div class="flex justify-center w-full bg-elixir-900">
-    <div class="container flex py-2 px-4 bg-elixir-900">
-      <div class="container flex items-center mx-auto">
-        <div class="flex font-extrabold">
-          <a class="hover:no-underline" href="https://thebroken.link/en/">
-            <span class="text-base font-bold md:tracking-wider text-elixir-100 hover:text-white"><svg
-  class="inline stroke-current text-elixir-100 w-6 h-6"
-   viewBox="0 0 69.572713 69.572715">
-  <g>
-    <path
-       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
-  </g>
+</head>
+  <body class="bg-canvas text-ink font-mono"><div id="progress-bar"></div>
+<nav class="sticky top-0 z-50 bg-card border-b-2 border-brdr px-6 py-3.5 flex items-center justify-between">
+  <a href="/en/" class="flex items-center gap-2 font-bold text-xs tracking-[0.18em] uppercase text-ink hover:text-pri no-underline"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 69.573 69.573" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-miterlimit="4" aria-hidden="true">
+  <path stroke-width="2.910" d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
 </svg>
-The Broken Link</span>
-          </a>
-        </div>
-        <div class="flex pl-2 text-sm md:pl-4">
-          <ul class="flex items-center justify-between flex-1 list-reset md:flex-none"></ul>
-        </div>
-      </div>
-      <div class="flex items-center justify-end w-1/2 align-baseline">
-        <p class="hidden py-4 mr-3 text-sm font-bold text-center text-elixir-100 md:block">
-          <span class="pr-1">Share this</span> 👉
-        </p>
-        <a class="inline-block w-8 h-8 text-center no-underline text-elixir-100 hover:text-white hover:text-underline md:h-auto md:w-16 md:p-4"
-           href="https://twitter.com/intent/tweet?text=Sometimes+good%27ol+SQL+is+better+than+any+abstraction.&url=https%3A%2F%2Fthebroken.link%2Fayesql-writing-raw-sql-in-elixir&via=etadelius">
-          <svg class="h-8 fill-current" viewBox="0 0 32 32">
-            <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
-            </path>
-          </svg>
-        </a>
-      </div>
-    </div>
+<span>← The Broken Link</span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/cv" class="inline-block border-2 border-brdr bg-card text-ink px-3 py-1.5 text-[0.72rem] font-bold tracking-[0.05em] uppercase shadow-neo-sm no-underline neo-hover-btn">CV</a>
+    <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm neo-hover-btn cursor-pointer" aria-label="Toggle theme">◐</button>
+    <a href="https://linkedin.com/in/ajdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="LinkedIn">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/alexdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="GitHub">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+</nav>
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">ELIXIR</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">9 MIN READ</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">Mar 31, 2020</span>
   </div>
 
-  <div id="progress-bar"></div>
-</nav>
-<div class="container w-full mx-auto pt-8 text-center md:pt-16">
-  <p class="text-sm font-bold text-elixir-600 md:text-base">Written by Alex de Sousa</p>
-  <h1 class="text-3xl font-bold break-normal md:text-5xl text-elixir-900">AyeSQL: Writing Raw SQL in Elixir</h1>
-</div>
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    AyeSQL: Writing Raw SQL in Elixir
+  </h1>
 
-<div class="container text-sm text-right w-full max-w-6xl mx-auto mt-8 bg-white bg-cover rounded"
-     style="background-image:url('/ayesql-writing-raw-sql-in-elixir/ship.jpg'); height: 75vh; background-position: center;"><a class="p-2 rounded-bl-md bg-elixir-100 text-elixir-900 hover:underline"
-      href="https://unsplash.com/photos/emH2e5SBifE">
-    
-      Cover by Austin Neill
-  </a></div>
-<div class="container max-w-5xl mx-auto -mt-16 md:-mt-20 lg:-mt-32">
-  <div class="mx-0 sm:mx-6">
-    <div id="post-content" class="w-full p-8 bg-white text-elixir-900 prose max-w-none md:p-16">
-      
-      <p>Most developers consider that writing raw SQL (Structured Query Language) is a bad practice. The main arguments against it are that Object Relational Mappers (ORMs):</p>
+  <div class="flex items-center gap-3"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0"><div>
+      <p class="text-sm font-bold leading-none mb-0.5">Alex de Sousa</p>
+      <p class="text-[0.72rem] text-muted">Elixir alchemist. Tech enthusiast.</p>
+    </div>
+  </div>
+</header>
+<div class="max-w-[720px] mx-auto px-6 py-8">
+  <article id="post-content" class="prose">
+    <p>Most developers consider that writing raw SQL (Structured Query Language) is a bad practice. The main arguments against it are that Object Relational Mappers (ORMs):</p>
 
 <ul>
-<li>Abstract several SQL dialects.</li>
-<li>Have a flat learning curve unlike SQL.</li>
-<li>Optimize queries.</li>
+  <li>Abstract several SQL dialects.</li>
+  <li>Have a flat learning curve unlike SQL.</li>
+  <li>Optimize queries.</li>
 </ul>
 
 <p>ORMs allow you to abstract queries in an almost magical way:</p>
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp"># INSERT INTO user (name, age)
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp"># INSERT INTO user (name, age)
 #   VALUES ('Bob', 18)
 #   ON CONFLICT(name)
 #   DO UPDATE SET name = EXCLUDED.name
@@ -162,15 +137,17 @@ The Broken Link</span>
 #   SET age = 17
 #   WHERE name = 'Bob'
 </span><span class="n">user</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">17</span>
-</code></pre></div>
-<p><img src="https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif" alt="Magic!"></p>
+</code></pre></div></div>
+
+<p><img src="https://media.giphy.com/media/12NUbkX6p4xOO4/giphy.gif" alt="Magic!" /></p>
 
 <h2 id="before-we-start">Before we start</h2>
 
 <p>The contents of this article are a mix between my work experience and the great insights <a href="https://www.goodreads.com/book/show/36555832-mastering-postgresql-in-application-development">Mastering PostgreSQL in Application Development</a> book provides.</p>
 
 <p>The code for this article can be found <a href="https://github.com/alexdesousa/alexdesousa.github.io/tree/blog/examples/matrix">here</a> and it can be downloaded with the following command:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone <span class="se">\</span>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone <span class="se">\</span>
   <span class="nt">--depth</span> 2 <span class="se">\</span>
   <span class="nt">-b</span> blog <span class="se">\</span>
   https://github.com/alexdesousa/alexdesousa.github.io.git examples <span class="o">&amp;&amp;</span> <span class="se">\</span>
@@ -178,36 +155,37 @@ The Broken Link</span>
 git filter-branch <span class="se">\</span>
   <span class="nt">--prune-empty</span> <span class="se">\</span>
   <span class="nt">--subdirectory-filter</span> examples/f1 HEAD
-</code></pre></div>
-<h2 id="my-orm-abstracts-several-sql-dialects">&quot;My ORM abstracts several SQL dialects&quot;</h2>
+</code></pre></div></div>
 
-<p>In my experience, I&#39;ve found that it&#39;s more likely for an application to be re-written in another language e.g. Ruby to Elixir than actually migrating the data from one database to another e.g. MySQL to PostgreSQL.</p>
+<h2 id="my-orm-abstracts-several-sql-dialects">“My ORM abstracts several SQL dialects”</h2>
+
+<p>In my experience, I’ve found that it’s more likely for an application to be re-written in another language e.g. Ruby to Elixir than actually migrating the data from one database to another e.g. MySQL to PostgreSQL.</p>
 
 <p>Additionally, running the database migrations in a different database is not a walk in the park either. Complex applications end up adding custom SQL to their migrations in order to optimize or automate certain processes: database extensions, indexes and triggers.</p>
 
-<p>And then, the data needs to be migrated e.g. <code>pgloader</code> is an amazing tool that migrates data from MySQL, SQLite or MSSQL to PostgreSQL. However, sometimes these tools don&#39;t work correctly or they are nonexistent.</p>
+<p>And then, the data needs to be migrated e.g. <code class="language-plaintext highlighter-rouge">pgloader</code> is an amazing tool that migrates data from MySQL, SQLite or MSSQL to PostgreSQL. However, sometimes these tools don’t work correctly or they are nonexistent.</p>
 
-<p><img src="https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy.gif" alt="At least you tried"></p>
+<p><img src="https://media.giphy.com/media/26ybwvTX4DTkwst6U/giphy.gif" alt="At least you tried" /></p>
 
-<h2 id="my-orm-has-a-flat-learning-curve-unlike-sql">&quot;My ORM has a flat learning curve unlike SQL&quot;</h2>
+<h2 id="my-orm-has-a-flat-learning-curve-unlike-sql">“My ORM has a flat learning curve unlike SQL”</h2>
 
-<p>SQL is different. It&#39;s a functional language and most programmers are used to imperative languages. It&#39;s also hard to master.</p>
+<p>SQL is different. It’s a functional language and most programmers are used to imperative languages. It’s also hard to master.</p>
 
-<p>Ironically, the queries are almost in natural language e.g. if we show the following sentences to someone who doesn&#39;t know SQL, probably they&#39;ll know they have the same objective:</p>
+<p>Ironically, the queries are almost in natural language e.g. if we show the following sentences to someone who doesn’t know SQL, probably they’ll know they have the same objective:</p>
 
 <ul>
-<li><em>Get the <code>name</code> and <code>age</code> of every <code>client</code> older than or equal to <code>18</code></em>.</li>
-<li><code>SELECT name, age FROM client WHERE age ≥ 18</code></li>
+  <li><em>Get the <code class="language-plaintext highlighter-rouge">name</code> and <code class="language-plaintext highlighter-rouge">age</code> of every <code class="language-plaintext highlighter-rouge">client</code> older than or equal to <code class="language-plaintext highlighter-rouge">18</code></em>.</li>
+  <li><code class="language-plaintext highlighter-rouge">SELECT name, age FROM client WHERE age ≥ 18</code></li>
 </ul>
 
 <p>ORMs specifically work great for simple queries. However, when you need a more complex query, you end up doing certain workarounds to bypass the ORMs limitations:</p>
 
 <ul>
-<li>Writing raw SQL directly.</li>
-<li>Querying the database several times (sometimes unknowingly) to retrieve the data we need and doing the computation in our language instead of the database.</li>
+  <li>Writing raw SQL directly.</li>
+  <li>Querying the database several times (sometimes unknowingly) to retrieve the data we need and doing the computation in our language instead of the database.</li>
 </ul>
 
-<p>For now I&#39;ll focus on the second approach and I&#39;ll talk about the first one later. It&#39;s easier to see it with a small example:</p>
+<p>For now I’ll focus on the second approach and I’ll talk about the first one later. It’s easier to see it with a small example:</p>
 
 <p>Given the following subset of tables from the <a href="https://github.com/lerocha/chinook-database">Chinook database</a>:</p>
 
@@ -222,7 +200,8 @@ git filter-branch <span class="se">\</span>
 </p>
 
 <p>We want to know the <em>duration of every album Pearl Jam has ever made</em> (or at least the ones listed in the database). In an OO language we would do something like:</p>
-<div class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="n">Artist</span> <span class="n">artist</span> <span class="o">=</span> <span class="n">Artist</span><span class="p">.</span><span class="n">one</span><span class="p">(</span><span class="n">name</span><span class="o">:</span> <span class="s">"Pearl Jam"</span><span class="p">)</span>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Artist</span> <span class="n">artist</span> <span class="o">=</span> <span class="n">Artist</span><span class="p">.</span><span class="n">one</span><span class="p">(</span><span class="n">name</span><span class="o">:</span> <span class="s">"Pearl Jam"</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">album</span> <span class="n">in</span> <span class="n">Album</span><span class="p">.</span><span class="n">all</span><span class="p">(</span><span class="n">artistId</span><span class="o">:</span> <span class="n">artist</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
   <span class="n">ms</span> <span class="o">=</span> <span class="mi">0</span>
@@ -231,40 +210,51 @@ git filter-branch <span class="se">\</span>
     <span class="n">ms</span> <span class="o">+=</span> <span class="n">track</span><span class="p">.</span><span class="n">milliseconds</span>
 
   <span class="n">print</span><span class="p">(</span><span class="s">"#{album.title} | #{format_time(ms)}"</span><span class="p">)</span>
-</code></pre></div>
-<p>For a developer who doesn&#39;t know SQL, this would seem like reasonable code. In reality, it&#39;s highly inefficient:</p>
+</code></pre></div></div>
+
+<p>For a developer who doesn’t know SQL, this would seem like reasonable code. In reality, it’s highly inefficient:</p>
 
 <ol>
-<li><p>We&#39;re requesting one artist by name:</p>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Artist"</span> <span class="k">WHERE</span> <span class="nv">"Name"</span> <span class="o">=</span> <span class="s1">'Pearl Jam'</span>
-</code></pre></div></li>
-<li><p>Then requesting all albums by artist id:</p>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Album"</span> <span class="k">WHERE</span> <span class="nv">"ArtistId"</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="n">id</span>
-</code></pre></div></li>
-<li><p>For every album, we&#39;re requesting the tracks by album id:</p>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Track"</span> <span class="k">WHERE</span> <span class="nv">"AlbumId"</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">id</span>
-</code></pre></div></li>
+  <li>
+    <p>We’re requesting one artist by name:</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Artist"</span> <span class="k">WHERE</span> <span class="nv">"Name"</span> <span class="o">=</span> <span class="s1">'Pearl Jam'</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Then requesting all albums by artist id:</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Album"</span> <span class="k">WHERE</span> <span class="nv">"ArtistId"</span> <span class="o">=</span> <span class="n">artist</span><span class="p">.</span><span class="n">id</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>For every album, we’re requesting the tracks by album id:</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="nv">"Track"</span> <span class="k">WHERE</span> <span class="nv">"AlbumId"</span> <span class="o">=</span> <span class="n">album</span><span class="p">.</span><span class="n">id</span>
+</code></pre></div>    </div>
+  </li>
 </ol>
 
 <p>This database contains 5 Pearl Jam albums, so we would be querying the database 7 times. The magic behind the ORM is deceiving us. In every round trip to the database, we need to consider two things:</p>
 
 <ul>
-<li>Time the query takes to execute.</li>
-<li>Time the network transmits the data.</li>
+  <li>Time the query takes to execute.</li>
+  <li>Time the network transmits the data.</li>
 </ul>
 
 <p>Good ORMs introduce ways of dealing with this type of problem. However, knowing we need to use those tools in order to have good performance in our queries requires knowing SQL.</p>
 
 <p>So, going back to the title of this section: Do ORMs really have a flat learning curve? Considering programmers need to know SQL to understand the tools ORMs offer and SQL is hard, then I guess they have not.</p>
 
-<p><img src="https://media.giphy.com/media/1oJLpejP9jEvWQlZj4/giphy.gif" alt="Visible confusion"></p>
+<p><img src="https://media.giphy.com/media/1oJLpejP9jEvWQlZj4/giphy.gif" alt="Visible confusion" /></p>
 
 <p>The previous problem can be solved with one query:</p>
 
 <blockquote>
-<p><strong>Note:</strong> Chinook database has capitalized table and column names. That&#39;s why they need to be between double quotes.</p>
+  <p><strong>Note:</strong> Chinook database has capitalized table and column names. That’s why they need to be between double quotes.</p>
 </blockquote>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql">    <span class="k">SELECT</span> <span class="nv">"Album"</span><span class="p">.</span><span class="nv">"Title"</span> <span class="k">AS</span> <span class="n">album</span><span class="p">,</span>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">SELECT</span> <span class="nv">"Album"</span><span class="p">.</span><span class="nv">"Title"</span> <span class="k">AS</span> <span class="n">album</span><span class="p">,</span>
            <span class="k">SUM</span><span class="p">(</span><span class="nv">"Track"</span><span class="p">.</span><span class="nv">"Milliseconds"</span><span class="p">)</span> <span class="o">*</span> <span class="n">interval</span> <span class="s1">'1 ms'</span> <span class="k">AS</span> <span class="n">duration</span>
       <span class="k">FROM</span> <span class="nv">"Album"</span>
 <span class="k">INNER</span> <span class="k">JOIN</span> <span class="nv">"Artist"</span> <span class="k">USING</span><span class="p">(</span><span class="nv">"ArtistId"</span><span class="p">)</span>
@@ -272,28 +262,32 @@ git filter-branch <span class="se">\</span>
      <span class="k">WHERE</span> <span class="nv">"Artist"</span><span class="p">.</span><span class="nv">"Name"</span> <span class="o">=</span> <span class="s1">'Pearl Jam'</span>
   <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">album</span>
   <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">album</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <p>and our result would be already formatted:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">          album          |   duration
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>          album          |   duration
 -------------------------+-------------
  Live On Two Legs [Live] | 01:11:18.954
  Pearl Jam               | 00:49:43.857
  Riot Act                | 00:54:16.468
  Ten                     | 00:53:25.871
  Vs.                     | 00:46:17.674
-</code></pre></div>
-<h2 id="my-orm-optimizes-queries">&quot;My ORM optimizes queries&quot;</h2>
+</code></pre></div></div>
 
-<p>Good ORMs do optimize queries. Usually they optimize queries for the most common cases. However, if the problem we&#39;re solving is not covered by these optimizations, it can be a real head-scratcher.</p>
+<h2 id="my-orm-optimizes-queries">“My ORM optimizes queries”</h2>
+
+<p>Good ORMs do optimize queries. Usually they optimize queries for the most common cases. However, if the problem we’re solving is not covered by these optimizations, it can be a real head-scratcher.</p>
 
 <p>In the end, we end up with a subpar solution or writing raw SQL to overcome the limitations.</p>
 
-<p><img src="https://media.giphy.com/media/D1ETZoAPSt5EA/giphy.gif" alt="duct taping broken wall"></p>
+<p><img src="https://media.giphy.com/media/D1ETZoAPSt5EA/giphy.gif" alt="duct taping broken wall" /></p>
 
 <h2 id="language-mappers">Language Mappers</h2>
 
-<p>There are alternatives to ORMs. In Elixir, we have <a href="https://github.com/elixir-ecto/ecto">Ecto</a>. It&#39;s not an ORM, but a language mapper. It gives you a Domain Specific Language (DSL) for dealing with SQL queries in Elixir e.g. again if we want to know the <em>duration of every album Pearl Jam has ever made</em> (or the 5 listed in this database), we would do the following:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">query</span> <span class="o">=</span>
+<p>There are alternatives to ORMs. In Elixir, we have <a href="https://github.com/elixir-ecto/ecto">Ecto</a>. It’s not an ORM, but a language mapper. It gives you a Domain Specific Language (DSL) for dealing with SQL queries in Elixir e.g. again if we want to know the <em>duration of every album Pearl Jam has ever made</em> (or the 5 listed in this database), we would do the following:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">query</span> <span class="o">=</span>
   <span class="n">from</span> <span class="n">al</span> <span class="ow">in</span> <span class="no">Album</span><span class="p">,</span>
     <span class="ss">inner_join:</span> <span class="n">ar</span> <span class="ow">in</span> <span class="no">Artist</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">al</span><span class="o">.</span><span class="n">artistId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">artistId</span><span class="p">,</span>
     <span class="ss">left_join:</span> <span class="n">tr</span> <span class="ow">in</span> <span class="no">Track</span><span class="p">,</span> <span class="ss">on:</span> <span class="n">tr</span><span class="o">.</span><span class="n">albumId</span> <span class="o">==</span> <span class="n">ar</span><span class="o">.</span><span class="n">albumId</span><span class="p">,</span>
@@ -303,10 +297,11 @@ git filter-branch <span class="se">\</span>
     <span class="ss">select:</span> <span class="p">%{</span><span class="ss">album:</span> <span class="n">al</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="ss">duration:</span> <span class="n">sum</span><span class="p">(</span><span class="n">tr</span><span class="o">.</span><span class="n">milliseconds</span><span class="p">)}</span>
 
 <span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-</code></pre></div>
-<p>Language mappers require developers to know SQL, but allows them to <em>almost</em> never leave the comfort of their language. That <em>&quot;almost&quot;</em> is important.</p>
+</code></pre></div></div>
 
-<p><img src="https://media.giphy.com/media/RgfGmnVvt8Pfy/giphy.gif" alt="that&#39;s good"></p>
+<p>Language mappers require developers to know SQL, but allows them to <em>almost</em> never leave the comfort of their language. That <em>“almost”</em> is important.</p>
+
+<p><img src="https://media.giphy.com/media/RgfGmnVvt8Pfy/giphy.gif" alt="that's good" /></p>
 
 <p>Though not everything is sunshine and rainbows. Language mappers try to abstract several SQL dialects in an unified DSL. This means that not all the SQL of our database is going to be included in this DSL.</p>
 
@@ -322,8 +317,9 @@ git filter-branch <span class="se">\</span>
   </figure>
 </p>
 
-<p>Let&#39;s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:</p>
-<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
+<p>Let’s say we want to get the percentage of accidents per participant in F1 seasons between the years 1974 and 1990. In SQL, we would have the following:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">WITH</span> <span class="n">accidents</span> <span class="k">AS</span>
 <span class="p">(</span>
     <span class="k">SELECT</span> <span class="k">EXTRACT</span><span class="p">(</span><span class="nb">year</span> <span class="k">from</span> <span class="n">races</span><span class="p">.</span><span class="nb">date</span><span class="p">)</span> <span class="k">AS</span> <span class="n">season</span><span class="p">,</span>
            <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="n">participants</span><span class="p">,</span>
@@ -338,9 +334,11 @@ git filter-branch <span class="se">\</span>
     <span class="k">FROM</span> <span class="n">accidents</span>
    <span class="k">WHERE</span> <span class="n">season</span> <span class="k">BETWEEN</span> <span class="mi">1974</span> <span class="k">AND</span> <span class="mi">1990</span>
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">season</span>
-</code></pre></div>
-<p>Now, when translating this query to Ecto, we&#39;ll have to use fragments:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># NOTE: The schema definition is omitted.</span>
+</code></pre></div></div>
+
+<p>Now, when translating this query to Ecto, we’ll have to use fragments:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># NOTE: The schema definition is omitted.</span>
 
 <span class="n">from</span> <span class="o">=</span> <span class="mi">1974</span>
 <span class="n">to</span> <span class="o">=</span> <span class="mi">1990</span>
@@ -365,11 +363,13 @@ git filter-branch <span class="se">\</span>
     <span class="p">}</span>
 
 <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-</code></pre></div>
-<p>The code above is hard to read, hard to write and error prone. Yet we don&#39;t have any performance improvements in our query. A maintenance nightmare.</p>
+</code></pre></div></div>
+
+<p>The code above is hard to read, hard to write and error prone. Yet we don’t have any performance improvements in our query. A maintenance nightmare.</p>
 
 <p>We could re-write the previous Ecto query differently by encapsulating them in Elixir macros and then importing our custom DSL e.g:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">CustomDSL</span> <span class="k">do</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">CustomDSL</span> <span class="k">do</span>
   <span class="kn">import</span> <span class="no">Ecto</span><span class="o">.</span><span class="no">Query</span>
 
   <span class="k">defmacro</span> <span class="n">year</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">do</span>
@@ -380,27 +380,29 @@ git filter-branch <span class="se">\</span>
 
   <span class="o">...</span>
 <span class="k">end</span>
-</code></pre></div>
-<p>But again, we wouldn&#39;t get any improvements performance-wise. Just readability... in Ecto. It was perfectly readable in SQL.</p>
+</code></pre></div></div>
+
+<p>But again, we wouldn’t get any improvements performance-wise. Just readability… in Ecto. It was perfectly readable in SQL.</p>
 
 <p>The consequences are clear. Developers need knowledge of:</p>
 
 <ul>
-<li>The specific SQL dialect (in this case PostgreSQL dialect).</li>
-<li>Ecto&#39;s API and its limitations.</li>
-<li>Elixir&#39;s macros for fragment encapsulation.</li>
+  <li>The specific SQL dialect (in this case PostgreSQL dialect).</li>
+  <li>Ecto’s API and its limitations.</li>
+  <li>Elixir’s macros for fragment encapsulation.</li>
 </ul>
 
 <p>Additionally, now they need to maintain a new custom DSL API with its documentation. If we only have a few of this complex queries in our project, is it worthy?</p>
 
-<p>What&#39;s worse, after the refactor, we could end up with a subpar solution or wasting our time entirely.</p>
+<p>What’s worse, after the refactor, we could end up with a subpar solution or wasting our time entirely.</p>
 
 <h2 id="raw-sql">Raw SQL</h2>
 
-<p>So far we&#39;ve seen ORMs and language mappers are good for general problems we might encounter. However, some other problems are better left in raw SQL.</p>
+<p>So far we’ve seen ORMs and language mappers are good for general problems we might encounter. However, some other problems are better left in raw SQL.</p>
 
-<p>ORMs, language mappers and database adapters usually provide an API for running raw SQL. In Elixir, Ecto and <a href="https://github.com/elixir-ecto/postgrex">Postgrex</a> give us the function <code>query/2</code> e.g. in Ecto we would do the following:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">query</span> <span class="o">=</span>
+<p>ORMs, language mappers and database adapters usually provide an API for running raw SQL. In Elixir, Ecto and <a href="https://github.com/elixir-ecto/postgrex">Postgrex</a> give us the function <code class="language-plaintext highlighter-rouge">query/2</code> e.g. in Ecto we would do the following:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">query</span> <span class="o">=</span>
   <span class="sd">"""
   WITH accidents AS
   (
@@ -420,89 +422,101 @@ git filter-branch <span class="se">\</span>
   """</span>
 
 <span class="no">Ecto</span><span class="o">.</span><span class="no">Adapters</span><span class="o">.</span><span class="no">SQL</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="p">[</span><span class="mi">1974</span><span class="p">,</span> <span class="mi">1990</span><span class="p">])</span>
-</code></pre></div>
-<p>There are some things I&#39;d like to point out from the previous code:</p>
+</code></pre></div></div>
+
+<p>There are some things I’d like to point out from the previous code:</p>
 
 <ul>
-<li><code>$1</code> and <code>$2</code> are the query parameters: The numbers indicate the position in the parameter list. If we add status as a variable instead of the constant <code>&#39;Accidents&#39;</code>, we would need to update the other indexes.</li>
-<li>The query is a string: usually editors wouldn&#39;t highlight the SQL syntax inside the string.</li>
-<li>The <code>columns</code> and <code>rows</code> are separated in the result:</li>
+  <li><code class="language-plaintext highlighter-rouge">$1</code> and <code class="language-plaintext highlighter-rouge">$2</code> are the query parameters: The numbers indicate the position in the parameter list. If we add status as a variable instead of the constant <code class="language-plaintext highlighter-rouge">'Accidents'</code>, we would need to update the other indexes.</li>
+  <li>The query is a string: usually editors wouldn’t highlight the SQL syntax inside the string.</li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">columns</code> and <code class="language-plaintext highlighter-rouge">rows</code> are separated in the result:</p>
+
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
+  <span class="p">%</span><span class="no">Postgrex</span><span class="o">.</span><span class="no">Result</span><span class="p">{</span>
+    <span class="ss">columns:</span> <span class="p">[</span><span class="s2">"season"</span><span class="p">,</span> <span class="s2">"percentage"</span><span class="p">],</span>
+    <span class="ss">command:</span> <span class="ss">:select</span><span class="p">,</span>
+    <span class="ss">connection_id:</span> <span class="mi">206</span><span class="p">,</span>
+    <span class="ss">messages:</span> <span class="p">[],</span>
+    <span class="ss">num_rows:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="ss">rows:</span> <span class="p">[</span>
+      <span class="p">[</span><span class="mf">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
+      <span class="p">[</span><span class="mf">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
+      <span class="p">[</span><span class="mf">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
+      <span class="p">[</span><span class="mf">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
+      <span class="p">[</span><span class="mf">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
+      <span class="o">...</span>
+ <span class="p">}}</span>
+</code></pre></div>    </div>
+  </li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
-    <span class="p">%</span><span class="no">Postgrex</span><span class="o">.</span><span class="no">Result</span><span class="p">{</span>
-      <span class="ss">columns:</span> <span class="p">[</span><span class="s2">"season"</span><span class="p">,</span> <span class="s2">"percentage"</span><span class="p">],</span>
-      <span class="ss">command:</span> <span class="ss">:select</span><span class="p">,</span>
-      <span class="ss">connection_id:</span> <span class="mi">206</span><span class="p">,</span>
-      <span class="ss">messages:</span> <span class="p">[],</span>
-      <span class="ss">num_rows:</span> <span class="mi">17</span><span class="p">,</span>
-      <span class="ss">rows:</span> <span class="p">[</span>
-        <span class="p">[</span><span class="mf">1974.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;3.67&gt;],</span>
-        <span class="p">[</span><span class="mf">1975.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;14.88&gt;],</span>
-        <span class="p">[</span><span class="mf">1976.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;11.06&gt;],</span>
-        <span class="p">[</span><span class="mf">1977.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;12.58&gt;],</span>
-        <span class="p">[</span><span class="mf">1978.0</span><span class="p">,</span> <span class="c1">#Decimal&lt;10.19&gt;],</span>
-        <span class="o">...</span>
-   <span class="p">}}</span>
-</code></pre></div>
-<p>The complexity it&#39;s still there.</p>
+
+<p>The complexity it’s still there.</p>
 
 <h2 id="meet-ayesql">Meet AyeSQL</h2>
 
 <p>Inspired by Clojure library <a href="https://github.com/krisajenkins/yesql">Yesql</a>, <a href="https://github.com/alexdesousa/ayesql">AyeSQL</a> tries to find a middle ground between raw SQL strings and SQL language mappers by:</p>
 
 <ul>
-<li>Keeping SQL in SQL files.</li>
-<li>Generating Elixir functions for every query.</li>
-<li>Working out of the box with PostgreSQL using Ecto or Postgrex.</li>
-<li>Being extendable to support other databases and outputs.</li>
-<li>Allowing some query composability.</li>
+  <li>Keeping SQL in SQL files.</li>
+  <li>Generating Elixir functions for every query.</li>
+  <li>Working out of the box with PostgreSQL using Ecto or Postgrex.</li>
+  <li>Being extendable to support other databases and outputs.</li>
+  <li>Allowing some query composability.</li>
 </ul>
 
 <p>Defining the same query in AyeSQL, we would need the following:</p>
 
 <ul>
-<li>A file for defining our query in raw SQL:</li>
+  <li>
+    <p>A file for defining our query in raw SQL:</p>
+
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="o">--</span> <span class="ss">file:</span> <span class="n">lib</span><span class="o">/</span><span class="n">f1</span><span class="o">/</span><span class="n">query</span><span class="o">/</span><span class="n">season</span><span class="o">.</span><span class="n">sql</span>
+
+ <span class="o">--</span> <span class="ss">name:</span> <span class="n">get_accidents</span>
+ <span class="o">--</span> <span class="ss">docs:</span> <span class="no">Gets</span> <span class="n">accidents</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">season</span> <span class="n">range</span><span class="o">.</span>
+ <span class="no">WITH</span> <span class="n">accidents</span> <span class="no">AS</span>
+ <span class="p">(</span>
+     <span class="no">SELECT</span> <span class="no">EXTRACT</span><span class="p">(</span><span class="n">year</span> <span class="n">from</span> <span class="n">races</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="no">AS</span> <span class="n">season</span><span class="p">,</span>
+            <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">AS</span> <span class="n">participants</span><span class="p">,</span>
+            <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">FILTER</span><span class="p">(</span><span class="no">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="no">AS</span> <span class="n">accidents</span>
+       <span class="no">FROM</span> <span class="n">f1db</span><span class="o">.</span><span class="n">results</span> <span class="no">AS</span> <span class="n">results</span>
+       <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">status</span> <span class="no">AS</span> <span class="n">status</span> <span class="no">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
+       <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">races</span> <span class="no">AS</span> <span class="n">races</span> <span class="no">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
+   <span class="no">GROUP</span> <span class="no">BY</span> <span class="n">season</span>
+ <span class="p">)</span>
+   <span class="no">SELECT</span> <span class="n">season</span><span class="p">,</span>
+          <span class="no">ROUND</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
+     <span class="no">FROM</span> <span class="n">accidents</span>
+    <span class="no">WHERE</span> <span class="n">season</span> <span class="no">BETWEEN</span> <span class="ss">:from</span> <span class="no">AND</span> <span class="ss">:to</span>
+ <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">season</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>A file for declaring our queries as Elixir functions:</p>
+
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># file: lib/f1/queries.ex</span>
+
+ <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="mi">3</span><span class="p">]</span>
+
+ <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="s2">"query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Modify our configuration to run the queries by default:</p>
+
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># file: config/config.exs</span>
+
+ <span class="kn">import</span> <span class="no">Config</span>
+
+ <span class="n">config</span> <span class="ss">:ayesql</span><span class="p">,</span> <span class="ss">run?:</span> <span class="no">true</span>
+</code></pre></div>    </div>
+  </li>
 </ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="o">--</span> <span class="ss">file:</span> <span class="n">lib</span><span class="o">/</span><span class="n">f1</span><span class="o">/</span><span class="n">query</span><span class="o">/</span><span class="n">season</span><span class="o">.</span><span class="n">sql</span>
 
-   <span class="o">--</span> <span class="ss">name:</span> <span class="n">get_accidents</span>
-   <span class="o">--</span> <span class="ss">docs:</span> <span class="no">Gets</span> <span class="n">accidents</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">season</span> <span class="n">range</span><span class="o">.</span>
-   <span class="no">WITH</span> <span class="n">accidents</span> <span class="no">AS</span>
-   <span class="p">(</span>
-       <span class="no">SELECT</span> <span class="no">EXTRACT</span><span class="p">(</span><span class="n">year</span> <span class="n">from</span> <span class="n">races</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> <span class="no">AS</span> <span class="n">season</span><span class="p">,</span>
-              <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">AS</span> <span class="n">participants</span><span class="p">,</span>
-              <span class="no">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="no">FILTER</span><span class="p">(</span><span class="no">WHERE</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">'Accident'</span><span class="p">)</span> <span class="no">AS</span> <span class="n">accidents</span>
-         <span class="no">FROM</span> <span class="n">f1db</span><span class="o">.</span><span class="n">results</span> <span class="no">AS</span> <span class="n">results</span>
-         <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">status</span> <span class="no">AS</span> <span class="n">status</span> <span class="no">USING</span><span class="p">(</span><span class="n">statusid</span><span class="p">)</span>
-         <span class="no">JOIN</span> <span class="n">f1db</span><span class="o">.</span><span class="n">races</span> <span class="no">AS</span> <span class="n">races</span> <span class="no">USING</span><span class="p">(</span><span class="n">raceid</span><span class="p">)</span>
-     <span class="no">GROUP</span> <span class="no">BY</span> <span class="n">season</span>
-   <span class="p">)</span>
-     <span class="no">SELECT</span> <span class="n">season</span><span class="p">,</span>
-            <span class="no">ROUND</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">accidents</span> <span class="o">/</span> <span class="n">participants</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="no">AS</span> <span class="n">percentage</span>
-       <span class="no">FROM</span> <span class="n">accidents</span>
-      <span class="no">WHERE</span> <span class="n">season</span> <span class="no">BETWEEN</span> <span class="ss">:from</span> <span class="no">AND</span> <span class="ss">:to</span>
-   <span class="no">ORDER</span> <span class="no">BY</span> <span class="n">season</span>
-</code></pre></div>
-<ul>
-<li>A file for declaring our queries as Elixir functions:</li>
-</ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: lib/f1/queries.ex</span>
-
-   <span class="kn">import</span> <span class="no">AyeSQL</span><span class="p">,</span> <span class="ss">only:</span> <span class="p">[</span><span class="ss">defqueries:</span> <span class="mi">3</span><span class="p">]</span>
-
-   <span class="n">defqueries</span><span class="p">(</span><span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="p">,</span> <span class="s2">"query/season.sql"</span><span class="p">,</span> <span class="ss">repo:</span> <span class="no">F1</span><span class="o">.</span><span class="no">Repo</span><span class="p">)</span>
-</code></pre></div>
-<ul>
-<li>Modify our configuration to run the queries by default:</li>
-</ul>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir">   <span class="c1"># file: config/config.exs</span>
-
-   <span class="kn">import</span> <span class="no">Config</span>
-
-   <span class="n">config</span> <span class="ss">:ayesql</span><span class="p">,</span> <span class="ss">run?:</span> <span class="no">true</span>
-</code></pre></div>
 <p>Then we can call our query as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="mi">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="mi">1990</span><span class="p">)</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="o">&gt;</span> <span class="no">F1</span><span class="o">.</span><span class="no">Query</span><span class="o">.</span><span class="no">Season</span><span class="o">.</span><span class="n">get_accidents</span><span class="p">(</span><span class="ss">from:</span> <span class="mi">1974</span><span class="p">,</span> <span class="ss">to:</span> <span class="mi">1990</span><span class="p">)</span>
 <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
  <span class="p">[</span>
    <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;3.67&gt;, season: 1974.0},</span>
@@ -512,168 +526,80 @@ git filter-branch <span class="se">\</span>
    <span class="p">%{</span><span class="ss">percentage:</span> <span class="c1">#Decimal&lt;10.19&gt;, season: 1978.0},</span>
    <span class="o">...</span>
  <span class="p">]}</span>
-</code></pre></div>
-<p>I don&#39;t know about you, but IMHO this seems like a maintainable way of dealing with complex SQL queries.</p>
+</code></pre></div></div>
 
-<p><img src="https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif" alt="easy"></p>
+<p>I don’t know about you, but IMHO this seems like a maintainable way of dealing with complex SQL queries.</p>
 
-<p>AyeSQL provides query runners for Ecto and Postgrex out-of-the-box. In the previous example we used Ecto&#39;s runner. If we need a different output or query a different database e.g. MSSQL, we could implement the behaviour <code>AyeSQL.Runner</code> for our use case.</p>
+<p><img src="https://media.giphy.com/media/cdGQHR4Qzefx6/giphy.gif" alt="easy" /></p>
+
+<p>AyeSQL provides query runners for Ecto and Postgrex out-of-the-box. In the previous example we used Ecto’s runner. If we need a different output or query a different database e.g. MSSQL, we could implement the behaviour <code class="language-plaintext highlighter-rouge">AyeSQL.Runner</code> for our use case.</p>
 
 <blockquote>
-<p><strong>Note</strong>: In the past year, my team and I had to write an Elixir application with a pre-existent MSSQL database. <code>AyeSQL.Runner</code> behaviour and <a href="https://github.com/livehelpnow/tds">TDS</a> library allowed us to query the database with ease.</p>
+  <p><strong>Note</strong>: In the past year, my team and I had to write an Elixir application with a pre-existent MSSQL database. <code class="language-plaintext highlighter-rouge">AyeSQL.Runner</code> behaviour and <a href="https://github.com/livehelpnow/tds">TDS</a> library allowed us to query the database with ease.</p>
 </blockquote>
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>I&#39;m hoping this article helps change the negative reputation raw SQL queries have.</p>
+<p>I’m hoping this article helps change the negative reputation raw SQL queries have.</p>
 
 <p>Yesql inspired libraries like AyeSQL, can help you to be more productive when your ORM or language mapper have failed you.</p>
 
-<p><img src="https://media.giphy.com/media/fdhZs6PUqxSQU/giphy.gif" alt="There is another"></p>
+<p><img src="https://media.giphy.com/media/fdhZs6PUqxSQU/giphy.gif" alt="There is another" /></p>
 
-<p>I&#39;ll write more about AyeSQL features in future articles, but for now happy coding!</p>
+<p>I’ll write more about AyeSQL features in future articles, but for now happy coding!</p>
 
 <p><em>Cover image by <a href="https://unsplash.com/@arstyy">Austin Neill</a></em></p>
 
-    </div><div class="flex items-center w-full p-8 font-sans md:p-16">
-  <img class="w-24 h-24 mr-4 rounded-full"
-       src="/assets/images/profile/alex.jpg"
-       alt="Avatar of Alex de Sousa"/>
-  <div class="flex-1">
-    <p class="text-base font-bold leading-none text-elixir-900 md:text-xl">Alex de Sousa</p>
-    <p class="mt-2 text-xs text-gray-700 md:text-base">Elixir alchemist. Tech enthusiast.</p>
-  </div>
+  </article><div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
 </div>
-<div class="flex flex-wrap justify-center py-6"><div class="flex flex-col w-full p-6 md:w-1/2 lg:w-5/12">
-  <div class="flex-1 overflow-hidden bg-white rounded-t rounded-b-none shadow-lg">
-    <a href="/my-road-to-8-week-streak" class="flex flex-wrap no-underline hover:no-underline">
-      <div class="w-full h-64 bg-center bg-cover"
-           style="background-image:url('/my-road-to-8-week-streak/small/pen.jpg'">
-      </div>
-      <p class="w-full px-6 pt-6 pb-3 text-xs text-gray-600 md:text-sm">Alex de Sousa</p>
-      <h2 class="w-full px-6 mb-4 text-xl font-bold text-gray-900">My Road to 8 Week Streak</h2>
-      <p class="px-6 mb-5 font-serif text-base text-gray-800">Writing is hard. Writing requires practice.</p>
-    </a>
-  </div>
-  <div class="flex-none p-6 mt-auto overflow-hidden bg-white rounded-t-none rounded-b shadow-lg">
-    <div class="flex items-center justify-between">
-      <img class="w-8 h-8 mr-4 rounded-full avatar"
-           data-tippy-content="Alex de Sousa"
-           src="/assets/images/profile/alex.jpg"
-           alt="Avatar of Alex de Sousa"/>
-      <p class="text-xs text-gray-600 md:text-sm">3 min read</p>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0"><div>
+    <p class="text-sm font-bold mb-1">Alex de Sousa</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">Elixir alchemist. Tech enthusiast.</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/ajdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/alexdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
     </div>
   </div>
 </div>
-<div class="flex flex-col w-full p-6 md:w-1/2 lg:w-5/12">
-  <div class="flex-1 overflow-hidden bg-white rounded-t rounded-b-none shadow-lg">
-    <a href="/elixir-pubsub-in-less-than-50-lines" class="flex flex-wrap no-underline hover:no-underline">
-      <div class="w-full h-64 bg-center bg-cover"
-           style="background-image:url('/elixir-pubsub-in-less-than-50-lines/small/web.jpg'">
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/my-road-to-8-week-streak" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/my-road-to-8-week-streak/pen.jpg'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">PERSONAL · 3 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">My Road to 8 Week Streak</h3>
       </div>
-      <p class="w-full px-6 pt-6 pb-3 text-xs text-gray-600 md:text-sm">Alex de Sousa</p>
-      <h2 class="w-full px-6 mb-4 text-xl font-bold text-gray-900">Elixir Pubsub In Less Than 50 Lines</h2>
-      <p class="px-6 mb-5 font-serif text-base text-gray-800">A small Elixir pubsub implementation using built-in module :pg2</p>
-    </a>
-  </div>
-  <div class="flex-none p-6 mt-auto overflow-hidden bg-white rounded-t-none rounded-b shadow-lg">
-    <div class="flex items-center justify-between">
-      <img class="w-8 h-8 mr-4 rounded-full avatar"
-           data-tippy-content="Alex de Sousa"
-           src="/assets/images/profile/alex.jpg"
-           alt="Avatar of Alex de Sousa"/>
-      <p class="text-xs text-gray-600 md:text-sm">3 min read</p>
-    </div>
-  </div>
-</div>
+    </a><a href="/elixir-pubsub-in-less-than-50-lines" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/elixir-pubsub-in-less-than-50-lines/web.jpg'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">ELIXIR · 3 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Elixir Pubsub In Less Than 50 Lines</h3>
+      </div>
+    </a></div>
 </div></div>
-</div>
-<footer class="bg-elixir-900">
-  <div class="container flex items-center max-w-6xl px-2 py-8 mx-auto">
-    <div class="flex flex-wrap items-center w-full mx-auto">
-      <div class="flex justify-center w-full font-extrabold text-white md:w-1/2 md:justify-start">
-        <a class="no-underline hover:text-gray-900 hover:no-underline"
-           href="/en">
-          <span class="text-base text-elixir-100"><svg
-  class="inline stroke-current text-elixir-100 w-6 h-6"
-   viewBox="0 0 69.572713 69.572715">
-  <g>
-    <path
-       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
-  </g>
-</svg>
-The Broken Link</span>
-        </a>
-      </div>
-      <div class="flex content-center justify-between w-full pt-2 md:w-1/2 md:justify-end">
-        <ul class="flex items-center justify-center flex-1 list-reset md:flex-none"><li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="Alex de Sousa's CV"
-               href="https://thebroken.link/cv/">Alex de Sousa's CV</a>
-          </li>
-          <li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="@etadelius"
-               href="https://twitter.com/etadelius">
-              <svg class="h-6 fill-current" viewBox="0 0 32 32">
-                <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
-                </path>
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="@alexdesousa"
-               href="https://github.com/alexdesousa/">
-              <svg class="h-6 fill-current" viewBox="0 0 512 512">
-                <g>
-                  <path d="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
-          c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
-          c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
-          c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136
-          c-4.187,0.767-9.469,1.092-15.846,1c-6.374-0.089-12.991-0.757-19.842-1.999c-6.854-1.231-13.229-4.086-19.13-8.559
-          c-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559
-          c-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-0.951-2.568-2.098-3.711-3.429c-1.142-1.331-1.997-2.663-2.568-3.997
-          c-0.572-1.335-0.098-2.43,1.427-3.289c1.525-0.859,4.281-1.276,8.28-1.276l5.708,0.853c3.807,0.763,8.516,3.042,14.133,6.851
-          c5.614,3.806,10.229,8.754,13.846,14.842c4.38,7.806,9.657,13.754,15.846,17.847c6.184,4.093,12.419,6.136,18.699,6.136
-          c6.28,0,11.704-0.476,16.274-1.423c4.565-0.952,8.848-2.383,12.847-4.285c1.713-12.758,6.377-22.559,13.988-29.41
-          c-10.848-1.14-20.601-2.857-29.264-5.14c-8.658-2.286-17.605-5.996-26.835-11.14c-9.235-5.137-16.896-11.516-22.985-19.126
-          c-6.09-7.614-11.088-17.61-14.987-29.979c-3.901-12.374-5.852-26.648-5.852-42.826c0-23.035,7.52-42.637,22.557-58.817
-          c-7.044-17.318-6.379-36.732,1.997-58.24c5.52-1.715,13.706-0.428,24.554,3.853c10.85,4.283,18.794,7.952,23.84,10.994
-          c5.046,3.041,9.089,5.618,12.135,7.708c17.705-4.947,35.976-7.421,54.818-7.421s37.117,2.474,54.823,7.421l10.849-6.849
-          c7.419-4.57,16.18-8.758,26.262-12.565c10.088-3.805,17.802-4.853,23.134-3.138c8.562,21.509,9.325,40.922,2.279,58.24
-          c15.036,16.18,22.559,35.787,22.559,58.817c0,16.178-1.958,30.497-5.853,42.966c-3.9,12.471-8.941,22.457-15.125,29.979
-          c-6.191,7.521-13.901,13.85-23.131,18.986c-9.232,5.14-18.182,8.85-26.84,11.136c-8.662,2.286-18.415,4.004-29.263,5.146
-          c9.894,8.562,14.842,22.077,14.842,40.539v60.237c0,3.422,1.19,6.279,3.572,8.562c2.379,2.279,6.136,2.95,11.276,1.995
-          c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906
-          C438.536,184.851,428.728,148.168,409.132,114.573z"/>
-                </g>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<footer class="border-t-2 border-brdr bg-card py-8 text-center text-[0.82rem] text-muted">
+  <p>Written by <a href="https://linkedin.com/in/ajdesousa" class="text-pri">Alex de Sousa</a>, Elixir Alchemist since 2015 and BEAM engineer since 2012.</p>
+  <p class="mt-1.5"><a href="/cv" class="text-pri">Curriculum Vitae</a> · <a href="https://github.com/alexdesousa" class="text-pri">GitHub</a> · <a href="https://linkedin.com/in/ajdesousa" class="text-pri">LinkedIn</a></p>
 </footer>
 <script>
       document.addEventListener('scroll', function() {
-        const scrollTop = document.documentElement['scrollTop'] || document.body['scrollTop'];
-        const scrollHeight = document.documentElement['scrollHeight'] || document.body['scrollHeight'];
-        const scrollBottom = scrollHeight - document.documentElement.clientHeight;
-        const scroll = scrollTop / scrollBottom * 100;
-
-        document
-          .getElementById('progress-bar')
-          .style.setProperty('--scroll', `${scroll}%`);
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        var scroll = st / (sh - document.documentElement.clientHeight) * 100;
+        document.getElementById('progress-bar').style.setProperty('--scroll', scroll + '%');
       }, {passive: true});
+      document.querySelectorAll('#post-content table').forEach(function(t) {
+        var w = document.createElement('div');
+        w.className = 'table-scroll';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+        t.style.margin = '0';
+      });
     </script>
   </body>
 </html>

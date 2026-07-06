@@ -1,0 +1,25 @@
+# The Broken Link
+
+> Technical blog by Alex de Sousa — BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.
+
+## About
+
+Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries including AyeSQL (raw SQL), Skogsrå (configuration), Planck (coding harness), and Yggdrasil (pub-sub).
+
+- Site: https://thebroken.link
+- CV: https://thebroken.link/cv
+- Feed: https://thebroken.link/feed_en.xml
+- GitHub: https://github.com/alexdesousa
+- LinkedIn: https://www.linkedin.com/in/ajdesousa
+
+## Posts
+- [ICON 2.0: Realtime Decentralized Quote Prices](https://thebroken.link/icon-2.0-realtime-decentralized-quote-prices/) — By leveraging one of ICON's BTP features, we get realtime quote prices from Balanced DEx
+- [My Worst Bug](https://thebroken.link/my-worst-bug/) — Debugging C/C++ can sometimes be a nightmare.
+- [My Road to 8 Week Streak](https://thebroken.link/my-road-to-8-week-streak/) — Writing is hard. Writing requires practice.
+- [AyeSQL: Writing Raw SQL in Elixir](https://thebroken.link/ayesql-writing-raw-sql-in-elixir/) — Sometimes good'ol SQL is better than any abstraction.
+- [Elixir Pubsub In Less Than 50 Lines](https://thebroken.link/elixir-pubsub-in-less-than-50-lines/) — A small Elixir pubsub implementation using built-in module :pg2
+- [Managing Dotfiles with Ansible](https://thebroken.link/managing-dotfiles-with-ansible/) — A small tutorial on how to use Ansible to manage your dotfiles.
+- [Oath: Don't Loose Your Keys!](https://thebroken.link/oath-dont-loose-your-keys/) — A ZSH plugin for handling your keys.
+- [Skogsrå: Simplifying Your Elixir Configuration](https://thebroken.link/skogsra-simplifying-your-elixir-configuration/) — Improving Elixir configurations for small and large projects.
+- [Yggdrasil: Easy Pub-Sub in Elixir](https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/) — An overview of Yggdrasil's capabilities.
+- [Syntax highlighting in Jekyll](https://thebroken.link/syntax-highlighting-in-jekyll/) — Using Redcarpet markdown renderer to add pygments to Jekyll

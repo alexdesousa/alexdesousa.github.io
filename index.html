@@ -3,9 +3,10 @@
   <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="description" content="Alex de Sousa's blog" />
+<meta name="description" content="Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015." />
 <meta name="robots" content="index, follow">
-<meta name="author" content="default" />
+<meta name="author" content="The Broken Link" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
 <title>Thoughts and Ramblings of an Elixir Alchemist | The Broken Link</title>
 <link rel="canonical" href="https://thebroken.link/"/>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -16,60 +17,48 @@
 <link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="theme-color" content="#FFFFFF">
-<meta itemprop="description" content="Alex de Sousa's blog" />
-<meta itemprop="image" content="/assets/images/preview.jpg" />
-<meta property="og:type" content="website" />
+<meta itemprop="description" content="Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015." />
+<meta itemprop="image" content="https://thebroken.link/assets/images/preview.jpg" />
+<meta property="og:type" content="website" /><meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="The Broken Link" />
 <meta property="og:title" content="Thoughts and Ramblings of an Elixir Alchemist" />
 <meta property="og:image" content="https://thebroken.link/assets/images/preview.jpg" />
 <meta property="og:url" content="https://thebroken.link/" />
-<meta property="og:description" content="Alex de Sousa's blog" />
+<meta property="og:description" content="Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015." />
 <meta name="twitter:title" content="Thoughts and Ramblings of an Elixir Alchemist"/>
-<meta name="twitter:description" content="Alex de Sousa's blog" />
+<meta name="twitter:description" content="Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015." />
 <meta name="twitter:image" content="https://thebroken.link/assets/images/preview.jpg" />
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image:alt" content="Alex de Sousa's blog"/>
-<meta name="twitter:site" content="@etadelius">
-<script type="application/ld+json">
-{
+<meta name="twitter:image:alt" content="Thoughts and Ramblings of an Elixir Alchemist"/>
+<script type="application/ld+json">{
   "@context": "https://schema.org",
-  "@type": "NewsArticle",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://thebroken.link/"
-  },
-  "headline": "Thoughts and Ramblings of an Elixir Alchemist",
-  "image": ["https://thebroken.link/assets/images/logo.png"],
-  "datePublished": "2022-03-07T20:55:20+00:00",
-  "dateModified": "2022-03-07T20:55:20+00:00",
+  "@type": "WebSite",
+  "url": "https://thebroken.link",
+  "name": "The Broken Link",
+  "description": "Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015.",
   "author": {
     "@type": "Person",
-    "name": "default"
-  },
-  "publisher": {
-    "@type": "Organization",
     "name": "The Broken Link",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://thebroken.link/assets/images/logo.png"
-    }
-  },
-  "description": "Alex de Sousa's blog"
-}
-</script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+    "url": "https://thebroken.link/cv"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
-</script><link rel="stylesheet" href="/assets/css/tailwind.css"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
-      rel="stylesheet"
-      integrity="sha384-xyZLiqnBEFn1hDkS8VeG/YHoqOjS/ucimT8TI6GDr9+ZP1UNbZr6d/q0ldMi/xvL"
-      crossorigin="anonymous"/>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
 <script type="text/javascript" src="/assets/js/app.js"></script>
 <meta http-equiv="refresh" content="0; url=/en/index.html">
   </head>

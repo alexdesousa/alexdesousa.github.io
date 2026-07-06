@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="description" content="Improving Elixir configurations for small and large projects." />
 <meta name="robots" content="index, follow">
-<meta name="author" content="alex" />
+<meta name="author" content="Alex de Sousa" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
 <title>Skogsrå: Simplifying Your Elixir Configuration | The Broken Link</title>
 <link rel="canonical" href="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/"/>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -17,8 +18,8 @@
 <meta name="msapplication-TileColor" content="#FFFFFF">
 <meta name="theme-color" content="#FFFFFF">
 <meta itemprop="description" content="Improving Elixir configurations for small and large projects." />
-<meta itemprop="image" content="/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
-<meta property="og:type" content="website" />
+<meta itemprop="image" content="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
+<meta property="og:type" content="article" /><meta property="og:locale" content="en_US" />
 <meta property="og:site_name" content="The Broken Link" />
 <meta property="og:title" content="Skogsrå: Simplifying Your Elixir Configuration" />
 <meta property="og:image" content="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
@@ -28,172 +29,148 @@
 <meta name="twitter:description" content="Improving Elixir configurations for small and large projects." />
 <meta name="twitter:image" content="https://thebroken.link/skogsra-simplifying-your-elixir-configuration/skogsra.jpg" />
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image:alt" content="Improving Elixir configurations for small and large projects."/>
-<meta name="twitter:site" content="@etadelius">
-<script type="application/ld+json">
-{
+<meta name="twitter:image:alt" content="Skogsrå: Simplifying Your Elixir Configuration"/>
+<script type="application/ld+json">{
   "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://thebroken.link/skogsra-simplifying-your-elixir-configuration/"
   },
   "headline": "Skogsrå: Simplifying Your Elixir Configuration",
-  "image": ["https://thebroken.link/assets/images/logo.png"],
+  "image": ["https://thebroken.link/skogsra-simplifying-your-elixir-configuration/skogsra.jpg"],
   "datePublished": "2020-02-12T00:00:00+00:00",
-  "dateModified": "2020-02-12T00:00:00+00:00",
+  "dateModified": "2026-07-06T18:49:25+00:00",
   "author": {
     "@type": "Person",
-    "name": "alex"
+    "name": "Alex de Sousa",
+    "url": "https://thebroken.link/cv"
   },
   "publisher": {
     "@type": "Organization",
     "name": "The Broken Link",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://thebroken.link/assets/images/logo.png"
+      "url": "https://thebroken.link/profiles/alex.jpg"
     }
   },
   "description": "Improving Elixir configurations for small and large projects."
-}
-</script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-85600451-1"></script>
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-85600451-1', {'anonymize_ip':true});
-</script><link rel="stylesheet" href="/assets/css/tailwind.css"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
-      rel="stylesheet"
-      integrity="sha384-xyZLiqnBEFn1hDkS8VeG/YHoqOjS/ucimT8TI6GDr9+ZP1UNbZr6d/q0ldMi/xvL"
-      crossorigin="anonymous"/>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
 <script type="text/javascript" src="/assets/js/app.js"></script>
-
-    <link rel="stylesheet" href="/assets/css/pygments/monokai.css" />
-    <style>
-      #progress-bar {
-        --scroll: 0%;
-        background: linear-gradient(to right, #9E7BEA var(--scroll), transparent 0);
-        height: 0.25rem;
-        width: 100%;
-      }
-    </style>
-  </head>
-  <body class="font-sans leading-normal tracking-normal bg-gray-100"><nav class="sticky top-0 z-50 flex flex-col w-full mt-0">
-  <div class="flex justify-center w-full bg-elixir-900">
-    <div class="container flex py-2 px-4 bg-elixir-900">
-      <div class="container flex items-center mx-auto">
-        <div class="flex font-extrabold">
-          <a class="hover:no-underline" href="https://thebroken.link/en/">
-            <span class="text-base font-bold md:tracking-wider text-elixir-100 hover:text-white"><svg
-  class="inline stroke-current text-elixir-100 w-6 h-6"
-   viewBox="0 0 69.572713 69.572715">
-  <g>
-    <path
-       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
-  </g>
+</head>
+  <body class="bg-canvas text-ink font-mono"><div id="progress-bar"></div>
+<nav class="sticky top-0 z-50 bg-card border-b-2 border-brdr px-6 py-3.5 flex items-center justify-between">
+  <a href="/en/" class="flex items-center gap-2 font-bold text-xs tracking-[0.18em] uppercase text-ink hover:text-pri no-underline"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 69.573 69.573" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-miterlimit="4" aria-hidden="true">
+  <path stroke-width="2.910" d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
 </svg>
-The Broken Link</span>
-          </a>
-        </div>
-        <div class="flex pl-2 text-sm md:pl-4">
-          <ul class="flex items-center justify-between flex-1 list-reset md:flex-none"></ul>
-        </div>
-      </div>
-      <div class="flex items-center justify-end w-1/2 align-baseline">
-        <p class="hidden py-4 mr-3 text-sm font-bold text-center text-elixir-100 md:block">
-          <span class="pr-1">Share this</span> 👉
-        </p>
-        <a class="inline-block w-8 h-8 text-center no-underline text-elixir-100 hover:text-white hover:text-underline md:h-auto md:w-16 md:p-4"
-           href="https://twitter.com/intent/tweet?text=Improving+Elixir+configurations+for+small+and+large+projects.&url=https%3A%2F%2Fthebroken.link%2Fskogsra-simplifying-your-elixir-configuration&via=etadelius">
-          <svg class="h-8 fill-current" viewBox="0 0 32 32">
-            <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
-            </path>
-          </svg>
-        </a>
-      </div>
-    </div>
+<span>← The Broken Link</span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/cv" class="inline-block border-2 border-brdr bg-card text-ink px-3 py-1.5 text-[0.72rem] font-bold tracking-[0.05em] uppercase shadow-neo-sm no-underline neo-hover-btn">CV</a>
+    <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm neo-hover-btn cursor-pointer" aria-label="Toggle theme">◐</button>
+    <a href="https://linkedin.com/in/ajdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="LinkedIn">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/alexdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="GitHub">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+</nav>
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">ELIXIR</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">5 MIN READ</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">Feb 12, 2020</span>
   </div>
 
-  <div id="progress-bar"></div>
-</nav>
-<div class="container w-full mx-auto pt-8 text-center md:pt-16">
-  <p class="text-sm font-bold text-elixir-600 md:text-base">Written by Alex de Sousa</p>
-  <h1 class="text-3xl font-bold break-normal md:text-5xl text-elixir-900">Skogsrå: Simplifying Your Elixir Configuration</h1>
-</div>
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    Skogsrå: Simplifying Your Elixir Configuration
+  </h1>
 
-<div class="container text-sm text-right w-full max-w-6xl mx-auto mt-8 bg-white bg-cover rounded"
-     style="background-image:url('/skogsra-simplifying-your-elixir-configuration/skogsra.jpg'); height: 75vh; background-position: center;"><a class="p-2 rounded-bl-md bg-elixir-100 text-elixir-900 hover:underline"
-      href="https://unsplash.com/photos/jFCViYFYcus">
-    
-      Cover by Lukasz Szmigiel
-  </a></div>
-<div class="container max-w-5xl mx-auto -mt-16 md:-mt-20 lg:-mt-32">
-  <div class="mx-0 sm:mx-6">
-    <div id="post-content" class="w-full p-8 bg-white text-elixir-900 prose max-w-none md:p-16">
-      
-      <p>Once an Elixir project is large enough, maintaining config files and configuration variables becomes a nightmare:</p>
+  <div class="flex items-center gap-3"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0"><div>
+      <p class="text-sm font-bold leading-none mb-0.5">Alex de Sousa</p>
+      <p class="text-[0.72rem] text-muted">Elixir alchemist. Tech enthusiast.</p>
+    </div>
+  </div>
+</header>
+<div class="max-w-[720px] mx-auto px-6 py-8">
+  <article id="post-content" class="prose">
+    <p>Once an Elixir project is large enough, maintaining config files and configuration variables becomes a nightmare:</p>
 
 <ul>
-<li>Configuration variables are scattered throughout the code so it&#39;s very easy to forget a configuration setting.</li>
-<li>OS environment variables must be casted to the correct type as they are always strings.</li>
-<li>Required variables must be checked by hand.</li>
-<li>Setting defaults can sometimes be a bit cumbersome.</li>
-<li>No type safety.</li>
+  <li>Configuration variables are scattered throughout the code so it’s very easy to forget a configuration setting.</li>
+  <li>OS environment variables must be casted to the correct type as they are always strings.</li>
+  <li>Required variables must be checked by hand.</li>
+  <li>Setting defaults can sometimes be a bit cumbersome.</li>
+  <li>No type safety.</li>
 </ul>
 
-<p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="madness"></p>
+<p><img src="https://media.giphy.com/media/S0KRynVEROiOs/giphy.gif" alt="madness" /></p>
 
 <p>Ideally though, configurations should be:</p>
 
 <ul>
-<li>Documented.</li>
-<li>Easy to find.</li>
-<li>Easy to read.</li>
-<li>Declarative.</li>
+  <li>Documented.</li>
+  <li>Easy to find.</li>
+  <li>Easy to read.</li>
+  <li>Declarative.</li>
 </ul>
 
 <p>In summary: <strong>easy to maintain</strong>.</p>
 
 <h2 id="the-problem">The problem</h2>
 
-<p>We&#39;ll elaborate using the the following example:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
+<p>We’ll elaborate using the the following example:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
   <span class="ss">hostname:</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"HOSTNAME"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"localhost"</span><span class="p">,</span>
   <span class="ss">port:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <p>The previous code is:</p>
 
 <ul>
-<li>Undocumented: <code>hostname</code> and <code>port</code> of what?</li>
-<li>Hard to read: Too many concerns in a single line.</li>
-<li>Hard to find: where are these <code>hostname</code> and <code>port</code> used?</li>
-<li>Not declarative: we&#39;re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> are the values we want</strong>.</li>
+  <li>Undocumented: <code class="language-plaintext highlighter-rouge">hostname</code> and <code class="language-plaintext highlighter-rouge">port</code> of what?</li>
+  <li>Hard to read: Too many concerns in a single line.</li>
+  <li>Hard to find: where are these <code class="language-plaintext highlighter-rouge">hostname</code> and <code class="language-plaintext highlighter-rouge">port</code> used?</li>
+  <li>Not declarative: we’re telling Elixir <strong><em>how</em> to retrieve the values</strong> instead of <strong><em>what</em> are the values we want</strong>.</li>
 </ul>
 
-<p>Conclusion: <strong>it&#39;s hard to maintain</strong>.</p>
+<p>Conclusion: <strong>it’s hard to maintain</strong>.</p>
 
 <h2 id="writing-a-config-module">Writing a config module</h2>
 
 <p>We could mitigate some of these problems with one simple approach:</p>
 
 <ul>
-<li>Create a module for your configs.</li>
-<li>Create a function for every single configuration parameter you app has.</li>
+  <li>Create a module for your configs.</li>
+  <li>Create a function for every single configuration parameter you app has.</li>
 </ul>
 
 <p>The following, though a bit more verbose, would be the equivalent to the previous config:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
 
   <span class="nv">@doc</span> <span class="s2">"My hostname"</span>
@@ -206,42 +183,44 @@ The Broken Link</span>
     <span class="no">String</span><span class="o">.</span><span class="n">to_integer</span><span class="p">(</span><span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="o">||</span> <span class="s2">"80"</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Unlike our original code, this one is:</p>
 
 <ul>
-<li>Documented: Every function has <code>@doc</code> attribute.</li>
-<li>Easy to find: We just need to to look for calls to functions defined in this module.</li>
+  <li>Documented: Every function has <code class="language-plaintext highlighter-rouge">@doc</code> attribute.</li>
+  <li>Easy to find: We just need to to look for calls to functions defined in this module.</li>
 </ul>
 
 <p>However, we still have essentially the same code we had before, which is:</p>
 
 <ul>
-<li>Hard to read.</li>
-<li>Not declarative.</li>
+  <li>Hard to read.</li>
+  <li>Not declarative.</li>
 </ul>
 
-<p>There&#39;s gotta be a better way!</p>
+<p>There’s gotta be a better way!</p>
 
-<p><img src="https://media.giphy.com/media/WTdg5GBR45X6NbxqJK/giphy.gif" alt="almost"></p>
+<p><img src="https://media.giphy.com/media/WTdg5GBR45X6NbxqJK/giphy.gif" alt="almost" /></p>
 
-<h2 id="there-is-a-better-way-meet-skogsr">There is a better way - Meet Skogsrå</h2>
+<h2 id="there-is-a-better-way---meet-skogsrå">There is a better way - Meet Skogsrå</h2>
 
 <p><a href="https://hexdocs.pm/skogsra/readme.html">Skogsrå</a> is a library for loading configuration variables with ease, providing:</p>
 
 <ul>
-<li>Variable defaults.</li>
-<li>Automatic type casting of values.</li>
-<li>Automatic docs and spec generation.</li>
-<li>OS environment template generation.</li>
-<li>Run-time reloading.</li>
-<li>Setting variable&#39;s values at run-time.</li>
-<li>Fast cached values access by using <code>:persistent_term</code> as temporal storage.</li>
-<li>YAML configuration provider for Elixir releases.</li>
+  <li>Variable defaults.</li>
+  <li>Automatic type casting of values.</li>
+  <li>Automatic docs and spec generation.</li>
+  <li>OS environment template generation.</li>
+  <li>Run-time reloading.</li>
+  <li>Setting variable’s values at run-time.</li>
+  <li>Fast cached values access by using <code class="language-plaintext highlighter-rouge">:persistent_term</code> as temporal storage.</li>
+  <li>YAML configuration provider for Elixir releases.</li>
 </ul>
 
 <p>The previous example can be re-written as follows:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="nv">@moduledoc</span> <span class="s2">"My app config."</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
@@ -255,76 +234,83 @@ The Broken Link</span>
     <span class="ss">default:</span> <span class="mi">80</span><span class="p">,</span>
     <span class="ss">os_env:</span> <span class="s2">"PORT"</span>
 <span class="k">end</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <p>This module will have these functions:</p>
 
 <ul>
-<li><code>Myapp.Config.hostname/0</code> for retrieving the hostname.</li>
-<li><code>Myapp.Config.port/0</code> for retrieving the port.</li>
+  <li><code class="language-plaintext highlighter-rouge">Myapp.Config.hostname/0</code> for retrieving the hostname.</li>
+  <li><code class="language-plaintext highlighter-rouge">Myapp.Config.port/0</code> for retrieving the port.</li>
 </ul>
 
 <p>With this implementation, we end up with:</p>
 
 <ul>
-<li>Documented configuration variables: Via <code>@envdoc</code> module attribute.</li>
-<li>Easy to find: Every configuration variable will be in <code>Myapp.Config</code> module.</li>
-<li>Easy to read: <code>app_env</code> options are self explanatory.</li>
-<li>Declarative: we&#39;re telling Skogsrå <em>what we want</em>.</li>
-<li><strong>Bonus</strong>: Type-safety (see <a href="#strong-typing">Strong typing</a> section).</li>
+  <li>Documented configuration variables: Via <code class="language-plaintext highlighter-rouge">@envdoc</code> module attribute.</li>
+  <li>Easy to find: Every configuration variable will be in <code class="language-plaintext highlighter-rouge">Myapp.Config</code> module.</li>
+  <li>Easy to read: <code class="language-plaintext highlighter-rouge">app_env</code> options are self explanatory.</li>
+  <li>Declarative: we’re telling Skogsrå <em>what we want</em>.</li>
+  <li><strong>Bonus</strong>: Type-safety (see <a href="#strong-typing">Strong typing</a> section).</li>
 </ul>
 
-<p><img src="https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif" alt="dance"></p>
+<p><img src="https://media.giphy.com/media/wAxlCmeX1ri1y/giphy.gif" alt="dance" /></p>
 
 <h2 id="how-it-works">How it works</h2>
 
-<p>Calling <code>Myapp.Config.port()</code> will retrieve the value for the port in the following order:</p>
+<p>Calling <code class="language-plaintext highlighter-rouge">Myapp.Config.port()</code> will retrieve the value for the port in the following order:</p>
 
 <ol>
-<li>From the OS environment variable <code>$PORT</code>.</li>
-<li><p>From the configuration file e.g. our test config file might look like:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="c1"># file config/test.exs</span>
-<span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Config</span>
+  <li>From the OS environment variable <code class="language-plaintext highlighter-rouge">$PORT</code>.</li>
+  <li>
+    <p>From the configuration file e.g. our test config file might look like:</p>
 
-<span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
-  <span class="ss">port:</span> <span class="mi">4000</span>
-</code></pre></div></li>
-<li><p>From the default value, if it exists (In this case, it would return the integer <code>80</code>).</p></li>
+    <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c1"># file config/test.exs</span>
+ <span class="kn">use</span> <span class="no">Mix</span><span class="o">.</span><span class="no">Config</span>
+
+ <span class="n">config</span> <span class="ss">:myapp</span><span class="p">,</span>
+   <span class="ss">port:</span> <span class="mi">4000</span>
+</code></pre></div>    </div>
+  </li>
+  <li>From the default value, if it exists (In this case, it would return the integer <code class="language-plaintext highlighter-rouge">80</code>).</li>
 </ol>
 
-<p>The values will be casted as the default values&#39; type unless the option <code>type</code> is provided (see <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
+<p>The values will be casted as the default values’ type unless the option <code class="language-plaintext highlighter-rouge">type</code> is provided (see <a href="#explicit-type-casting">Explicit type casting</a> section).</p>
 
 <p>Though Skogsrå has <a href="https://hexdocs.pm/skogsra/readme.html">many options and features</a>, we will just explore the ones I use the most:</p>
 
 <ul>
-<li><a href="#explicit-type-casting">Explicit type casting</a>.</li>
-<li><a href="#defining-custom-types">Defining custom types</a>.</li>
-<li><a href="#required-variables">Required variables</a>.</li>
-<li><a href="#strong-typing">Strong typing</a>.</li>
+  <li><a href="#explicit-type-casting">Explicit type casting</a>.</li>
+  <li><a href="#defining-custom-types">Defining custom types</a>.</li>
+  <li><a href="#required-variables">Required variables</a>.</li>
+  <li><a href="#strong-typing">Strong typing</a>.</li>
 </ul>
 
 <h2 id="explicit-type-casting">Explicit type casting</h2>
 
-<p>When the types are not <code>any</code>, <code>binary</code>, <code>integer</code>, <code>float</code>, <code>boolean</code> or <code>atom</code>, Skogsrå cannot automatically cast values solely by the default value&#39;s type. Types then need to be specified explicitly using the option <code>type</code>. The available types are:</p>
+<p>When the types are not <code class="language-plaintext highlighter-rouge">any</code>, <code class="language-plaintext highlighter-rouge">binary</code>, <code class="language-plaintext highlighter-rouge">integer</code>, <code class="language-plaintext highlighter-rouge">float</code>, <code class="language-plaintext highlighter-rouge">boolean</code> or <code class="language-plaintext highlighter-rouge">atom</code>, Skogsrå cannot automatically cast values solely by the default value’s type. Types then need to be specified explicitly using the option <code class="language-plaintext highlighter-rouge">type</code>. The available types are:</p>
 
 <ul>
-<li><code>:any</code> (default).</li>
-<li><code>:binary</code>.</li>
-<li><code>:integer</code>.</li>
-<li><code>:float</code>.</li>
-<li><code>:boolean</code>.</li>
-<li><code>:atom</code>.</li>
-<li><code>:module</code>: for modules loaded in the system.</li>
-<li><code>:unsafe_module</code>: for modules that might or might not be loaded in the system.</li>
-<li><code>Skogsra.Type</code> implementation: a <code>behaviour</code> for defining custom types.</li>
+  <li><code class="language-plaintext highlighter-rouge">:any</code> (default).</li>
+  <li><code class="language-plaintext highlighter-rouge">:binary</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">:integer</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">:float</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">:boolean</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">:atom</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">:module</code>: for modules loaded in the system.</li>
+  <li><code class="language-plaintext highlighter-rouge">:unsafe_module</code>: for modules that might or might not be loaded in the system.</li>
+  <li><code class="language-plaintext highlighter-rouge">Skogsra.Type</code> implementation: a <code class="language-plaintext highlighter-rouge">behaviour</code> for defining custom types.</li>
 </ul>
 
 <h2 id="defining-custom-types">Defining custom types</h2>
 
-<p>Let&#39;s say we need to read an OS environment variable called <code>HISTOGRAM_BUCKETS</code> as a list of integers:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">HISTOGRAM_BUCKETS</span><span class="o">=</span><span class="s2">"1, 10, 30, 60"</span>
-</code></pre></div>
-<p>We could then implement <code>Skogsra.Type</code> behaviour to parse the string correctly:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span> <span class="k">do</span>
+<p>Let’s say we need to read an OS environment variable called <code class="language-plaintext highlighter-rouge">HISTOGRAM_BUCKETS</code> as a list of integers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">HISTOGRAM_BUCKETS</span><span class="o">=</span><span class="s2">"1, 10, 30, 60"</span>
+</code></pre></div></div>
+
+<p>We could then implement <code class="language-plaintext highlighter-rouge">Skogsra.Type</code> behaviour to parse the string correctly:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span><span class="o">.</span><span class="no">Type</span>
 
   <span class="nv">@impl</span> <span class="no">Skogsra</span><span class="o">.</span><span class="no">Type</span>
@@ -347,9 +333,11 @@ The Broken Link</span>
     <span class="ss">:error</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre></div>
-<p>And finally use <code>Myapp.Type.IntegerList</code> in our Skogsrå configuration:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+</code></pre></div></div>
+
+<p>And finally use <code class="language-plaintext highlighter-rouge">Myapp.Type.IntegerList</code> in our Skogsrå configuration:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
   <span class="nv">@envdoc</span> <span class="s2">"Histogram buckets"</span>
@@ -357,23 +345,29 @@ The Broken Link</span>
     <span class="ss">type:</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Type</span><span class="o">.</span><span class="no">IntegerList</span><span class="p">,</span>
     <span class="ss">os_env:</span> <span class="s2">"HISTOGRAM_BUCKETS"</span>
 <span class="k">end</span>
-</code></pre></div>
-<p>Then it should be easy to retrieve our <code>buckets</code> from an OS environment variable:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"BUCKETS"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Then it should be easy to retrieve our <code class="language-plaintext highlighter-rouge">buckets</code> from an OS environment variable:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"BUCKETS"</span><span class="p">)</span>
 <span class="s2">"1, 10, 30, 60"</span>
 <span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <p>or if the variable is not defined, from our application configuration:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">app_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:histogram_buckets</span><span class="p">)</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]</span>
 <span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">buckets</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">]}</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <h2 id="required-variables">Required variables</h2>
 
-<p>Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it&#39;s expected to find a value in either an OS environment variable or the application configuration e.g. given the following config module:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+<p>Skogsrå provides an option for making configuration variables mandatory. This is useful when there is no default value for our variable and Skogsrå it’s expected to find a value in either an OS environment variable or the application configuration e.g. given the following config module:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
   <span class="nv">@envdoc</span> <span class="s2">"Server port."</span>
@@ -381,35 +375,42 @@ The Broken Link</span>
     <span class="ss">os_env:</span> <span class="s2">"PORT"</span><span class="p">,</span>
     <span class="ss">required:</span> <span class="no">true</span>
 <span class="k">end</span>
-</code></pre></div>
-<p>The function <code>Myapp.Config.port()</code> will error if <code>PORT</code> is undefined and
+</code></pre></div></div>
+
+<p>The function <code class="language-plaintext highlighter-rouge">Myapp.Config.port()</code> will error if <code class="language-plaintext highlighter-rouge">PORT</code> is undefined and
 the application configuration is not found:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">System</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span>
 <span class="no">nil</span>
 <span class="n">iex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">Application</span><span class="o">.</span><span class="n">get_env</span><span class="p">(</span><span class="ss">:myapp</span><span class="p">,</span> <span class="ss">:port</span><span class="p">)</span>
 <span class="no">nil</span>
 <span class="n">iex</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;</span> <span class="no">MyApp</span><span class="o">.</span><span class="no">Config</span><span class="o">.</span><span class="n">port</span><span class="p">()</span>
 <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="s2">"Variable port in app myapp is undefined"</span><span class="p">}</span>
-</code></pre></div>
+</code></pre></div></div>
+
 <h2 id="strong-typing">Strong typing</h2>
 
-<p>All the configuration variables will have the correct function <code>@spec</code> definition e.g. given the following definition:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
+<p>All the configuration variables will have the correct function <code class="language-plaintext highlighter-rouge">@spec</code> definition e.g. given the following definition:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">Myapp</span><span class="o">.</span><span class="no">Config</span> <span class="k">do</span>
   <span class="kn">use</span> <span class="no">Skogsra</span>
 
   <span class="nv">@envdoc</span> <span class="s2">"PostgreSQL hostname"</span>
   <span class="n">app_env</span> <span class="ss">:db_port</span><span class="p">,</span> <span class="ss">:myapp</span><span class="p">,</span> <span class="p">[</span><span class="ss">:postgres</span><span class="p">,</span> <span class="ss">:port</span><span class="p">],</span>
     <span class="ss">default:</span> <span class="mi">5432</span>
 <span class="k">end</span>
-</code></pre></div>
-<p>The generated function <code>Myapp.Config.db_port/0</code> will have the following <code>@spec</code>:</p>
-<div class="highlight"><pre><code class="language-elixir" data-lang="elixir"><span class="nv">@spec</span> <span class="n">db_port</span><span class="p">()</span> <span class="p">::</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">integer</span><span class="p">()}</span> <span class="o">|</span> <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="n">binary</span><span class="p">()}</span>
-</code></pre></div>
+</code></pre></div></div>
+
+<p>The generated function <code class="language-plaintext highlighter-rouge">Myapp.Config.db_port/0</code> will have the following <code class="language-plaintext highlighter-rouge">@spec</code>:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">@spec</span> <span class="n">db_port</span><span class="p">()</span> <span class="p">::</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">integer</span><span class="p">()}</span> <span class="o">|</span> <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="n">binary</span><span class="p">()}</span>
+</code></pre></div></div>
+
 <p>The type is derived from:</p>
 
 <ul>
-<li>The <code>default</code> value (in this case the integer <code>5432</code>)</li>
-<li>The <code>type</code> configuration value (see the previous <a href="#explicit-type-casting">Explicit type casting</a> section).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">default</code> value (in this case the integer <code class="language-plaintext highlighter-rouge">5432</code>)</li>
+  <li>The <code class="language-plaintext highlighter-rouge">type</code> configuration value (see the previous <a href="#explicit-type-casting">Explicit type casting</a> section).</li>
 </ul>
 
 <h2 id="conclusion">Conclusion</h2>
@@ -418,147 +419,58 @@ the application configuration is not found:</p>
 
 <p>Hope you found this article useful. Happy coding!</p>
 
-<p><img src="https://media.giphy.com/media/PiQejEf31116URju4V/giphy.gif" alt="coding"></p>
+<p><img src="https://media.giphy.com/media/PiQejEf31116URju4V/giphy.gif" alt="coding" /></p>
 
-    </div><div class="flex items-center w-full p-8 font-sans md:p-16">
-  <img class="w-24 h-24 mr-4 rounded-full"
-       src="/assets/images/profile/alex.jpg"
-       alt="Avatar of Alex de Sousa"/>
-  <div class="flex-1">
-    <p class="text-base font-bold leading-none text-elixir-900 md:text-xl">Alex de Sousa</p>
-    <p class="mt-2 text-xs text-gray-700 md:text-base">Elixir alchemist. Tech enthusiast.</p>
-  </div>
+  </article><div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
 </div>
-<div class="flex flex-wrap justify-center py-6"><div class="flex flex-col w-full p-6 md:w-1/2 lg:w-5/12">
-  <div class="flex-1 overflow-hidden bg-white rounded-t rounded-b-none shadow-lg">
-    <a href="/oath-dont-loose-your-keys" class="flex flex-wrap no-underline hover:no-underline">
-      <div class="w-full h-64 bg-center bg-cover"
-           style="background-image:url('/oath-dont-loose-your-keys/small/keys.jpg'">
-      </div>
-      <p class="w-full px-6 pt-6 pb-3 text-xs text-gray-600 md:text-sm">Alex de Sousa</p>
-      <h2 class="w-full px-6 mb-4 text-xl font-bold text-gray-900">Oath: Don't Loose Your Keys!</h2>
-      <p class="px-6 mb-5 font-serif text-base text-gray-800">A ZSH plugin for handling your keys.</p>
-    </a>
-  </div>
-  <div class="flex-none p-6 mt-auto overflow-hidden bg-white rounded-t-none rounded-b shadow-lg">
-    <div class="flex items-center justify-between">
-      <img class="w-8 h-8 mr-4 rounded-full avatar"
-           data-tippy-content="Alex de Sousa"
-           src="/assets/images/profile/alex.jpg"
-           alt="Avatar of Alex de Sousa"/>
-      <p class="text-xs text-gray-600 md:text-sm">1 min read</p>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0"><div>
+    <p class="text-sm font-bold mb-1">Alex de Sousa</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">Elixir alchemist. Tech enthusiast.</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/ajdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/alexdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
     </div>
   </div>
 </div>
-<div class="flex flex-col w-full p-6 md:w-1/2 lg:w-5/12">
-  <div class="flex-1 overflow-hidden bg-white rounded-t rounded-b-none shadow-lg">
-    <a href="/yggdrasil-easy-pub-sub-in-elixir" class="flex flex-wrap no-underline hover:no-underline">
-      <div class="w-full h-64 bg-center bg-cover"
-           style="background-image:url('/yggdrasil-easy-pub-sub-in-elixir/small/tree.jpg'">
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/oath-dont-loose-your-keys" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/oath-dont-loose-your-keys/keys.jpg'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">DEVOPS · 1 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Oath: Don't Loose Your Keys!</h3>
       </div>
-      <p class="w-full px-6 pt-6 pb-3 text-xs text-gray-600 md:text-sm">Alex de Sousa</p>
-      <h2 class="w-full px-6 mb-4 text-xl font-bold text-gray-900">Yggdrasil: Easy Pub-Sub in Elixir</h2>
-      <p class="px-6 mb-5 font-serif text-base text-gray-800">An overview of Yggdrasil's capabilities.</p>
-    </a>
-  </div>
-  <div class="flex-none p-6 mt-auto overflow-hidden bg-white rounded-t-none rounded-b shadow-lg">
-    <div class="flex items-center justify-between">
-      <img class="w-8 h-8 mr-4 rounded-full avatar"
-           data-tippy-content="Alex de Sousa"
-           src="/assets/images/profile/alex.jpg"
-           alt="Avatar of Alex de Sousa"/>
-      <p class="text-xs text-gray-600 md:text-sm">10 min read</p>
-    </div>
-  </div>
-</div>
+    </a><a href="/yggdrasil-easy-pub-sub-in-elixir" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/yggdrasil-easy-pub-sub-in-elixir/tree.jpg'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">ELIXIR · 11 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Yggdrasil: Easy Pub-Sub in Elixir</h3>
+      </div>
+    </a></div>
 </div></div>
-</div>
-<footer class="bg-elixir-900">
-  <div class="container flex items-center max-w-6xl px-2 py-8 mx-auto">
-    <div class="flex flex-wrap items-center w-full mx-auto">
-      <div class="flex justify-center w-full font-extrabold text-white md:w-1/2 md:justify-start">
-        <a class="no-underline hover:text-gray-900 hover:no-underline"
-           href="/en">
-          <span class="text-base text-elixir-100"><svg
-  class="inline stroke-current text-elixir-100 w-6 h-6"
-   viewBox="0 0 69.572713 69.572715">
-  <g>
-    <path
-       style="fill:none;stroke-width:2.91042;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
-    <path
-       style="fill:none;stroke-width:4.7625;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
-  </g>
-</svg>
-The Broken Link</span>
-        </a>
-      </div>
-      <div class="flex content-center justify-between w-full pt-2 md:w-1/2 md:justify-end">
-        <ul class="flex items-center justify-center flex-1 list-reset md:flex-none"><li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="Alex de Sousa's CV"
-               href="https://thebroken.link/cv/">Alex de Sousa's CV</a>
-          </li>
-          <li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="@etadelius"
-               href="https://twitter.com/etadelius">
-              <svg class="h-6 fill-current" viewBox="0 0 32 32">
-                <path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z">
-                </path>
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a class="flex items-center h-10 p-2 text-center no-underline text-elixir-500 hover:text-elixir-100 hover:text-underline md:h-auto md:p-4 avatar"
-               data-tippy-content="@alexdesousa"
-               href="https://github.com/alexdesousa/">
-              <svg class="h-6 fill-current" viewBox="0 0 512 512">
-                <g>
-                  <path d="M409.132,114.573c-19.608-33.596-46.205-60.194-79.798-79.8C295.736,15.166,259.057,5.365,219.271,5.365
-          c-39.781,0-76.472,9.804-110.063,29.408c-33.596,19.605-60.192,46.204-79.8,79.8C9.803,148.168,0,184.854,0,224.63
-          c0,47.78,13.94,90.745,41.827,128.906c27.884,38.164,63.906,64.572,108.063,79.227c5.14,0.954,8.945,0.283,11.419-1.996
-          c2.475-2.282,3.711-5.14,3.711-8.562c0-0.571-0.049-5.708-0.144-15.417c-0.098-9.709-0.144-18.179-0.144-25.406l-6.567,1.136
-          c-4.187,0.767-9.469,1.092-15.846,1c-6.374-0.089-12.991-0.757-19.842-1.999c-6.854-1.231-13.229-4.086-19.13-8.559
-          c-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559
-          c-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-0.951-2.568-2.098-3.711-3.429c-1.142-1.331-1.997-2.663-2.568-3.997
-          c-0.572-1.335-0.098-2.43,1.427-3.289c1.525-0.859,4.281-1.276,8.28-1.276l5.708,0.853c3.807,0.763,8.516,3.042,14.133,6.851
-          c5.614,3.806,10.229,8.754,13.846,14.842c4.38,7.806,9.657,13.754,15.846,17.847c6.184,4.093,12.419,6.136,18.699,6.136
-          c6.28,0,11.704-0.476,16.274-1.423c4.565-0.952,8.848-2.383,12.847-4.285c1.713-12.758,6.377-22.559,13.988-29.41
-          c-10.848-1.14-20.601-2.857-29.264-5.14c-8.658-2.286-17.605-5.996-26.835-11.14c-9.235-5.137-16.896-11.516-22.985-19.126
-          c-6.09-7.614-11.088-17.61-14.987-29.979c-3.901-12.374-5.852-26.648-5.852-42.826c0-23.035,7.52-42.637,22.557-58.817
-          c-7.044-17.318-6.379-36.732,1.997-58.24c5.52-1.715,13.706-0.428,24.554,3.853c10.85,4.283,18.794,7.952,23.84,10.994
-          c5.046,3.041,9.089,5.618,12.135,7.708c17.705-4.947,35.976-7.421,54.818-7.421s37.117,2.474,54.823,7.421l10.849-6.849
-          c7.419-4.57,16.18-8.758,26.262-12.565c10.088-3.805,17.802-4.853,23.134-3.138c8.562,21.509,9.325,40.922,2.279,58.24
-          c15.036,16.18,22.559,35.787,22.559,58.817c0,16.178-1.958,30.497-5.853,42.966c-3.9,12.471-8.941,22.457-15.125,29.979
-          c-6.191,7.521-13.901,13.85-23.131,18.986c-9.232,5.14-18.182,8.85-26.84,11.136c-8.662,2.286-18.415,4.004-29.263,5.146
-          c9.894,8.562,14.842,22.077,14.842,40.539v60.237c0,3.422,1.19,6.279,3.572,8.562c2.379,2.279,6.136,2.95,11.276,1.995
-          c44.163-14.653,80.185-41.062,108.068-79.226c27.88-38.161,41.825-81.126,41.825-128.906
-          C438.536,184.851,428.728,148.168,409.132,114.573z"/>
-                </g>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+<footer class="border-t-2 border-brdr bg-card py-8 text-center text-[0.82rem] text-muted">
+  <p>Written by <a href="https://linkedin.com/in/ajdesousa" class="text-pri">Alex de Sousa</a>, Elixir Alchemist since 2015 and BEAM engineer since 2012.</p>
+  <p class="mt-1.5"><a href="/cv" class="text-pri">Curriculum Vitae</a> · <a href="https://github.com/alexdesousa" class="text-pri">GitHub</a> · <a href="https://linkedin.com/in/ajdesousa" class="text-pri">LinkedIn</a></p>
 </footer>
 <script>
       document.addEventListener('scroll', function() {
-        const scrollTop = document.documentElement['scrollTop'] || document.body['scrollTop'];
-        const scrollHeight = document.documentElement['scrollHeight'] || document.body['scrollHeight'];
-        const scrollBottom = scrollHeight - document.documentElement.clientHeight;
-        const scroll = scrollTop / scrollBottom * 100;
-
-        document
-          .getElementById('progress-bar')
-          .style.setProperty('--scroll', `${scroll}%`);
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        var scroll = st / (sh - document.documentElement.clientHeight) * 100;
+        document.getElementById('progress-bar').style.setProperty('--scroll', scroll + '%');
       }, {passive: true});
+      document.querySelectorAll('#post-content table').forEach(function(t) {
+        var w = document.createElement('div');
+        w.className = 'table-scroll';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+        t.style.margin = '0';
+      });
     </script>
   </body>
 </html>
