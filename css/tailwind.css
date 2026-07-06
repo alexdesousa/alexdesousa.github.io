@@ -53,15 +53,15 @@
   }
 
   p {
-    @apply text-elixir-900 !important;
+    @apply !text-elixir-900;
   }
 
   strong {
-    @apply text-elixir-900 !important;
+    @apply !text-elixir-900;
   }
 
   em {
-    @apply text-elixir-900 !important;
+    @apply !text-elixir-900;
   }
 }
 

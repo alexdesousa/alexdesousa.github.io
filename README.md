@@ -20,7 +20,7 @@ For this blog I use:
 - _Github Pages_ for hosting it.
 - _Jekyll_ for generating the static site.
 - _TailwindCSS_ for the site styling.
-- _Travis CI_ for building and deploying it.
+- _GitHub Actions_ for building and deploying it.
 
 ## Why Github Pages?
 
@@ -62,13 +62,12 @@ My `Gemfile` looks like the following:
 ```ruby
 source "https://rubygems.org"
 
-gem "jekyll"
+gem "jekyll", "~> 4.3"
 gem "html-proofer"
+gem "webrick"
 
 group :jekyll_plugins do
-  gem "redcarpet"
   gem "jekyll-last-modified-at"
-  gem "jekyll-minimagick"
   gem "jekyll-roman"
 end
 ```
@@ -76,19 +75,15 @@ end
 ## Building the Project
 
 [This project](https://github.com/alexdesousa/alexdesousa.github.io) depends on
-[asdf-vm](https://github.com/asdf-vm/asdf) and its ruby plugin e.g:
+[asdf-vm](https://github.com/asdf-vm/asdf) and its ruby and nodejs plugins:
 
 ```bash
-$ asdf install           # Installs Ruby.
-$ gem install bundler    # Installs bundler.
-$ bundle install         # Installs Jekyll dependencies.
-$ npm install            # Installs CSS dependencies.
+$ asdf install    # Installs Ruby 3.0.2 and Node 22.14.0 from .tool-versions.
+$ bundle install  # Installs Jekyll dependencies.
+$ npm install     # Installs CSS dependencies.
 ```
 
-Before you do the previous, make sure you installed the following using `asdf`:
-
-- NodeJS 17.3.0
-- Ruby 2.6.9
+You also need [ImageMagick](https://imagemagick.org) installed (used by `./build_images.sh` to resize post images — called automatically by `./runblog.sh`).
 
 ## Running the Server
 

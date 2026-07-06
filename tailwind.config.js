@@ -1,14 +1,8 @@
 module.exports = {
-  future: {
-    purgeLayersByDefault: true,
-  },
-  purge: {
-    enabled: ((process.env.BUILD_ENV === 'prod') ? true : false),
-    content: [
-      './_site/*.html',
-      './_site/**/*.html',
-    ],
-  },
+  content: [
+    './_site/*.html',
+    './_site/**/*.html',
+  ],
   theme: {
     extend: {
       colors: {
@@ -35,7 +29,7 @@ module.exports = {
           900: '#4A4136',
         },
         'elixir': {
-          default: '#9E7BEA',
+          DEFAULT: '#9E7BEA',
           '100': '#F9F6FE',
           '200': '#E2D7F9',
           '300': '#CBB8F4',
@@ -49,7 +43,6 @@ module.exports = {
       },
     },
   },
-  variants: {},
   plugins: [
     require('@tailwindcss/typography'),
   ],

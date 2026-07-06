@@ -13,7 +13,7 @@ jobs:
       LANG: en_US.UTF-8
       LANGUAGE: en_US.UTF-8
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: "Update apt dependencies"
         run: sudo apt-get update
       - name: "Install Imagemagick"
@@ -21,17 +21,16 @@ jobs:
       - uses: ruby/setup-ruby@v1
         name: "Setup Ruby"
         with:
-          ruby-version: 2.6
-      - name: "Get Bundler"
-        run: gem install bundler
-      - name: "Install Bundler dependencies"
-        run: bundle install
-      - uses: actions/setup-node@v2
+          ruby-version: '3.0'
+          bundler-cache: true
+      - uses: actions/setup-node@v4
         name: "Setup NodeJS"
         with:
-          node-version: '16'
+          node-version: '22'
       - name: "Get Node dependencies"
         run: npm install
+      - name: "Process images"
+        run: bash build_images.sh
       - name: "Build Config"
         run: bundle exec jekyll build
       - name: "Build CSS"
@@ -42,7 +41,7 @@ jobs:
         run: bundle exec jekyll build
       - name: "Check HTML"
         run: bundle exec htmlproofer ./_site --disable-external
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         name: "Upload built site"
         with:
           name: "the-broken-link"
@@ -52,11 +51,11 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         name: "Checkout to master branch"
         with:
           ref: master
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         name: "Download built site"
         with:
           name: "the-broken-link"
