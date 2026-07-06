@@ -1,33 +1,23 @@
-{%- comment -%}
-Main page content.
+{%- assign lang = include.lang | default: "en" -%}
+{%- assign posts = site.posts | where:"lang", lang -%}
+<main>
+  <div class="max-w-[960px] mx-auto px-6">
 
-Options:
-  - lang: Page language.
-{%- endcomment -%}
-{%- assign posts = site.posts
-    | where:"lang", include.lang
--%}
-<div class="container max-w-6xl px-4 mx-auto -mt-16 md:px-0 md:-mt-20 lg:-mt-32">
-  <div class="mx-0 sm:mx-6">
-    {%- include main/content/navigation.html
-        lang = include.lang
-    -%}
-    <div class="w-full text-xl leading-normal text-gray-800 bg-gray-200 rounded-t md:text-2xl">
-      {%- include main/content/leading_card.html
-          lang = include.lang
-      -%}
-      <div class="flex flex-wrap justify-center pt-12 -mx-6">
+    <!-- Featured post -->
+    <section class="pt-10 pb-4">
+      <h2 class="eyebrow">LATEST POST</h2>
+      {%- include main/content/leading_card.html lang=lang -%}
+    </section>
+
+    <!-- Post grid -->
+    <section class="pt-8 pb-12">
+      <h2 class="eyebrow">ALL POSTS</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {%- for post in posts offset:1 -%}
-          {%- include main/content/small_card.html
-              lang = include.lang
-              post = post
-          -%}
+          {%- include main/content/small_card.html lang=lang post=post -%}
         {%- endfor -%}
       </div>
-    </div>
-    {%- include main/content/subscribe.html
-        lang = include.lang
-    -%}
-  </div>
-</div>
+    </section>
 
+  </div>
+</main>

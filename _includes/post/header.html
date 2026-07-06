@@ -1,29 +1,34 @@
-{%- comment -%}
-Header for blog posts.
+{%- assign lang = include.lang | default: "en" -%}
+{%- assign author = site.data.authors[page.handle] -%}
+{%- assign author_name = author.name | default: "Alex de Sousa" -%}
+{%- assign name_parts = author_name | split: " " -%}
+{%- assign i1 = name_parts[0] | slice: 0 | upcase -%}
+{%- assign i2 = name_parts[1] | slice: 0 | upcase -%}
+{%- assign initials = i1 | append: i2 -%}
+{%- assign category = page.categories | first | default: page.tags | first | upcase -%}
+{%- capture read_time -%}{%- include main/read_time.html lang=lang post=page -%}{%- endcapture -%}
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    {% if category %}<span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">{{ category }}</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    {% endif %}<span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">{{ read_time | upcase }}</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">{{ page.date | date: "%b %-d, %Y" }}</span>
+  </div>
 
-Options:
-  - lang: Page language.
-{%- endcomment -%}
-{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
-<div class="container w-full mx-auto pt-8 text-center md:pt-16">
-  <p class="text-sm font-bold text-{{- swatch -}}-600 md:text-base">
-  {{- site.data.defaults.t[page.lang].written_by }} {{ site.data.authors[page.handle].name -}}
-  </p>
-  <h1 class="text-3xl font-bold break-normal md:text-5xl text-{{- swatch -}}-900">
-    {{- page.title -}}
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    {{ page.title }}
   </h1>
-</div>
 
-<div class="container text-sm text-right w-full max-w-6xl mx-auto mt-8 bg-white bg-cover rounded"
-     style="background-image:url('{{- page.id -}}/{{- page.image -}}'); height: 75vh; background-position: center;">
-  {%- if page.image_link -%}
-  <a class="p-2 rounded-bl-md bg-{{- swatch -}}-100 text-{{- swatch -}}-900 hover:underline"
-      href="{{- page.image_link -}}">
-    {% if page.image_author %}
-      {{ site.data.defaults.t[page.lang].cover_by }} {{ page.image_author -}}
-    {% else %}
-      {{ site.data.defaults.t[page.lang].cover_source }}
-    {% endif %}
-  </a>
-  {%- endif -%}
-</div>
+  <div class="flex items-center gap-3">
+    {%- if author.image -%}
+    <img src="{{ author.image }}" alt="{{ author_name }}" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0">
+    {%- else -%}
+    <div class="w-9 h-9 border-2 border-brdr bg-pri text-white text-[0.65rem] font-bold flex items-center justify-center flex-shrink-0">{{ initials }}</div>
+    {%- endif -%}
+    <div>
+      <p class="text-sm font-bold leading-none mb-0.5">{{ author_name }}</p>
+      <p class="text-[0.72rem] text-muted">{{ author.bio[lang] }}</p>
+    </div>
+  </div>
+</header>

@@ -13,7 +13,6 @@ exclude: [
   "postcss.config.js",
   "css",
   "node_modules",
-  "profiles",
   "examples",
   "runblog.sh",
   "build_images.sh",

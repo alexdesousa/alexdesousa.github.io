@@ -8,6 +8,7 @@ image: bug.jpg
 image_link: "https://unsplash.com/photos/mrL7QWWkciE"
 image_author: "Guillaume de Germain"
 handle: alex
+tags: [c/c++]
 ---
 
 Some bugs pull you to the abyss and leave you there. They're the Balrog to our Gandalf. Once you beat them though, you're wiser and more powerful!

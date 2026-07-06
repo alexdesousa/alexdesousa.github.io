@@ -11,32 +11,36 @@ Options
    | default: site.time
    | date_to_xmlschema
 -%}
-
-{%- assign page_url = page.url
-    | replace: 'index.html', ''
-    | prepend: site.baseurl
-    | prepend: site.url
+{%- assign date_modified = page.last_modified_at
+   | default: page.date
+   | default: site.time
+   | date_to_xmlschema
 -%}
-
-{%- assign logo_url = site.url
-    | append: "/assets/images/logo.png"
--%}
+{%- assign page_url = site.url | append: page.url -%}
+{%- assign logo_url = site.url | append: "/profiles/alex.jpg" -%}
+{%- if page.image -%}
+  {%- assign schema_image = site.url | append: page.id | append: "/" | append: page.image -%}
+{%- else -%}
+  {%- assign schema_image = logo_url -%}
+{%- endif -%}
 
 <script type="application/ld+json">
+{%- if page.layout == "post" -%}
 {
   "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{- page_url -}}"
   },
   "headline": "{{- include.title -}}",
-  "image": ["{{- logo_url -}}"],
+  "image": ["{{- schema_image -}}"],
   "datePublished": "{{- date_published -}}",
-  "dateModified": "{{- date_published -}}",
+  "dateModified": "{{- date_modified -}}",
   "author": {
     "@type": "Person",
-    "name": "{{- include.author -}}"
+    "name": "{{- include.author -}}",
+    "url": "{{- site.url -}}/cv"
   },
   "publisher": {
     "@type": "Organization",
@@ -48,4 +52,33 @@ Options
   },
   "description": "{{- include.description -}}"
 }
+{%- elsif page.layout == "cv" -%}
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{- include.author -}}",
+  "url": "{{- site.url -}}/cv",
+  "image": "{{- logo_url -}}",
+  "jobTitle": "Senior Software Engineer",
+  "description": "{{- include.description -}}",
+  "knowsAbout": ["Elixir", "Erlang", "OTP", "Distributed Systems", "Open Source"],
+  "sameAs": [
+    "https://github.com/{{- site.data.defaults.github_handle -}}",
+    "https://www.linkedin.com/in/{{- site.data.defaults.linkedin_handle -}}"
+  ]
+}
+{%- else -%}
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "url": "{{- site.url -}}",
+  "name": "{{- site.data.defaults.organization -}}",
+  "description": "{{- include.description -}}",
+  "author": {
+    "@type": "Person",
+    "name": "{{- include.author -}}",
+    "url": "{{- site.url -}}/cv"
+  }
+}
+{%- endif -%}
 </script>

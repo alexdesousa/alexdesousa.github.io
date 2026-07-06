@@ -5,6 +5,7 @@ default:
     es: "Thoughts and ramblings of an Elixir Alchemist."
 alex:
   name: "Alex de Sousa"
+  image: "/profiles/alex.jpg"
   bio:
     en: "Elixir alchemist. Tech enthusiast."
     es: "Alquimista de Elixir. Entusiasta de la tecnología."

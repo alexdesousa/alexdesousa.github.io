@@ -8,6 +8,7 @@ image: skogsra.jpg
 image_link: "https://unsplash.com/photos/jFCViYFYcus"
 image_author: "Lukasz Szmigiel"
 handle: alex
+tags: [elixir]
 ---
 
 Once an Elixir project is large enough, maintaining config files and configuration variables becomes a nightmare:

@@ -8,6 +8,7 @@ image: web.jpg
 image_link: "https://unsplash.com/photos/kME9jbKd--s"
 image_author: "Nathan Dumlao"
 handle: alex
+tags: [elixir]
 ---
 
 `:pg2` is a mostly unknown, but powerful Erlang module. It provides an API for creating process groups.

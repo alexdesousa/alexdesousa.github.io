@@ -8,6 +8,7 @@ image: ship.jpg
 image_link: "https://unsplash.com/photos/emH2e5SBifE"
 image_author: "Austin Neill"
 handle: alex
+tags: [elixir]
 ---
 
 Most developers consider that writing raw SQL (Structured Query Language) is a bad practice. The main arguments against it are that Object Relational Mappers (ORMs):

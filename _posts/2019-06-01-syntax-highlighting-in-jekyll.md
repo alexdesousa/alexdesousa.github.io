@@ -8,6 +8,7 @@ image: jekyll.jpg
 image_link: "https://unsplash.com/photos/wTXvFDfKL2s"
 image_author: "Clem Around The Corner"
 handle: alex
+tags: [jekyll]
 ---
 
 This is mainly a programming blog. Big part of picking a static site generator

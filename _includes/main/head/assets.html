@@ -1,9 +1,15 @@
-{%- comment -%}
-Page assets.
-{%- endcomment-%}
 <link rel="stylesheet" href="/assets/css/tailwind.css"/>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
-      rel="stylesheet"
-      integrity="sha384-xyZLiqnBEFn1hDkS8VeG/YHoqOjS/ucimT8TI6GDr9+ZP1UNbZr6d/q0ldMi/xvL"
-      crossorigin="anonymous"/>
+<script>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
 <script type="text/javascript" src="/assets/js/app.js"></script>

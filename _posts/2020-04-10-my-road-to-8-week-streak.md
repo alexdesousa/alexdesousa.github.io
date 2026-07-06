@@ -8,6 +8,7 @@ image: pen.jpg
 image_link: "https://unsplash.com/photos/SXn-fWj0Ht4"
 image_author: "Nicolas Thomas"
 handle: alex
+tags: [personal]
 ---
 9 weeks ago, I challenged myself to consistently write an article every week for at least 8 weeks. Today, I can say I did it. It was hard. Not the hardest thing I've done, but hard nonetheless.
 

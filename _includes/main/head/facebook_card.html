@@ -7,9 +7,14 @@ Options
   - title: Page title.
   - description: Page description.
 {%- endcomment -%}
+{%- if page.layout == "post" -%}
+<meta property="og:type" content="article" />
+{%- else -%}
 <meta property="og:type" content="website" />
+{%- endif -%}
+<meta property="og:locale" content="{% if include.lang == 'es' %}es_ES{% else %}en_US{% endif %}" />
 <meta property="og:site_name" content="{{- site.data.defaults.t[include.lang].blog_name -}}" />
 <meta property="og:title" content="{{- include.title -}}" />
 <meta property="og:image" content="{{- site.url | append: include.preview_image -}}" />
-<meta property="og:url" content="{{- site.url | append: page.id | append: "/" -}}" />
+<meta property="og:url" content="{{- site.url | append: page.url -}}" />
 <meta property="og:description" content="{{- include.description -}}" />
