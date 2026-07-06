@@ -40,7 +40,7 @@ jobs:
       - name: "Build blog"
         run: bundle exec jekyll build
       - name: "Check HTML"
-        run: bundle exec htmlproofer ./_site --disable-external
+        run: bundle exec htmlproofer ./_site --disable-external=true
       - uses: actions/upload-artifact@v4
         name: "Upload built site"
         with:

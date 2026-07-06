@@ -28,4 +28,4 @@ npm run build
 bundle exec \
   jekyll serve --livereload --unpublished --host=0.0.0.0 &&
 bundle exec \
-  htmlproofer "$ROOT_FOLDER/_site" --disable-external
+  htmlproofer "$ROOT_FOLDER/_site" --disable-external=true

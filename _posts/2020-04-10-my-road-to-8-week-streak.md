@@ -76,7 +76,7 @@ Thinking you're writing good content is different than writing good content. I n
 Additionally to those quantitative metrics, I also took into consideration whether the articles were published in a newsletter or not:
 
 - [Elixir Weekly](https://elixirweekly.net/)
-- [Elixir Radar](http://plataformatec.com.br/elixir-radar/)
+- [Elixir Radar](https://plataformatec.com.br/elixir-radar/)
 
 I created a spreadsheet in Google Sheets and with [this script](https://gist.github.com/alexdesousa/a23552ed2995a865895f53a4fd844c6b) I periodically gathered the data. This approach was inspired by/stolen from [this article](https://dev.to/pluralsight/pulling-your-dev-to-stats-into-a-google-sheet-56dh).
 
