@@ -1,6 +1,37 @@
-{%- include cv/job.html data = site.data.cv.refill_aqua -%}
-{%- include cv/job.html data = site.data.cv.skogsra -%}
-{%- include cv/job.html data = site.data.cv.yggdrasil -%}
-{%- include cv/job.html data = site.data.cv.ayesql -%}
-{%- include cv/job.html data = site.data.cv.blog -%}
-{%- include cv/job.html data = site.data.cv.github -%}
+{%- assign projects = "planck,ayesql,skogsra,yggdrasil,github,blog" | split: "," -%}
+<section class="cv-projects-section pt-8 pb-14">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-6">
+    OPEN SOURCE &amp; PROJECTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+
+  <div class="cv-projects-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {%- for key in projects -%}
+    {%- assign entry = site.data.cv[key] -%}
+    {%- assign desc = entry.description -%}
+    {%- if key == "ayesql" or key == "skogsra" or key == "yggdrasil" -%}
+      {%- assign proj_badge = "LIBRARY" -%}
+    {%- elsif key == "github" -%}
+      {%- assign proj_badge = "PROFILE" -%}
+    {%- else -%}
+      {%- assign proj_badge = "PROJECT" -%}
+    {%- endif -%}
+    <a href="{{ entry.job.website }}" target="_blank" class="cv-proj border-2 border-brdr bg-card shadow-neo p-5 no-underline text-ink neo-hover block">
+      <div class="cv-proj-meta flex items-center justify-between mb-2">
+        <span class="cv-badge text-[0.58rem] font-bold tracking-[0.12em] uppercase border border-brdr text-muted px-1.5 py-0.5">{{ proj_badge }}</span>
+        <span class="text-[0.62rem] text-muted">{{ entry.job.beginning }} – {{ entry.job.ending }}</span>
+      </div>
+      <h3 class="cv-proj-title font-bold text-sm mb-1">{{ entry.job.title }}</h3>
+      <p class="cv-proj-desc text-[0.75rem] text-muted leading-relaxed mb-3">{{ desc | strip_html }}</p>
+      <div class="cv-print-line hidden">{{ entry.job.title }} · {{ entry.job.beginning }} – {{ entry.job.ending }}</div>
+      {%- if entry.stack and entry.stack.size > 0 -%}
+      <div class="cv-tags flex flex-wrap gap-1.5">
+        {%- for tag in entry.stack -%}
+        <span class="text-[0.6rem] border border-brdr px-1.5 py-0.5">#{{ tag }}</span>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </a>
+  {%- endfor -%}
+  </div>
+</section>

@@ -8,6 +8,7 @@ image: keys.jpg
 image_link: "https://unsplash.com/photos/8fs1X0JFgFE"
 image_author: "Chunlea Ju"
 handle: alex
+tags: [devops]
 ---
 
 Recently, I needed to reset my phone. I spent some time backing up my pictures and documents. Everything was going great. But then, I hit a roadblock.

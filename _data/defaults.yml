@@ -4,7 +4,7 @@ t:
     page:
       author: "default"
       title: "Thoughts and Ramblings of an Elixir Alchemist"
-      description: "Alex de Sousa's blog"
+      description: "Elixir, distributed systems, and open source — written by Alex de Sousa, BEAM engineer since 2012, Elixir alchemist since 2015."
     minute_read: "min read"
     avatar_of: "Avatar of"
     written_by: "Written by"
@@ -22,7 +22,7 @@ t:
     page:
       author: "default"
       title: "Pensamientos y divagaciones de un alquimista"
-      description: "Blog de Alex de Sousa"
+      description: "Elixir, sistemas distribuidos y código abierto — escrito por Alex de Sousa, alquimista de Elixir desde 2015."
     minute_read: "mín. de lectura"
     avatar_of: "Avatar de"
     written_by: "Escrito por"
@@ -35,11 +35,8 @@ t:
     get_latest_posts: "Recibe nuestros más recientes artículos directamente en tu buzón de correo"
     subscribe: "Suscríbeme!"
     email_placeholder: "tuemail@ejemplo.com"
-analytics:
-  id: "UA-85600451-1"
-  newsletter: false
-twitter_handle: "etadelius"
 github_handle: "alexdesousa"
+linkedin_handle: "ajdesousa"
 organization: "The Broken Link"
 swatch: "elixir"
 scroll_color: "#9E7BEA"

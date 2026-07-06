@@ -1,12 +1,17 @@
 {%- assign lang = page.lang | default: "en" -%}
-{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
 <!DOCTYPE html>
-<html lang="{{- lang -}}">
+<html lang="{{ lang }}" data-theme="light">
   <head>
-    {%- include main/head.html lang = lang -%}
+    {%- include main/head.html lang=lang -%}
   </head>
-  <body class="antialiased text-{{- swatch -}}-900">
-    {%- include cv/header.html name = "Alex de Sousa" -%}
-    {%- include cv/tabs.html -%}
+  <body class="bg-canvas text-ink font-mono">
+    {%- include cv/navigation.html -%}
+    <div class="max-w-[820px] mx-auto px-6">
+      {%- include cv/header.html -%}
+      {%- include cv/timeline.html -%}
+      {%- include cv/projects.html -%}
+    </div>
+    {%- include main/footer.html lang=lang -%}
+    {%- include cv/hidden_ats.html -%}
   </body>
 </html>

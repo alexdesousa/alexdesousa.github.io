@@ -4,6 +4,9 @@ ROOT_FOLDER=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 cd "$ROOT_FOLDER"
 
+# Process images.
+bash "$ROOT_FOLDER/build_images.sh"
+
 # Build site.
 bundle exec jekyll build --unpublished
 
@@ -18,8 +21,11 @@ then
   cp "$ROOT_FOLDER/_site/config.yml" "$ROOT_FOLDER/_config.yml"
 fi
 
+# Build CSS.
+npm run build
+
 # Run server.
 bundle exec \
   jekyll serve --livereload --unpublished --host=0.0.0.0 &&
 bundle exec \
-  htmlproofer "$ROOT_FOLDER/_site" --disable-external
+  htmlproofer "$ROOT_FOLDER/_site" --disable-external=true

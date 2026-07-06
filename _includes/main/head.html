@@ -2,8 +2,11 @@
 Builds the head of the page.
 {%- endcomment -%}
 
-{%- assign author = page.handle
+{%- assign author_handle = page.handle
     | default: site.data.defaults.t[lang].page.author
+-%}
+{%- assign author = site.data.authors[author_handle].name
+    | default: "Alex de Sousa"
 -%}
 
 {%- assign title = page.title
@@ -58,5 +61,4 @@ Builds the head of the page.
     title = title
     description = description
 -%}
-{%- include main/head/google_analytics.html -%}
 {%- include main/head/assets.html -%}

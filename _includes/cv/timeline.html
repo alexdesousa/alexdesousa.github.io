@@ -1,9 +1,73 @@
-{%- include cv/job.html data = site.data.cv.contractbook -%}
-{%- include cv/job.html data = site.data.cv.asolvi -%}
-{%- include cv/job.html data = site.data.cv.derivco -%}
-{%- include cv/job.html data = site.data.cv.1bitcloud -%}
-{%- include cv/job.html data = site.data.cv.gmtprime_remote -%}
-{%- include cv/job.html data = site.data.cv.upc -%}
-{%- include cv/job.html data = site.data.cv.barcelona -%}
-{%- include cv/job.html data = site.data.cv.gmtprime_onsite -%}
-{%- include cv/job.html data = site.data.cv.usb -%}
+{%- assign timeline = "sona,contractbook,refill_aqua,asolvi,derivco,1bitcloud,gmtprime_remote,upc,barcelona,gmtprime_onsite,usb" | split: "," -%}
+{%- assign prev_year = "" -%}
+<section class="pt-8 pb-6">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-8">
+    EXPERIENCE &amp; EDUCATION
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+
+  <div class="cv-spine border-l-2 border-brdr pl-6">
+  {%- for key in timeline -%}
+    {%- assign entry = site.data.cv[key] -%}
+    {%- assign year = entry.job.beginning | split: " " | last -%}
+    {%- if year != prev_year -%}
+      {%- assign prev_year = year -%}
+      {%- if entry.cover.icon == "education" -%}
+        {%- assign dot_class = "bg-accent" -%}
+      {%- else -%}
+        {%- assign dot_class = "bg-pri" -%}
+      {%- endif -%}
+      {%- if forloop.first -%}
+        {%- assign year_mt = "" -%}
+      {%- else -%}
+        {%- assign year_mt = "mt-8" -%}
+      {%- endif -%}
+      <div class="cv-year flex items-center gap-3 -ml-[25px] mb-4 {{ year_mt }}">
+        <div class="w-3 h-3 {{ dot_class }} border-2 border-brdr flex-shrink-0"></div>
+        <span class="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-muted">{{ year }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- assign icon = entry.cover.icon -%}
+    {%- if icon == "job" -%}
+      {%- assign badge_class = "bg-pri text-white" -%}
+      {%- assign badge_label = "JOB" -%}
+    {%- elsif icon == "project" -%}
+      {%- assign badge_class = "border border-brdr text-muted" -%}
+      {%- assign badge_label = "ENTREPRENEURSHIP" -%}
+    {%- elsif icon == "education" -%}
+      {%- assign badge_class = "bg-accent text-black border border-black" -%}
+      {%- assign badge_label = "EDUCATION" -%}
+    {%- else -%}
+      {%- assign badge_class = "border border-brdr text-muted" -%}
+      {%- assign badge_label = "TRAVEL" -%}
+    {%- endif -%}
+
+    {%- assign desc = entry.description -%}
+    {%- assign is_last_in_section = forloop.last -%}
+    <div class="{% unless is_last_in_section %}mb-6{% else %}mb-2{% endunless %}">
+      <div class="cv-card border-2 border-brdr bg-card shadow-neo p-5">
+        <div class="cv-entry-meta flex flex-wrap items-center gap-2 mb-2">
+          <span class="cv-badge text-[0.58rem] font-bold tracking-[0.12em] uppercase {{ badge_class }} px-1.5 py-0.5">{{ badge_label }}</span>
+          <span class="cv-date text-[0.68rem] text-muted">{{ entry.job.beginning }} – {{ entry.job.ending }}{% if entry.job.type %} · {{ entry.job.type }}{% endif %}</span>
+        </div>
+        <h3 class="cv-role font-bold text-sm mb-0.5">{{ entry.job.title }}</h3>
+        {%- if entry.job.website and entry.job.website != "" -%}
+          <a href="{{ entry.job.website }}" target="_blank" class="cv-company text-[0.75rem] text-pri font-bold block mb-3 hover:underline">{{ entry.job.name }}</a>
+        {%- elsif entry.job.name -%}
+          <span class="cv-company text-[0.75rem] text-pri font-bold block mb-3">{{ entry.job.name }}</span>
+        {%- endif -%}
+        <p class="cv-desc text-[0.78rem] text-muted leading-relaxed mb-3">{{ desc }}</p>
+        <div class="cv-print-line hidden">{{ entry.job.name }}{% if entry.job.name %} · {% endif %}{{ entry.job.title }} · {{ entry.job.beginning }} – {{ entry.job.ending }}{% if entry.job.type %} · {{ entry.job.type }}{% endif %}</div>
+        {%- if entry.stack and entry.stack.size > 0 -%}
+        <div class="cv-tags flex flex-wrap gap-1.5">
+          {%- for tag in entry.stack -%}
+          <span class="text-[0.6rem] border border-brdr px-1.5 py-0.5">#{{ tag }}</span>
+          {%- endfor -%}
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+  </div>
+</section>

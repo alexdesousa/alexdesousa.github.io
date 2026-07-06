@@ -1,0 +1,32 @@
+{%- comment -%}
+RSS 2.0 feed for the selected language.
+Options:
+  - lang: Site language.
+{%- endcomment -%}
+{%- assign posts = site.posts | where: "lang", include.lang -%}
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.data.defaults.t[include.lang].blog_name }}</title>
+    <description>{{ site.data.defaults.t[include.lang].page.description }}</description>
+    <link>{{ site.data.defaults.url }}</link>
+    <atom:link href="{{ site.data.defaults.url }}/feed_{{ include.lang }}.xml" rel="self" type="application/rss+xml" />
+    <language>{{ include.lang }}</language>
+    {%- for post in posts -%}
+    {%- unless post.published == false %}
+    <item>
+      <title>{{ post.title | xml_escape }}</title>
+      <description>{{ post.description | xml_escape }}</description>
+      <link>{{ site.data.defaults.url }}{{ post.url }}</link>
+      <guid isPermaLink="true">{{ site.data.defaults.url }}{{ post.url }}</guid>
+      <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
+      {%- if post.tags %}
+      {%- for tag in post.tags %}
+      <category>{{ tag | xml_escape }}</category>
+      {%- endfor %}
+      {%- endif %}
+    </item>
+    {%- endunless -%}
+    {%- endfor %}
+  </channel>
+</rss>

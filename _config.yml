@@ -2,7 +2,7 @@ url: "https://thebroken.link"
 permalink: /:title/
 plugins:
   - jekyll-last-modified-at
-markdown: redcarpet
+markdown: kramdown
 exclude: [
   "Gemfile",
   "Gemfile.lock",
@@ -13,118 +13,13 @@ exclude: [
   "postcss.config.js",
   "css",
   "node_modules",
-  "profiles",
   "examples",
   "runblog.sh",
+  "build_images.sh",
   ".logo",
   ".cover"
 ]
-redcarpet:
-  extensions: [
-    "tables",
-    "strikethrough",
-    "no_intra_emphasis",
-    "superscript",
-    "with_toc_data"
-  ]
-mini_magick:
-  logo:
-    source: ".logo"
-    destination: "assets/images/"
-  cover:
-    source: ".cover"
-    destination: "assets/images/"
-    resize: "1080"
-  profile:
-    source: "profiles"
-    destination: "assets/images/profile/"
-    resize: "100"
-  icon-2.0-realtime-decentralized-quote-prices:
-    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
-    destination: "/icon-2.0-realtime-decentralized-quote-prices/"
-    resize: "800"
-  icon-2.0-realtime-decentralized-quote-prices-small:
-    source: "_posts/icon-2.0-realtime-decentralized-quote-prices/"
-    destination: "/icon-2.0-realtime-decentralized-quote-prices/small/"
-    resize: "400"
-  my-worst-bug:
-    source: "_posts/my-worst-bug/"
-    destination: "/my-worst-bug/"
-    resize: "800"
-  my-worst-bug-small:
-    source: "_posts/my-worst-bug/"
-    destination: "/my-worst-bug/small/"
-    resize: "400"
-  my-road-to-8-week-streak:
-    source: "_posts/my-road-to-8-week-streak/"
-    destination: "/my-road-to-8-week-streak/"
-    resize: "800"
-  my-road-to-8-week-streak-small:
-    source: "_posts/my-road-to-8-week-streak/"
-    destination: "/my-road-to-8-week-streak/small/"
-    resize: "400"
-  ayesql-writing-raw-sql-in-elixir:
-    source: "_posts/ayesql-writing-raw-sql-in-elixir/"
-    destination: "/ayesql-writing-raw-sql-in-elixir/"
-    resize: "800"
-  ayesql-writing-raw-sql-in-elixir-small:
-    source: "_posts/ayesql-writing-raw-sql-in-elixir/"
-    destination: "/ayesql-writing-raw-sql-in-elixir/small/"
-    resize: "400"
-  elixir-pubsub-in-less-than-50-lines:
-    source: "_posts/elixir-pubsub-in-less-than-50-lines/"
-    destination: "/elixir-pubsub-in-less-than-50-lines/"
-    resize: "800"
-  elixir-pubsub-in-less-than-50-lines-small:
-    source: "_posts/elixir-pubsub-in-less-than-50-lines/"
-    destination: "/elixir-pubsub-in-less-than-50-lines/small/"
-    resize: "400"
-  managing-dotfiles-with-ansible:
-    source: "_posts/managing-dotfiles-with-ansible/"
-    destination: "/managing-dotfiles-with-ansible/"
-    resize: "800"
-  managing-dotfiles-with-ansible-small:
-    source: "_posts/managing-dotfiles-with-ansible/"
-    destination: "/managing-dotfiles-with-ansible/small/"
-    resize: "400"
-  oath-dont-loose-your-keys:
-    source: "_posts/oath-dont-loose-your-keys/"
-    destination: "/oath-dont-loose-your-keys/"
-    resize: "800"
-  oath-dont-loose-your-keys-small:
-    source: "_posts/oath-dont-loose-your-keys/"
-    destination: "/oath-dont-loose-your-keys/small/"
-    resize: "400"
-  skogsra-simplifying-your-elixir-configuration:
-    source: "_posts/skogsra-simplifying-your-elixir-configuration/"
-    destination: "/skogsra-simplifying-your-elixir-configuration/"
-    resize: "800"
-  skogsra-simplifying-your-elixir-configuration-small:
-    source: "_posts/skogsra-simplifying-your-elixir-configuration/"
-    destination: "/skogsra-simplifying-your-elixir-configuration/small/"
-    resize: "400"
-  markdown-cheatsheet:
-    source: "_posts/markdown-cheatsheet/"
-    destination: "/markdown-cheatsheet/"
-    resize: "800"
-  markdown-cheatsheet-small:
-    source: "_posts/markdown-cheatsheet/"
-    destination: "/markdown-cheatsheet/small/"
-    resize: "400"
-  yggdrasil-easy-pub-sub-in-elixir:
-    source: "_posts/yggdrasil-easy-pub-sub-in-elixir/"
-    destination: "/yggdrasil-easy-pub-sub-in-elixir/"
-    resize: "800"
-  yggdrasil-easy-pub-sub-in-elixir-small:
-    source: "_posts/yggdrasil-easy-pub-sub-in-elixir/"
-    destination: "/yggdrasil-easy-pub-sub-in-elixir/small/"
-    resize: "400"
-  syntax-highlighting-in-jekyll:
-    source: "_posts/syntax-highlighting-in-jekyll/"
-    destination: "/syntax-highlighting-in-jekyll/"
-    resize: "800"
-  syntax-highlighting-in-jekyll-small:
-    source: "_posts/syntax-highlighting-in-jekyll/"
-    destination: "/syntax-highlighting-in-jekyll/small/"
-    resize: "400"
-  
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge

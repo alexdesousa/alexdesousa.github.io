@@ -8,6 +8,7 @@ image: bug.jpg
 image_link: "https://unsplash.com/photos/mrL7QWWkciE"
 image_author: "Guillaume de Germain"
 handle: alex
+tags: [c/c++]
 ---
 
 Some bugs pull you to the abyss and leave you there. They're the Balrog to our Gandalf. Once you beat them though, you're wiser and more powerful!
@@ -28,7 +29,7 @@ Once I deployed the plugin, everything seemed fine... until the next day! A nast
 
 After several days of testing, I realized the production server always died with the same set of data. I was able to pinpoint the error to RapidJSON. Something weird was happening when the memory was allocated, but none of the tools I was using to debug this were reporting any problems.
 
-I was desperate, so I compiled the DLL with debug symbols and then I de-compiled it using [OllyDBG](http://www.ollydbg.de/).
+I was desperate, so I compiled the DLL with debug symbols and then I de-compiled it using [OllyDBG](https://www.ollydbg.de/).
 
 I started reading the DLL assembly code ... **for a week and a half**! Reading assembly was horrible. I considered switching careers. But then I got to the instruction that failed! Eureka! I couldn't believe it! It felt good to finally understand the bug!
 

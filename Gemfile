@@ -1,11 +1,10 @@
 source "https://rubygems.org"
 
-gem "jekyll"
+gem "jekyll", "~> 4.3"
 gem "html-proofer"
+gem "webrick"
 
 group :jekyll_plugins do
-  gem "redcarpet"
   gem "jekyll-last-modified-at"
-  gem "jekyll-minimagick"
   gem "jekyll-roman"
 end

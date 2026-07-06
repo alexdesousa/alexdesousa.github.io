@@ -1,20 +1,28 @@
-{%- comment -%}
-Post's author bio.
-
-Options:
-  - lang: Page language.
-{%- endcomment -%}
-{%- assign swatch = site.data.defaults.swatch | default: "sea-blue" -%}
-<div class="flex items-center w-full p-8 font-sans md:p-16">
-  <img class="w-24 h-24 mr-4 rounded-full"
-       src="/assets/images/profile/{{- page.handle -}}.jpg"
-       alt="{{- site.data.defaults.t[include.lang].avatar_of }} {{ site.data.authors[page.handle].name -}}"/>
-  <div class="flex-1">
-    <p class="text-base font-bold leading-none text-{{- swatch -}}-900 md:text-xl">
-      {{- site.data.authors[page.handle].name -}}
-    </p>
-    <p class="mt-2 text-xs text-gray-700 md:text-base">
-      {{- site.data.authors[page.handle].bio[include.lang] -}}
-    </p>
+{%- assign lang = include.lang | default: "en" -%}
+{%- assign author = site.data.authors[page.handle] -%}
+{%- assign author_name = author.name | default: "Alex de Sousa" -%}
+{%- assign name_parts = author_name | split: " " -%}
+{%- assign i1 = name_parts[0] | slice: 0 | upcase -%}
+{%- assign i2 = name_parts[1] | slice: 0 | upcase -%}
+{%- assign initials = i1 | append: i2 -%}
+{%- assign github = site.data.defaults.github_handle -%}
+{%- assign linkedin = site.data.defaults.linkedin_handle -%}
+<div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+</div>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6">
+  {%- if author.image -%}
+  <img src="{{ author.image }}" alt="{{ author_name }}" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0">
+  {%- else -%}
+  <div class="w-14 h-14 border-2 border-brdr bg-pri text-white text-base font-bold flex items-center justify-center flex-shrink-0">{{ initials }}</div>
+  {%- endif -%}
+  <div>
+    <p class="text-sm font-bold mb-1">{{ author_name }}</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">{{ author.bio[lang] }}</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/{{ linkedin }}" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/{{ github }}" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
+    </div>
   </div>
 </div>

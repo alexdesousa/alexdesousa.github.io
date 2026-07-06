@@ -6,4 +6,4 @@ Options
   - description: Page description.
 {%- endcomment -%}
 <meta itemprop="description" content="{{- include.description -}}" />
-<meta itemprop="image" content="{{- include.preview_image -}}" />
+<meta itemprop="image" content="{{- site.url | append: include.preview_image -}}" />

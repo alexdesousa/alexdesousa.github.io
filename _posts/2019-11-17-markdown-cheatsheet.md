@@ -8,7 +8,6 @@ image: turtle.jpg
 image_link: "https://unsplash.com/photos/IBEXUZBmlXg"
 image_author: "Tanguy Sauvin"
 handle: alex
-soundcloud: 721257316
 published: false
 ---
 
@@ -69,7 +68,6 @@ image: turtle.jpg
 image_link: "https://unsplash.com/photos/IBEXUZBmlXg"
 image_author: "Tanguy Sauvin"
 handle: alex
-soundcloud: 721257316
 published: false
 ---
 {% endraw %}
@@ -89,7 +87,6 @@ where:
 | `image_author` | Header image author | No |
 | `handle`       | Author's handle (see {% include ref.html title = "Authors" -%}) | No, but it's recommended |
 | `published`    | Whether the article is published or not: `true` or `false` | No, but defaults to `true` |
-| `soundcloud`   | Number of the Soundcloud recording for the article's content. | No |
 
 ### Article Images
 

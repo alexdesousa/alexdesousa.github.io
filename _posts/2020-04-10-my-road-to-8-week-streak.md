@@ -8,6 +8,7 @@ image: pen.jpg
 image_link: "https://unsplash.com/photos/SXn-fWj0Ht4"
 image_author: "Nicolas Thomas"
 handle: alex
+tags: [personal]
 ---
 9 weeks ago, I challenged myself to consistently write an article every week for at least 8 weeks. Today, I can say I did it. It was hard. Not the hardest thing I've done, but hard nonetheless.
 
@@ -75,7 +76,7 @@ Thinking you're writing good content is different than writing good content. I n
 Additionally to those quantitative metrics, I also took into consideration whether the articles were published in a newsletter or not:
 
 - [Elixir Weekly](https://elixirweekly.net/)
-- [Elixir Radar](http://plataformatec.com.br/elixir-radar/)
+- [Elixir Radar](https://plataformatec.com.br/elixir-radar/)
 
 I created a spreadsheet in Google Sheets and with [this script](https://gist.github.com/alexdesousa/a23552ed2995a865895f53a4fd844c6b) I periodically gathered the data. This approach was inspired by/stolen from [this article](https://dev.to/pluralsight/pulling-your-dev-to-stats-into-a-google-sheet-56dh).
 

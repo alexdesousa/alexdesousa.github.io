@@ -1,0 +1,24 @@
+---
+---
+# The Broken Link
+
+> Technical blog by Alex de Sousa — BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.
+
+## About
+
+Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries including AyeSQL (raw SQL), Skogsrå (configuration), Planck (coding harness), and Yggdrasil (pub-sub).
+
+- Site: {{ site.data.defaults.url }}
+- CV: {{ site.data.defaults.url }}/cv
+- Feed: {{ site.data.defaults.url }}/feed_en.xml
+- GitHub: https://github.com/{{ site.data.defaults.github_handle }}
+- LinkedIn: https://www.linkedin.com/in/{{ site.data.defaults.linkedin_handle }}
+
+## Posts
+
+{%- assign posts = site.posts | where: "lang", "en" -%}
+{%- for post in posts -%}
+{%- unless post.published == false %}
+- [{{ post.title }}]({{ site.data.defaults.url }}{{ post.url }}) — {{ post.description }}
+{%- endunless -%}
+{%- endfor %}

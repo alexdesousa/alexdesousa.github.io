@@ -1,13 +1,8 @@
-{%- comment -%}
-Post previews.
-
-Options:
-  - lang: Page language.
-{%- endcomment -%}
+{%- assign lang = include.lang | default: "en" -%}
 {%- assign current = page -%}
 {%- for i in (1..site.posts.size) -%}
-  {%- if current.next and current.next.lang == include.lang -%}
-    {%- assign next = current.next -%}
+  {%- if current.next and current.next.lang == lang -%}
+    {%- assign next_post = current.next -%}
     {%- break -%}
   {%- elsif current.next -%}
     {%- assign current = current.next -%}
@@ -15,29 +10,48 @@ Options:
 {%- endfor -%}
 {%- assign current = page -%}
 {%- for i in (1..site.posts.size) -%}
-  {%- if current.previous and current.previous.lang == include.lang -%}
-    {%- assign previous = current.previous -%}
+  {%- if current.previous and current.previous.lang == lang -%}
+    {%- assign prev_post = current.previous -%}
     {%- break -%}
   {%- elsif current.previous -%}
     {%- assign current = current.previous -%}
   {%- endif -%}
 {%- endfor -%}
-{%- if previous or next -%}
-<div class="flex flex-wrap justify-center py-6">
-  {%- if next -%}
-  {%- include main/content/small_card.html
-      lang = include.lang
-      post = next
-      lg = "w-5/12"
-  -%}
-  {%- endif -%}
-
-  {%- if previous -%}
-  {%- include main/content/small_card.html
-      lang = include.lang
-      post = previous
-      lg = "w-5/12"
-  -%}
-  {%- endif -%}
+{%- if prev_post or next_post -%}
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    {%- if next_post -%}
+    {%- assign p = next_post -%}
+    {%- assign p_image = "/assets/images/preview.jpg" -%}
+    {%- if p.image -%}{%- assign p_image = p.id | append: "/" | append: p.image -%}{%- endif -%}
+    {%- assign p_category = p.categories | first | default: p.tags | first | upcase -%}
+    {%- capture p_rt -%}{%- include main/read_time.html lang=lang post=p -%}{%- endcapture -%}
+    <a href="{{ p.id }}" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">{% if p_category %}{{ p_category }} · {% endif %}{{ p_rt | upcase }}</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">{{ p.title }}</h3>
+      </div>
+    </a>
+    {%- endif -%}
+    {%- if prev_post -%}
+    {%- assign p = prev_post -%}
+    {%- assign p_image = "/assets/images/preview.jpg" -%}
+    {%- if p.image -%}{%- assign p_image = p.id | append: "/" | append: p.image -%}{%- endif -%}
+    {%- assign p_category = p.categories | first | default: p.tags | first | upcase -%}
+    {%- capture p_rt -%}{%- include main/read_time.html lang=lang post=p -%}{%- endcapture -%}
+    <a href="{{ p.id }}" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;"></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">{% if p_category %}{{ p_category }} · {% endif %}{{ p_rt | upcase }}</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">{{ p.title }}</h3>
+      </div>
+    </a>
+    {%- endif -%}
+  </div>
 </div>
 {%- endif -%}

@@ -8,11 +8,12 @@ image: jekyll.jpg
 image_link: "https://unsplash.com/photos/wTXvFDfKL2s"
 image_author: "Clem Around The Corner"
 handle: alex
+tags: [jekyll]
 ---
 
 This is mainly a programming blog. Big part of picking a static site generator
 involved researching for code syntax highlighters. When I found these
-[Pygments CSS themes](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html)
+[Pygments CSS themes](https://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html)
 I knew I wanted Pygments support in my static site generator.
 
 Turns out Jekyll has amazing support for Pygments when used together with

@@ -8,6 +8,7 @@ image: tree.jpg
 image_link: "https://unsplash.com/photos/XBxQZLNBM0Q"
 image_author: "Todd Quackenbush"
 handle: alex
+tags: [elixir]
 ---
 
 When I started coding in Elixir (around 2016), I was working for a financial company. Our product automatically invested money in the Forex market by copying traders' actions (_market orders_) in real time. We had the following:

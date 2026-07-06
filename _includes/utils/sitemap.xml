@@ -12,9 +12,14 @@ Options:
   {%- assign posts = site.posts
       | where:"lang", include.lang
   -%}
-  {%- for post in posts %}
+  {%- for post in posts -%}
+  {%- unless post.published == false %}
   <url>
     <loc>{{- site.url -}}{{ post.id }}/</loc>
+    <lastmod>{{- post.last_modified_at | default: post.date | date: "%Y-%m-%d" -}}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
+  {%- endunless -%}
   {%- endfor %}
 </urlset>
