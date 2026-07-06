@@ -2,7 +2,7 @@ default:
   name: "The Broken Link"
   bio:
     en: "Thoughts and ramblings of an Elixir Alchemist."
-    es: "Thoughts and ramblings of an Elixir Alchemist."
+    es: "Pensamientos y divagaciones de un alquimista."
 alex:
   name: "Alex de Sousa"
   image: "/profiles/alex.jpg"

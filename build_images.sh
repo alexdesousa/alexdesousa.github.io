@@ -11,6 +11,15 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+if command -v magick >/dev/null 2>&1; then
+  MAGICK=(magick)
+elif command -v convert >/dev/null 2>&1; then
+  MAGICK=(convert)
+else
+  echo "error: ImageMagick not found (need 'magick' or 'convert')" >&2
+  exit 1
+fi
+
 resize_dir() {
   local src="$1" dest="$2" size="${3:-}"
   [ -d "$ROOT/$src" ] || return 0
@@ -19,7 +28,7 @@ resize_dir() {
   for img in "$ROOT/$src"/*.jpg "$ROOT/$src"/*.jpeg "$ROOT/$src"/*.png "$ROOT/$src"/*.gif "$ROOT/$src"/*.webp; do
     out="$ROOT/$dest/$(basename "$img")"
     if [ -n "$size" ]; then
-      magick "$img" -resize "${size}>" "$out"
+      "${MAGICK[@]}" "$img" -strip -resize "${size}>" "$out"
     else
       cp "$img" "$out"
     fi

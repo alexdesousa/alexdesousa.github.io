@@ -1,4 +1,4 @@
-{%- assign projects = "refill_aqua,blog,ayesql,skogsra,yggdrasil,github" | split: "," -%}
+{%- assign projects = "planck,ayesql,skogsra,yggdrasil,github,blog" | split: "," -%}
 <section class="cv-projects-section pt-8 pb-14">
   <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-6">
     OPEN SOURCE &amp; PROJECTS
@@ -8,7 +8,7 @@
   <div class="cv-projects-grid grid grid-cols-1 sm:grid-cols-2 gap-4">
   {%- for key in projects -%}
     {%- assign entry = site.data.cv[key] -%}
-    {%- assign desc = entry.description | first -%}
+    {%- assign desc = entry.description -%}
     {%- if key == "ayesql" or key == "skogsra" or key == "yggdrasil" -%}
       {%- assign proj_badge = "LIBRARY" -%}
     {%- elsif key == "github" -%}

@@ -1,4 +1,4 @@
-{%- assign timeline = "contractbook,asolvi,derivco,1bitcloud,gmtprime_remote,upc,barcelona,gmtprime_onsite,usb" | split: "," -%}
+{%- assign timeline = "sona,contractbook,refill_aqua,asolvi,derivco,1bitcloud,gmtprime_remote,upc,barcelona,gmtprime_onsite,usb" | split: "," -%}
 {%- assign prev_year = "" -%}
 <section class="pt-8 pb-6">
   <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-8">
@@ -32,6 +32,9 @@
     {%- if icon == "job" -%}
       {%- assign badge_class = "bg-pri text-white" -%}
       {%- assign badge_label = "JOB" -%}
+    {%- elsif icon == "project" -%}
+      {%- assign badge_class = "border border-brdr text-muted" -%}
+      {%- assign badge_label = "ENTREPRENEURSHIP" -%}
     {%- elsif icon == "education" -%}
       {%- assign badge_class = "bg-accent text-black border border-black" -%}
       {%- assign badge_label = "EDUCATION" -%}
@@ -40,7 +43,7 @@
       {%- assign badge_label = "TRAVEL" -%}
     {%- endif -%}
 
-    {%- assign desc = entry.description | first -%}
+    {%- assign desc = entry.description -%}
     {%- assign is_last_in_section = forloop.last -%}
     <div class="{% unless is_last_in_section %}mb-6{% else %}mb-2{% endunless %}">
       <div class="cv-card border-2 border-brdr bg-card shadow-neo p-5">

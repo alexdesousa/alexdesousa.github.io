@@ -57,6 +57,10 @@ html { font-size: 14px; }
 .prose strong { font-weight: 700; }
 .prose em { font-style: italic; }
 
+/* ── CV entry description links ── */
+.cv-desc a { color: var(--primary); text-decoration: underline; }
+.cv-desc a:hover { opacity: 0.8; }
+
 .prose h2 {
   font-size: 1.2rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.06em;

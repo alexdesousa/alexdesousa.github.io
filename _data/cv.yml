@@ -1,18 +1,31 @@
+sona:
+  cover:
+    icon: "job"
+  job:
+    type: "Remote"
+    beginning: "September 2024"
+    ending: "Present"
+    title: "Senior Software Developer"
+    website: "https://sona.ai"
+    name: "Sona Technologies Ltd"
+  description: "Worked on integrations and metrics ingestion, building internal tooling to manage them and AI workflows that automated part of my job — which led to building <a href=\"https://thebroken.link/planck\" target=\"_blank\">Planck</a>, a workflow-based coding harness."
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "postgresql"
+    - "integrations"
+    - "AI"
 contractbook:
   cover:
     icon: "job"
-    source: "/cv/contractbook.jpg"
-    profile: "https://unsplash.com/@nickkarvounis"
-    author: "Nick Karvouns"
   job:
     type: "Remote"
     beginning: "May 2020"
-    ending: "Present"
+    ending: "May 2024"
     title: "Senior Software Developer"
     website: "https://contractbook.com"
     name: "Contractbook ApS"
-  description:
-    - "I was hired to be part of the team building a new product focused on the Legal Industry"
+  description: "Hired to help build a new product for the Legal Industry."
   stack:
     - "elixir"
     - "phoenix"
@@ -22,9 +35,6 @@ contractbook:
 asolvi:
   cover:
     icon: "job"
-    source: "/cv/asolvi.jpg"
-    profile: "https://unsplash.com/@simowilliams"
-    author: "Simon Williams"
   job:
     type: "Remote"
     beginning: "September 2019"
@@ -32,9 +42,7 @@ asolvi:
     title: "Senior Software Developer"
     website: "https://asolvi.com"
     name: "Asolvi AS"
-  description:
-    - "I've spent 4 weeks in Trondheim for the onboarding process and met my team (75% of them remote workers as me)."
-    - "After that, I returned to Barcelona and we've been designing and developing a modern version of one of the company's products."
+  description: "Onboarded in Trondheim, then worked remotely from Barcelona designing and building a modern version of one of the company's products."
   stack:
     - "elixir"
     - "phoenix"
@@ -48,19 +56,14 @@ asolvi:
 refill_aqua:
   cover:
     icon: "project"
-    source: "/cv/refill_aqua.jpg"
-    profile: "https://unsplash.com/@benjagremler"
-    author: "Benjamín Gremler"
   job:
-    type: "Project"
+    type: "On-site"
     beginning: "August 2019"
-    ending: "Present"
-    title: "Co-founder"
+    ending: "January 2022"
+    title: "Co-founder & CTO"
     website: "https://refillaqua.com"
     name: "Refill Aqua"
-  description:
-    - "Barcelona has a serious plastic pollution problem. We wanted to help reducing single-use plastic by partnering with businesses in the city that can offer filtered water to our users."
-    - "As I'm the only programmer in the project, I'm developing the webpage, the blog, the backend and the mobile application."
+  description: "Co-founded a project tackling Barcelona's plastic pollution by partnering with local businesses to offer filtered water, building the webpage, blog, backend, and mobile app as the sole programmer."
   stack:
     - "elixir"
     - "ansible"
@@ -72,9 +75,6 @@ refill_aqua:
 blog:
   cover:
     icon: "project"
-    source: "/cv/blog.jpg"
-    profile: "https://unsplash.com/@jjying"
-    author: "JJ Ying"
   job:
     type: "Project"
     beginning: "May 2019"
@@ -82,8 +82,7 @@ blog:
     title: "Personal Blog"
     website: "https://thebroken.link"
     name: "The Broken Link"
-  description:
-    - "Where I share my knoledge and discoveries. Also available at <a href=\"https://dev.to/alexdesousa\" target=\"_blank\">DEV</a>."
+  description: "Where I share my knowledge and discoveries, also available on <a href=\"https://dev.to/alexdesousa\" target=\"_blank\">DEV</a>."
   stack:
     - "elixir"
     - "jekyll"
@@ -92,9 +91,6 @@ blog:
 derivco:
   cover:
     icon: "job"
-    source: "/cv/derivco.jpg"
-    profile: "https://unsplash.com/@upmanis"
-    author: "Kaspars Upmanis"
   job:
     type: "On Site"
     beginning: "January 2019"
@@ -102,9 +98,7 @@ derivco:
     title: "Senior Software Developer"
     website: "https://derivco.com"
     name: "Derivco Barcelona"
-  description:
-    - "We were mainly maintaining and automating deploy of several systems."
-    - "After almost 4 years working remotely, I decided to try working on-site again. It didn't feel right after some weeks though."
+  description: "Maintained and automated deployments for several systems on-site, after years of remote work."
   stack:
     - "elixir"
     - "ansible"
@@ -112,12 +106,26 @@ derivco:
     - "ruby"
     - "ci/cd"
 
+planck:
+  cover:
+    icon: "project"
+  job:
+    type: "Project"
+    beginning: "May 2026"
+    ending: "Present"
+    title: "Planck"
+    website: "https://thebroken.link/planck"
+    name: "Planck's Landing Page"
+  description: "A workflow-based coding harness born from automating parts of my own job with AI."
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "docker"
+    - "AI"
+
 ayesql:
   cover:
     icon: "project"
-    source: "/cv/ayesql.jpg"
-    profile: "https://unsplash.com/@arstyy"
-    author: "Austin Neill"
   job:
     type: "Project"
     beginning: "September 2018"
@@ -125,8 +133,7 @@ ayesql:
     title: "AyeSQL"
     website: "https://github.com/alexdesousa/ayesql"
     name: "Github"
-  description:
-    - "Library for using raw SQL in Elixir"
+  description: "Library for using raw SQL in Elixir."
   stack:
     - "elixir"
     - "sql"
@@ -136,9 +143,6 @@ ayesql:
 1bitcloud:
   cover:
     icon: "job"
-    source: "/cv/1bitcloud.jpg"
-    profile: "https://unsplash.com/@zombience"
-    author: "Ryan Spencer"
   job:
     type: "Remote"
     beginning: "November 2017"
@@ -146,11 +150,7 @@ ayesql:
     title: "Senior Software Developer"
     website: ""
     name: "1BitCloud"
-  description:
-    - "During 2017 cryptocurrency bubble, a lot of people were building mining datacenters. Lacking tools for configuring their machines, we created a small IoT device that configured their whole datacenter in minutes."
-    - "We also provided our clients miner and revenue monitoring statistics in a stylish dashboard."
-    - "After the craze ended and Bitcoin price declined, most of our clients closed their datacenters for good."
-    - "GMT Prime Corp's owner was also this company's owner, thus we shared a lot of tools between companies."
+  description: "Built an IoT device that configured cryptocurrency mining datacenters in minutes, plus a dashboard for miner and revenue monitoring, during the 2017 mining boom."
   stack:
     - "elixir"
     - "postgresql"
@@ -163,9 +163,6 @@ ayesql:
 skogsra:
   cover:
     icon: "project"
-    source: "/cv/skogsra.jpg"
-    profile: "https://unsplash.com/@szmigieldesign"
-    author: "Łukasz Szmigiel"
   job:
     type: "Project"
     beginning: "June 2017"
@@ -173,8 +170,7 @@ skogsra:
     title: "Skogsrå"
     website: "https://github.com/gmtprime/skogsra"
     name: "Github"
-  description:
-    - "Library to manage OS environment variables and application configuration options with ease"
+  description: "Library to manage OS environment variables and application configuration options with ease."
   stack:
     - "elixir"
     - "environment-variables"
@@ -183,9 +179,6 @@ skogsra:
 yggdrasil:
   cover:
     icon: "project"
-    source: "/cv/yggdrasil.jpg"
-    profile: "https://unsplash.com/@toddquackenbush"
-    author: "Todd Quackenbush"
   job:
     type: "Project"
     beginning: "February 2016"
@@ -193,8 +186,7 @@ yggdrasil:
     title: "Yggdrasil"
     website: "https://github.com/gmtprime/yggdrasil"
     name: "Github"
-  description:
-    - "Subscription and publishing server for Elixir applications."
+  description: "Subscription and publishing server for Elixir applications."
   stack:
     - "elixir"
     - "pub-sub"
@@ -206,9 +198,6 @@ yggdrasil:
 gmtprime_remote:
   cover:
     icon: "job"
-    source: "/cv/gmtprime_remote.jpg"
-    profile: "https://unsplash.com/@rutherford2020"
-    author: "Steele Rutherford"
   job:
     type: "Remote"
     beginning: "March 2015"
@@ -216,9 +205,7 @@ gmtprime_remote:
     title: "Senior Software Developer"
     website: "https://github.com/gmtprime"
     name: "GMT Prime Corp"
-  description:
-    - "We built an automated crowd-trading platform for the foreign exchange market (ForEx)"
-    - "You can read more about our architecture <a href=\"https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/\" target=\"_blank\">in this blog post.</a>"
+  description: "Built an automated crowd-trading platform for the foreign exchange market (ForEx) — <a href=\"https://thebroken.link/yggdrasil-easy-pub-sub-in-elixir/\" target=\"_blank\">read more about our architecture</a>."
   stack:
     - "elixir"
     - "postgresql"
@@ -235,9 +222,6 @@ gmtprime_remote:
 upc:
   cover:
     icon: "education"
-    source: "/cv/upc.jpg"
-    profile: "https://unsplash.com/@johanmouchet"
-    author: "Johan Mouchet"
   job:
     type: "Master's degree"
     beginning: "October 2014"
@@ -245,8 +229,7 @@ upc:
     title: "Mobile Business & Apps Design"
     website: "https://www.upc.edu/es/"
     name: "Universitat Politècnica de Catalunya"
-  description:
-    - "Here I learnt about business development and mobile application design."
+  description: "Learnt about business development and mobile application design."
   stack:
     - "business-development"
     - "ui/ux"
@@ -257,16 +240,12 @@ upc:
 barcelona:
   cover:
     icon: "travel"
-    source: "/cv/barcelona.jpg"
-    profile: "https://unsplash.com/@nilsnedel"
-    author: "Nils Nedel"
   job:
     type: "Travel"
     beginning: "October 2014"
     ending: "October 2014"
     title: "Moved to Barcelona"
-  description:
-    - "After fighting Venezuelan bureaucracy for months, I managed to have all the required documents to move to Barcelona and start my master's degree."
+  description: "Moved to Barcelona after months of Venezuelan bureaucracy, to start my master's degree."
   stack:
     - "airplane"
     - "suitcases"
@@ -276,9 +255,6 @@ barcelona:
 gmtprime_onsite:
   cover:
     icon: "job"
-    source: "/cv/gmtprime_onsite.jpg"
-    profile: "https://www.flickr.com/people/danielito311/"
-    author: "Daniel"
   job:
     type: "On site"
     beginning: "January 2012"
@@ -286,9 +262,7 @@ gmtprime_onsite:
     title: "Software Developer"
     website: "https://github.com/gmtprime"
     name: "GMT Prime Corp (Caracas)"
-  description:
-    - "We developed a platform for foreign exchange market traders. At this time the business model wasn't that defined, mainly because government regulations made us take unexpected turns."
-    - "I got the opportunity to build a distributed system using Erlang :)"
+  description: "Developed a foreign exchange trading platform amid shifting government regulations, and built a distributed system using Erlang."
   stack:
     - "erlang"
     - "postgresql"
@@ -300,9 +274,6 @@ gmtprime_onsite:
 github:
   cover:
     icon: "project"
-    source: "/cv/github.jpg"
-    profile: "https://unsplash.com/@swimstaralex"
-    author: "Alexander Sinn"
   job:
     type: "Project"
     beginning: "March 2011"
@@ -310,8 +281,7 @@ github:
     title: "Github Account"
     website: "https://github.com/alexdesousa"
     name: "Github"
-  description:
-    - "I've highlighted the most relevant projects, but you can always find more in my Github profile. <a href=\"https://github.com/sponsors/alexdesousa\" target=\"_blank\">Sponsors are always welcome!</a>"
+  description: "The most relevant projects are highlighted here, but there's more on my Github profile — <a href=\"https://github.com/sponsors/alexdesousa\" target=\"_blank\">sponsors are always welcome!</a>"
   stack:
     - "elixir"
     - "erlang"
@@ -321,9 +291,6 @@ github:
 usb:
   cover:
     icon: "education"
-    source: "/cv/usb.jpg"
-    profile: "https://usb.ve"
-    author: "Unknown"
   job:
     type: "Bachelor's degree"
     beginning: "September 2006"
@@ -331,9 +298,7 @@ usb:
     title: "Computer Science"
     website: "https://usb.ve"
     name: "Universidad Simón Bolívar"
-  description:
-    - "Though I had coded before, here I officially started my journey as a developer."
-    - "I discovered functional programming, had amazing professors and made good friends."
+  description: "Officially started my journey as a developer here, discovering functional programming with great professors and friends."
   stack:
     - "haskell"
     - "prolog"
