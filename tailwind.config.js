@@ -7,7 +7,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: { mono: ['"Courier New"', 'Courier', 'monospace'] },
+      fontFamily: { mono: ['"Space Mono"', '"Courier New"', 'Courier', 'monospace'] },
       colors: {
         canvas: 'var(--bg)',
         ink:    'var(--fg)',
