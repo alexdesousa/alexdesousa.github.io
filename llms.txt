@@ -6,7 +6,7 @@
 
 ## About
 
-Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries including AyeSQL (raw SQL), Skogsrå (configuration), Planck (coding harness), and Yggdrasil (pub-sub).
+Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries/apps including Planck (coding harness), AyeSQL (raw SQL), Skogsrå (configuration), and Yggdrasil (pub-sub).
 
 - Site: {{ site.data.defaults.url }}
 - CV: {{ site.data.defaults.url }}/cv
