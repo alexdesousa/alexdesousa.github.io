@@ -7,8 +7,8 @@ alex:
   name: "Alex de Sousa"
   image: "/profiles/alex.jpg"
   bio:
-    en: "Elixir alchemist. Tech enthusiast."
-    es: "Alquimista de Elixir. Entusiasta de la tecnología."
+    en: "BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering."
+    es: "Ingeniero BEAM desde 2012, alquimista de Elixir desde 2015 y autor de código abierto. Escribiendo sobre Elixir, OTP e ingeniería de software."
 list:
   - "default"
   - "alex"
