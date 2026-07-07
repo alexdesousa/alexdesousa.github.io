@@ -6,6 +6,8 @@ title: "Building Planck #8: Context Management in Practice"
 description: "How Planck keeps context small, stable, and cache-friendly — and what you can steal for your own agent design."
 handle: alex
 tags: [ai, agents, context, llm]
+series: "building-planck"
+series_order: 8
 published: false
 ---
 

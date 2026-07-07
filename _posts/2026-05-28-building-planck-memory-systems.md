@@ -6,6 +6,8 @@ title: "Building Planck #9: Memory Systems — Short-Term, Long-Term, and Why Th
 description: "Agents forget everything between sessions by default. Here's how to give them the right kind of memory for each problem."
 handle: alex
 tags: [ai, agents, memory]
+series: "building-planck"
+series_order: 9
 published: false
 ---
 

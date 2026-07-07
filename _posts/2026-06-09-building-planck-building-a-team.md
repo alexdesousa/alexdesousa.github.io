@@ -6,6 +6,8 @@ title: "Building Planck #12: Building a Team"
 description: "How to design, configure, and run a real multi-agent team in Planck — from TEAM.json to a working workflow."
 handle: alex
 tags: [elixir, ai, agents, planck]
+series: "building-planck"
+series_order: 12
 published: false
 ---
 

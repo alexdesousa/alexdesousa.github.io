@@ -6,6 +6,8 @@ title: "Building Planck #11: Building a Tool"
 description: "A step-by-step walkthrough of building a custom Planck tool — from behaviour to sidecar registration."
 handle: alex
 tags: [elixir, ai, agents, planck]
+series: "building-planck"
+series_order: 11
 published: false
 ---
 

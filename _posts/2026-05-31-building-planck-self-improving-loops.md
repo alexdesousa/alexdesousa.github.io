@@ -6,6 +6,8 @@ title: "Building Planck #10: Self-Improving Loops — The Skill Reflector"
 description: "What if your agent could write its own playbook? Here's how Planck's skill reflector captures reusable workflows automatically."
 handle: alex
 tags: [ai, agents, skills]
+series: "building-planck"
+series_order: 10
 published: false
 ---
 

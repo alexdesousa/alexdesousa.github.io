@@ -6,6 +6,8 @@ title: "Building Planck #6: The Sidecar Pattern — Extending Agents Without Cha
 description: "How Planck separates agent intelligence from tooling — and why that separation matters for everything that follows."
 handle: alex
 tags: [ai, agents, architecture, elixir]
+series: "building-planck"
+series_order: 6
 published: false
 ---
 

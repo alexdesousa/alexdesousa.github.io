@@ -6,6 +6,8 @@ title: "Building Planck #2: The 20/80 Split — Why the Future Is Mostly Local"
 description: "Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them."
 handle: alex
 tags: [ai, agents, local-models, self-hosting]
+series: "building-planck"
+series_order: 2
 published: false
 ---
 

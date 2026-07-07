@@ -6,6 +6,8 @@ title: "Building Planck #13: Enter Marvin"
 description: "Putting it all together: a personal AI agent with its own team, persistent memory, and a self-improving skill library."
 handle: alex
 tags: [ai, agents, planck, marvin]
+series: "building-planck"
+series_order: 13
 published: false
 ---
 

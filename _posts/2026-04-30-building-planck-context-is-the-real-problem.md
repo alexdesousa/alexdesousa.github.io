@@ -6,6 +6,8 @@ title: "Building Planck #1: Context Is the Real Problem with AI Agents"
 description: "Why giving your AI agent more context usually makes it worse — and what to do instead."
 handle: alex
 tags: [ai, agents, llm]
+series: "building-planck"
+series_order: 1
 published: false
 ---
 

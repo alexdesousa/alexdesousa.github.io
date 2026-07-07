@@ -6,6 +6,8 @@ title: "Building Planck #4: Introducing Planck — Why I Built an AI Framework i
 description: "Planck is an open-source AI agent framework built on Elixir/OTP. Here's why BEAM processes are the natural unit of an AI agent."
 handle: alex
 tags: [elixir, ai, agents, planck]
+series: "building-planck"
+series_order: 4
 published: false
 ---
 

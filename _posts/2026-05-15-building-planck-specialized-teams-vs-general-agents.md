@@ -6,6 +6,8 @@ title: "Building Planck #3: Specialized Teams vs General Agents"
 description: "Why one AI trying to do everything produces mediocre results — and how to design teams that don't."
 handle: alex
 tags: [ai, agents, teams]
+series: "building-planck"
+series_order: 3
 published: false
 ---
 

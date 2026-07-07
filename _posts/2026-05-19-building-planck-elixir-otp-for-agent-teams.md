@@ -6,6 +6,8 @@ title: "Building Planck #5: Elixir/OTP as the Natural Runtime for Agent Teams"
 description: "Most AI frameworks treat concurrency as an afterthought. Here's why the BEAM gets it right by design."
 handle: alex
 tags: [elixir, otp, ai, agents]
+series: "building-planck"
+series_order: 5
 published: false
 ---
 

@@ -6,6 +6,8 @@ title: "Building Planck #7: Agents Shouldn't Have Credentials"
 description: "When an AI agent holds an API key, it can be tricked into using it maliciously. Here's how to design that risk away architecturally."
 handle: alex
 tags: [ai, agents, security]
+series: "building-planck"
+series_order: 7
 published: false
 ---
 
