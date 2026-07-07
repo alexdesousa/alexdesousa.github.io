@@ -9,6 +9,7 @@ image_link: "https://unsplash.com/photos/IBEXUZBmlXg"
 image_author: "Tanguy Sauvin"
 handle: alex
 published: false
+mermaid: true
 ---
 
 This is a small cheatsheet for creating articles using `Jekyll` and the blog
@@ -21,6 +22,7 @@ layout and utilities I've prepared:
 {% include toc.html title = "Images with Captions" %}
 {% include toc.html title = "Youtube Videos" %}
 {% include toc.html prefix = "Bonus" title = "Code Highlighting" %}
+{% include toc.html prefix = "Bonus" title = "Diagrams" %}
 
 {% include chapter.html %}
 
@@ -590,3 +592,35 @@ will produce the following block highlighted for `elixir` language:
 ```elixir
 IO.puts "Alex"
 ```
+
+{% include chapter.html %}
+
+Diagrams are rendered using [Mermaid](https://mermaid.js.org). To enable them in
+a post, add `mermaid: true` to the article header (see
+{% include ref.html title = "Articles" %} for more information).
+
+A diagram is written as a fenced code block with `mermaid` as the language e.g.
+the following:
+
+{% highlight markdown %}
+{% raw %}
+```mermaid
+flowchart LR
+  Write -->|push| Build
+  Build -->|pass| Deploy
+  Build -->|fail| Write
+```
+{% endraw %}
+{% endhighlight %}
+
+will produce:
+
+```mermaid
+flowchart LR
+  Write -->|push| Build
+  Build -->|pass| Deploy
+  Build -->|fail| Write
+```
+
+Mermaid supports many diagram types beyond flowcharts. See the
+[Mermaid documentation](https://mermaid.js.org/intro/) for the full list.

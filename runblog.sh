@@ -21,7 +21,7 @@ then
   cp "$ROOT_FOLDER/_site/config.yml" "$ROOT_FOLDER/_config.yml"
 fi
 
-# Build CSS.
+# Build CSS and JS.
 npm run build
 
 # Run server.

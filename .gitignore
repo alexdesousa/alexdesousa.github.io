@@ -1,6 +1,7 @@
 _site
 node_modules/
 /assets/css/tailwind.css
+/assets/js/mermaid.min.js
 /assets/images/
 .jekyll-cache/
 

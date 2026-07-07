@@ -33,7 +33,7 @@ jobs:
         run: bash build_images.sh
       - name: "Build Config"
         run: bundle exec jekyll build
-      - name: "Build CSS"
+      - name: "Build assets"
         run: npm run build
         env:
           NODE_ENV: production

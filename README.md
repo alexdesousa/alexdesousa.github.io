@@ -20,6 +20,7 @@ For this blog I use:
 - _Github Pages_ for hosting it.
 - _Jekyll_ for generating the static site.
 - _TailwindCSS_ for the site styling.
+- _Mermaid_ for diagrams.
 - _GitHub Actions_ for building and deploying it.
 
 ## Why Github Pages?
@@ -80,7 +81,7 @@ end
 ```bash
 $ asdf install    # Installs Ruby 3.0.2 and Node 22.14.0 from .tool-versions.
 $ bundle install  # Installs Jekyll dependencies.
-$ npm install     # Installs CSS dependencies.
+$ npm install     # Installs CSS and JS dependencies.
 ```
 
 You also need [ImageMagick](https://imagemagick.org) installed (used by `./build_images.sh` to resize post images — called automatically by `./runblog.sh`).

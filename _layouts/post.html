@@ -9,6 +9,9 @@
     {%- include post/header.html lang=lang -%}
     {%- include post/content.html lang=lang -%}
     {%- include main/footer.html lang=lang -%}
+    {%- if page.mermaid -%}
+    <script src="/assets/js/mermaid.min.js"></script>
+    {%- endif -%}
     <script>
       document.addEventListener('scroll', function() {
         var st = document.documentElement.scrollTop || document.body.scrollTop;
