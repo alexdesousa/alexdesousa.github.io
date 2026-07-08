@@ -23,6 +23,7 @@ layout and utilities I've prepared:
 {% include toc.html title = "Youtube Videos" %}
 {% include toc.html prefix = "Bonus" title = "Code Highlighting" %}
 {% include toc.html prefix = "Bonus" title = "Diagrams" %}
+{% include toc.html prefix = "Bonus" title = "References" %}
 
 {% include chapter.html %}
 
@@ -624,3 +625,62 @@ flowchart LR
 
 Mermaid supports many diagram types beyond flowcharts. See the
 [Mermaid documentation](https://mermaid.js.org/intro/) for the full list.
+
+### Diagrams with Captions
+
+To add a caption below a diagram, use {% raw %}`{% capture %}`{% endraw %} to pass the diagram
+definition to the `diagram.html` helper:
+
+{% highlight markdown %}
+{% raw %}
+{% capture my_diagram %}
+flowchart LR
+  Write -->|push| Build
+  Build -->|pass| Deploy
+  Build -->|fail| Write
+{% endcapture %}
+{% include diagram.html content=my_diagram caption="A typical CI/CD flow." %}
+{% endraw %}
+{% endhighlight %}
+
+will produce:
+
+{% capture example_diagram %}
+flowchart LR
+  Write -->|push| Build
+  Build -->|pass| Deploy
+  Build -->|fail| Write
+{% endcapture %}
+{% include diagram.html content=example_diagram caption="A typical CI/CD flow." %}
+
+{% include chapter.html %}
+
+External references can be cited inline and collected into a bibliography at
+the end of the post. There are two helpers:
+
+- `cite.html` — renders an inline superscript and registers the reference.
+- `references.html` — renders the numbered bibliography from all `cite.html` calls.
+
+For example, the following:
+
+{% highlight markdown %}
+{% raw %}
+Transformers use an attention mechanism{% include cite.html
+  title = "Attention Is All You Need"
+  url = "https://arxiv.org/abs/1706.03762"
+%} to process context.
+
+## References
+
+{% include references.html %}
+{% endraw %}
+{% endhighlight %}
+
+will render `Transformers use an attention mechanism` followed by a superscript
+`[1]` that links to the bibliography, and at the bottom a numbered list:
+
+> 1. [Attention Is All You Need](https://arxiv.org/abs/1706.03762) ↩
+
+Each `cite.html` call increments the counter automatically. The `references.html`
+include must appear after all `cite.html` calls — typically at the very end of
+the post under a `## References` heading.

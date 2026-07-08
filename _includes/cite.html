@@ -1,0 +1,24 @@
+{%- comment -%}
+Inline citation. Accumulates the reference and renders a superscript link.
+Use {% include references.html %} at the end of the post to render the bibliography.
+
+Options:
+  - title: Display title of the reference (required).
+  - url: URL of the reference (required).
+{%- endcomment -%}
+{%- assign ref_index = ref_index | default: 0 | plus: 1 -%}
+
+{%- if ref_titles -%}
+  {%- assign _ref_title = include.title | split: "|" -%}
+  {%- assign ref_titles = ref_titles | concat: _ref_title -%}
+{%- else -%}
+  {%- assign ref_titles = include.title | split: "|" -%}
+{%- endif -%}
+
+{%- if ref_urls -%}
+  {%- assign _ref_url = include.url | split: "|" -%}
+  {%- assign ref_urls = ref_urls | concat: _ref_url -%}
+{%- else -%}
+  {%- assign ref_urls = include.url | split: "|" -%}
+{%- endif -%}
+{%- capture _cite -%}<sup><a href="#ref-{{ ref_index }}" id="cite-{{ ref_index }}">[{{ ref_index }}]</a></sup>{%- endcapture -%}{{ _cite -}}

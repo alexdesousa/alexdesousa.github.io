@@ -1,0 +1,14 @@
+{%- comment -%}
+Renders the bibliography of all cite.html citations on the page.
+Place at the end of the post after all {% include cite.html %} calls.
+{%- endcomment -%}
+{%- if ref_titles -%}
+<ol class="references">
+  {%- for title in ref_titles -%}
+  <li id="ref-{{ forloop.index }}">
+    <a href="{{ ref_urls[forloop.index0] }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+    <a href="#cite-{{ forloop.index }}" aria-label="Back to citation {{ forloop.index }}">↩</a>
+  </li>
+  {%- endfor -%}
+</ol>
+{%- endif -%}
