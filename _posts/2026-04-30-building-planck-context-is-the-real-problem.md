@@ -3,7 +3,7 @@ layout: post
 lang: en
 ref: "building-planck-context-is-the-real-problem"
 title: "Building Planck #1: Context Is the Real Problem with AI Agents"
-description: "Why giving your AI agent more context usually makes it worse — and what to do instead."
+description: "Why giving your AI agent more context usually makes it worse and what to do instead."
 handle: alex
 tags: [ai, agents, llm]
 series: "building-planck"
@@ -245,6 +245,10 @@ putting the right context in front of the right model at the right time.
 Even if you don't use [Planck](https://thebroken.link/planck) in the future,
 I hope this helps you reason about your current workflow and how you
 can make it better.
+
+In the [next post](/building-planck-specialized-teams-vs-general-agents), we take this
+further: reducing context is only the first step. The real solution is to stop trying to
+fit the whole workflow into one agent.
 
 > The model wasn't the problem. It never was.
 
