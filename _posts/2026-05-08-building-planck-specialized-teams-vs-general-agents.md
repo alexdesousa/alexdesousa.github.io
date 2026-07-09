@@ -5,6 +5,9 @@ ref: "building-planck-specialized-teams-vs-general-agents"
 title: "Building Planck #2: Specialized Teams vs General Agents"
 description: "Why one AI trying to do everything produces mediocre results and how to design teams that don't."
 handle: alex
+image: team.jpg
+image_link: "https://unsplash.com/photos/group-stacking-hands-in-colorful-sweaters-Zyx1bK9mqmA"
+image_author: "Hannah Busing"
 tags: [ai, agents, teams]
 series: "building-planck"
 series_order: 2
