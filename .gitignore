@@ -8,8 +8,12 @@ node_modules/
 # Generated post image directories (created by build_images.sh).
 # Add new post slugs here when you create a post with images.
 /ayesql-writing-raw-sql-in-elixir/
+/building-planck-context-is-the-real-problem/
+/building-planck-specialized-teams-vs-general-agents/
+/building-planck-the-20-80-split/
 /elixir-pubsub-in-less-than-50-lines/
 /icon-2.0-realtime-decentralized-quote-prices/
+/j-space-where-ai-thoughts-live/
 /managing-dotfiles-with-ansible/
 /markdown-cheatsheet/
 /my-road-to-8-week-streak/
@@ -18,7 +22,4 @@ node_modules/
 /skogsra-simplifying-your-elixir-configuration/
 /syntax-highlighting-in-jekyll/
 /yggdrasil-easy-pub-sub-in-elixir/
-/building-planck-context-is-the-real-problem/
-/building-planck-specialized-teams-vs-general-agents/
-/building-planck-the-20-80-split/
 
