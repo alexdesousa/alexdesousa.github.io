@@ -5,7 +5,6 @@ ref: "syntax-highlighting-in-jekyll"
 title: "Syntax highlighting in Jekyll"
 description: "Using Redcarpet markdown renderer to add pygments to Jekyll"
 image: jekyll.jpg
-image_link: "https://unsplash.com/photos/wTXvFDfKL2s"
 image_author: "Clem Around The Corner"
 handle: alex
 tags: [jekyll]

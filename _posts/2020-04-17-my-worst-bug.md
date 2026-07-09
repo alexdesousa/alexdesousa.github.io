@@ -5,7 +5,6 @@ ref: "my-worst-bug"
 title: "My Worst Bug"
 description: "Debugging C/C++ can sometimes be a nightmare."
 image: bug.jpg
-image_link: "https://unsplash.com/photos/mrL7QWWkciE"
 image_author: "Guillaume de Germain"
 handle: alex
 tags: [c/c++]

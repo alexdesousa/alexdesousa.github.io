@@ -5,7 +5,6 @@ ref: "ayesql-writing-raw-sql-in-elixir"
 title: "AyeSQL: Writing Raw SQL in Elixir"
 description: "Sometimes good'ol SQL is better than any abstraction."
 image: ship.jpg
-image_link: "https://unsplash.com/photos/emH2e5SBifE"
 image_author: "Austin Neill"
 handle: alex
 tags: [elixir]

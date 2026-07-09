@@ -5,7 +5,6 @@ ref: "my-road-to-8-week-streak"
 title: "My Road to 8 Week Streak"
 description: "Writing is hard. Writing requires practice."
 image: pen.jpg
-image_link: "https://unsplash.com/photos/SXn-fWj0Ht4"
 image_author: "Nicolas Thomas"
 handle: alex
 tags: [personal]

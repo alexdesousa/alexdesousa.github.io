@@ -5,7 +5,6 @@ ref: "yggdrasil-easy-pub-sub-in-elixir"
 title: "Yggdrasil: Easy Pub-Sub in Elixir"
 description: "An overview of Yggdrasil's capabilities."
 image: tree.jpg
-image_link: "https://unsplash.com/photos/XBxQZLNBM0Q"
 image_author: "Todd Quackenbush"
 handle: alex
 tags: [elixir]

@@ -5,7 +5,6 @@ ref: "oath-do-not-loose-your-keys"
 title: "Oath: Don't Loose Your Keys!"
 description: "A ZSH plugin for handling your keys."
 image: keys.jpg
-image_link: "https://unsplash.com/photos/8fs1X0JFgFE"
 image_author: "Chunlea Ju"
 handle: alex
 tags: [devops]

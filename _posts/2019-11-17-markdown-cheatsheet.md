@@ -5,7 +5,6 @@ ref: "markdown-cheatsheet"
 title: "Markdown Cheatsheet"
 description: "Some of the things we can accomplish with the current blog configuration."
 image: turtle.jpg
-image_link: "https://unsplash.com/photos/IBEXUZBmlXg"
 image_author: "Tanguy Sauvin"
 handle: alex
 published: false

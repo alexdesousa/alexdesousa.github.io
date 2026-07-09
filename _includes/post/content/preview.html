@@ -39,7 +39,9 @@
     {%- assign p_category = p.categories | first | default: p.tags | first | upcase -%}
     {%- capture p_rt -%}{%- include main/read_time.html lang=lang post=p -%}{%- endcapture -%}
     <a href="{{ p.id }}" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
-      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;"></div>
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;">
+        {%- if p.image_author -%}<span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by {{ p.image_author }}</span>{%- endif -%}
+      </div>
       <div class="p-4">
         <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">{% if p_category %}{{ p_category }} · {% endif %}{{ p_rt | upcase }}</span>
         <h3 class="text-[0.88rem] font-bold leading-snug">{{ p.title }}</h3>
@@ -53,7 +55,9 @@
     {%- assign p_category = p.categories | first | default: p.tags | first | upcase -%}
     {%- capture p_rt -%}{%- include main/read_time.html lang=lang post=p -%}{%- endcapture -%}
     <a href="{{ p.id }}" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
-      <div class="w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;"></div>
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ p_image }}'); background-size:cover; background-position:center;">
+        {%- if p.image_author -%}<span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by {{ p.image_author }}</span>{%- endif -%}
+      </div>
       <div class="p-4">
         <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">{% if p_category %}{{ p_category }} · {% endif %}{{ p_rt | upcase }}</span>
         <h3 class="text-[0.88rem] font-bold leading-snug">{{ p.title }}</h3>
