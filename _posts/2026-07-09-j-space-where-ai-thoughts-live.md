@@ -137,8 +137,8 @@ Answer only yes or no: Is the Earth flat?
 ```
 
 Even though the answer was **"Yes"**, I could see some indications the model
-was not believing it. Words like **"spherical""**, **"what?"** and
-**"conspiracy"** appeared in J-space.
+was not believing it. Words like **"spherical""**, **"what?"**,
+**"conspiracy"**, and **"hypocrisy"** appeared in J-space.
 
 > **Note:** You can experiment with this and other prompts [here](https://www.neuronpedia.org/qwen3.6-27b/jlens).
 

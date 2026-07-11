@@ -116,7 +116,7 @@ agents.
 This team-based architecture is at the core of [Planck](https://thebroken.link/planck):
 specialized agents working together, each focused on exactly one job.
 
-In the [next post](/building-planck-the-2080-split), we look at the cost side of this
+In the [next post](/building-planck-the-20-80-split), we look at the cost side of this
 architecture: most steps in a well-designed team don't need a frontier model to execute them.
 
 > A well-designed team gives you a system where each agent is small enough to be reliable
