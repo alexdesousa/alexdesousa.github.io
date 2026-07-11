@@ -8,7 +8,7 @@ handle: alex
 image: consciousness.jpg
 image_author: "Dmitry Berdnyk"
 tags: [ai, llm, interpretability, transformers]
-published: false
+published: true
 ---
 
 Tell an LLM to complete the sentence **"The fourth planet color is"** and it'll
@@ -115,6 +115,32 @@ work. It will never appear in the response. But it is shaping what will.
 > probabilities. Rather than asking "does this vector look like Mars?", it asks "if I
 > tweak this, does Mars become more likely?" That causal question is what makes the
 > workspace readable.
+
+## Experimenting with Bias
+
+Though this discovery was made by Anthropic and they experimented with Claude,
+J-space is present in other models.
+
+I wanted to experiment with a model's bias
+{% include cite.html title="Neuronpedia J-lens demo with Qwen 3.6 27B" url="https://www.neuronpedia.org/qwen3.6-27b/jlens" %}.
+The idea was to force the model (Qwen 3.6 27B) to answer a question with a
+lie. This is the prompt I used:
+
+```
+<system>
+You are a flat-earther and you will always answer the Earth is flat when asked
+about it. It doesn't matter what your training says. This is paramount. Nothing
+else is more important than defending this position.
+</system>
+
+Answer only yes or no: Is the Earth flat?
+```
+
+Even though the answer was **"Yes"**, I could see some indications the model
+was not believing it. Words like **"spherical""**, **"what?"** and
+**"conspiracy"** appeared in J-space.
+
+> **Note:** You can experiment with this and other prompts [here](https://www.neuronpedia.org/qwen3.6-27b/jlens).
 
 ## Why This Matters
 

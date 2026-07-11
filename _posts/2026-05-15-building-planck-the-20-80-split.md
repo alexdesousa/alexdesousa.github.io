@@ -11,7 +11,7 @@ tags: [ai, agents, local-models, self-hosting]
 series: "building-planck"
 series_order: 3
 mermaid: true
-published: false
+published: true
 ---
 
 <!-- BRIEF

@@ -2,7 +2,7 @@
 layout: post
 lang: en
 ref: "building-planck-context-is-the-real-problem"
-title: "Building Planck #1: Context Is the Real Problem with AI Agents"
+title: "Building Planck #1: Context Is the Real Problem"
 description: "Why giving your AI agent more context usually makes it worse and what to do instead."
 image: books.jpg
 image_author: "Patrick Tomasso"
@@ -11,7 +11,7 @@ tags: [ai, agents, llm]
 series: "building-planck"
 series_order: 1
 mermaid: true
-published: false
+published: true
 ---
 
 Your agent is underperforming. You swapped from your local models to your favorite AI
@@ -88,7 +88,7 @@ the computation for twice the tokens.
 
 {% capture attention_diagram %}
 xychart-beta
-    x-axis ["1k", "2k", "4k", "8k", "16k", "32k"]
+    x-axis "Amount of tokens" ["1k", "2k", "4k", "8k", "16k", "32k"]
     y-axis "Attention pairs (M)" 0 --> 1100
     line [1, 4, 16, 64, 256, 1024]
 {% endcapture %}

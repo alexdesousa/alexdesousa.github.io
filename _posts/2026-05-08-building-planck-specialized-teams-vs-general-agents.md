@@ -11,7 +11,7 @@ tags: [ai, agents, teams]
 series: "building-planck"
 series_order: 2
 mermaid: true
-published: false
+published: true
 ---
 
 Reducing what an agent sees is a step in the right direction. But if we only have one
