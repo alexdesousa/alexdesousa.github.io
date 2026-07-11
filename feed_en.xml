@@ -7,6 +7,48 @@
     <atom:link href="https://thebroken.link/feed_en.xml" rel="self" type="application/rss+xml" />
     <language>en</language>
     <item>
+      <title>J-Space: Where AI Thoughts Live</title>
+      <description>Anthropic just found a hidden workspace inside Claude where silent reasoning happens before a single token is written. Here is where it lives and how it works.</description>
+      <link>https://thebroken.link/j-space-where-ai-thoughts-live/</link>
+      <guid isPermaLink="true">https://thebroken.link/j-space-where-ai-thoughts-live/</guid>
+      <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+      <category>ai</category>
+      <category>llm</category>
+      <category>interpretability</category>
+      <category>transformers</category>
+    </item>
+    <item>
+      <title>Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</title>
+      <description>Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here&apos;s how to combine them.</description>
+      <link>https://thebroken.link/building-planck-the-20-80-split/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-the-20-80-split/</guid>
+      <pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate>
+      <category>ai</category>
+      <category>agents</category>
+      <category>local-models</category>
+      <category>self-hosting</category>
+    </item>
+    <item>
+      <title>Building Planck #2: Specialized Teams vs General Agents</title>
+      <description>Why one AI trying to do everything produces mediocre results and how to design teams that don&apos;t.</description>
+      <link>https://thebroken.link/building-planck-specialized-teams-vs-general-agents/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-specialized-teams-vs-general-agents/</guid>
+      <pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate>
+      <category>ai</category>
+      <category>agents</category>
+      <category>teams</category>
+    </item>
+    <item>
+      <title>Building Planck #1: Context Is the Real Problem</title>
+      <description>Why giving your AI agent more context usually makes it worse and what to do instead.</description>
+      <link>https://thebroken.link/building-planck-context-is-the-real-problem/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-context-is-the-real-problem/</guid>
+      <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+      <category>ai</category>
+      <category>agents</category>
+      <category>llm</category>
+    </item>
+    <item>
       <title>ICON 2.0: Realtime Decentralized Quote Prices</title>
       <description>By leveraging one of ICON&apos;s BTP features, we get realtime quote prices from Balanced DEx</description>
       <link>https://thebroken.link/icon-2.0-realtime-decentralized-quote-prices/</link>

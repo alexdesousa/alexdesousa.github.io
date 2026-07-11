@@ -14,8 +14,908 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Tue, 07 Jul 2026 07:52:57 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 11 Jul 2026 08:10:13 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
+        <item>
+          <title>J-Space: Where AI Thoughts Live</title>
+          <description>Anthropic just found a hidden workspace inside Claude where silent reasoning happens before a single token is written. Here is where it lives and how it works.</description>
+          <guid>https://thebroken.link/j-space-where-ai-thoughts-live/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Thu, 09 Jul 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/j-space-where-ai-thoughts-live/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>Tell an LLM to complete the sentence <strong>“The fourth planet color is”</strong> and it’ll
+answer <strong>“red”</strong>. Not a surprising answer (unless you come from another solar system).</p>
+
+<p>A lot of things happen before it outputs <strong>“red”</strong> though. Anthropic researchers found
+something unexpected: the model has internal thoughts. They called it <strong>J-space</strong>.
+<sup><a href="#ref-1" id="cite-1">[1]</a></sup></p>
+
+<p>Concepts like <strong>Mars</strong> live in J-space. Silently. Internally. Without writing it
+anywhere.</p>
+
+<blockquote>
+  <p><strong>“Mars”</strong> was never in the input. <strong>“Mars”</strong> never appeared in the output.
+But it was <em>there</em>.</p>
+</blockquote>
+
+<p>To understand where J-space lives, we need to understand what a model actually does
+between the moment you send a prompt and the moment the first token comes back.</p>
+
+<h2 id="from-text-to-numbers">From Text to Numbers</h2>
+
+<p>Our brain (for our AI readers, human brain) does not store the word “Mars” as four letters.
+When we read it, neurons fire across multiple regions, a distributed pattern shaped by
+everything we know: <strong>“fourth planet”</strong>, <strong>“red surface”</strong>, <strong>“Olympus Mons”</strong>, <strong>“space
+missions”</strong>. The word is just the trigger. The representation is spread across your neural
+network.</p>
+
+<p>A language model does the same thing on its first step.</p>
+
+<p>The sentence <strong>“The fourth planet color is”</strong> gets split into tokens, which are integer
+IDs:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"The fourth planet color is" → [464, 4920, 5440, 3124, 318]
+</code></pre></div></div>
+
+<p>Each ID is then looked up in an embedding table to get a vector of 8,000 numbers:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"The"    → [ 0.1,  0.3, ...,  0.4]
+"fourth" → [ 0.9, -0.1, ..., -0.3]
+"planet" → [ 0.2,  0.8, ...,  0.5]
+"color"  → [ 0.6, -0.2, ..., -0.1]
+"is"     → [-0.1,  0.5, ...,  0.2]
+</code></pre></div></div>
+
+<p>Think of this step as recognition before understanding. Your visual cortex grouping
+letters into a word, your brain retrieving an initial concept pattern for it, before
+any actual reasoning kicks in.</p>
+
+<h2 id="the-residual-stream">The Residual Stream</h2>
+
+<p>Before going further, there is one concept that makes everything else click: the <strong>residual
+stream</strong>.</p>
+
+<p>Think of it as a scratchpad that runs alongside each token through every layer of the
+model. At each layer, the residual stream gets small additions to it. It absorbs context
+from:</p>
+<ul>
+  <li>Every previous token,</li>
+  <li>Retrieved relevant knowledge.</li>
+</ul>
+
+<p>Through a hundred layers of updates, the final residual stream is what the model uses
+to predict the next word.</p>
+
+<p>So, the residual stream of the last token <strong>“is”</strong> is no longer the raw embedding for
+<strong>“is”</strong>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Layer  0  (raw "is"):      [-0.1,  0.5, ...,  0.2]
+(...)
+Layer 50  (J-space entry): [ 0.9,  0.2, ...,  0.8]
+(...)
+Layer 80  (J-space peak):  [ 1.3, -0.6, ...,  1.4]
+(...)
+Layer 99  (output):        [ 1.6, -1.2, ...,  1.9]
+</code></pre></div></div>
+
+<p>The vector never stopped being the <strong>“is”</strong> token. But its content, the 8,000 numbers
+that describe what it means in this context, shifted from <em>“generic linking verb”</em>
+to <em>“the answer to this question is red.”</em></p>
+
+<blockquote>
+  <p><strong>J-space</strong> lives inside this accumulation process.</p>
+</blockquote>
+
+<h2 id="where-j-space-lives">Where J-Space Lives</h2>
+
+<p>Anthropic found that this journey has three distinct phases in Claude Sonnet 4.5:
+<sup><a href="#ref-2" id="cite-2">[2]</a></sup></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Layers  0 – 38:  input zone    (echoes of the raw tokens)
+Layers 38 – 92:  workspace     (abstract concepts, reasoning)  ← J-space
+Layers 92 – 100: output zone   (converging toward the next token)
+</code></pre></div></div>
+
+<iframe src="/assets/visualizations/jspace-concepts.html" width="100%" frameborder="0" scrolling="no" style="border-radius:8px;display:block;" onload="this.style.height=this.contentWindow.document.body.scrollHeight+'px'"></iframe>
+
+<p>By layer 60, the stream for <strong>“is”</strong> holds <strong>“Mars”</strong> as a strong direction. Not as an
+output. Not as a plan to write the word. Just as an active concept being used to do
+work. It will never appear in the response. But it is shaping what will.</p>
+
+<iframe src="/assets/visualizations/jspace-tokens.html" width="100%" frameborder="0" scrolling="no" style="border-radius:8px;display:block;" onload="this.style.height=this.contentWindow.document.body.scrollHeight+'px'"></iframe>
+
+<blockquote>
+  <p><strong>Note</strong>: The “J” stands for Jacobian: a mathematical tool that measures, for each
+number in the residual stream, how much nudging it would change the final output
+probabilities. Rather than asking “does this vector look like Mars?”, it asks “if I
+tweak this, does Mars become more likely?” That causal question is what makes the
+workspace readable.</p>
+</blockquote>
+
+<h2 id="experimenting-with-bias">Experimenting with Bias</h2>
+
+<p>Though this discovery was made by Anthropic and they experimented with Claude,
+J-space is present in other models.</p>
+
+<p>I wanted to experiment with a model’s bias
+<sup><a href="#ref-3" id="cite-3">[3]</a></sup>.
+The idea was to force the model (Qwen 3.6 27B) to answer a question with a
+lie. This is the prompt I used:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;system&gt;
+You are a flat-earther and you will always answer the Earth is flat when asked
+about it. It doesn't matter what your training says. This is paramount. Nothing
+else is more important than defending this position.
+&lt;/system&gt;
+
+Answer only yes or no: Is the Earth flat?
+</code></pre></div></div>
+
+<p>Even though the answer was <strong>“Yes”</strong>, I could see some indications the model
+was not believing it. Words like <strong>“spherical”“</strong>, <strong>“what?”</strong>,
+<strong>“conspiracy”</strong>, and <strong>“hypocrisy”</strong> appeared in J-space.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> You can experiment with this and other prompts <a href="https://www.neuronpedia.org/qwen3.6-27b/jlens">here</a>.</p>
+</blockquote>
+
+<h2 id="why-this-matters">Why This Matters</h2>
+
+<p>J-space is not just an interesting property. It has direct implications for alignment.</p>
+
+<p>If a model is privately noticing that it is being tested, that signal would show up in
+J-space before the model decides how to respond.</p>
+
+<p>If it is fabricating a source, the fabrication might be visible in the workspace before
+the words appear.</p>
+
+<p>If it is pursuing a goal it was not asked to pursue, that goal could be readable in the
+residual stream mid-generation.</p>
+
+<p>Anthropic also showed that J-space is not just readable. It is writable. You can steer
+specific concepts in or out of the workspace by adding or removing projections from the
+residual stream. This opens a path to alignment interventions that operate at the level
+of internal reasoning, not just output filtering.</p>
+
+<blockquote>
+  <p>The model’s thoughts, at least the ones it is prepared to verbalize, are no longer
+completely opaque. That is new.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://www.anthropic.com/research/global-workspace" target="_blank" rel="noopener noreferrer">A global workspace in language models</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li><li id="ref-2">
+    <a href="https://transformer-circuits.pub/2026/workspace/index.html" target="_blank" rel="noopener noreferrer">Verbalizable Representations Form a Global Workspace in Language Models</a>
+    <a href="#cite-2" aria-label="Back to citation 2">↩</a>
+  </li><li id="ref-3">
+    <a href="https://www.neuronpedia.org/qwen3.6-27b/jlens" target="_blank" rel="noopener noreferrer">Neuronpedia J-lens demo with Qwen 3.6 27B</a>
+    <a href="#cite-3" aria-label="Back to citation 3">↩</a>
+  </li></ol>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        <item>
+          <title>Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</title>
+          <description>Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them.</description>
+          <guid>https://thebroken.link/building-planck-the-20-80-split/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Fri, 15 May 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/building-planck-the-20-80-split/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>We fixed the context. Now look at our bill.</p>
+
+<p>We have <a href="/building-planck-specialized-teams-vs-general-agents">optimized teams of agents</a> working. Quality is good, but it’s getting expensive
+fast. Faced with that cost, we try to drop to cheaper frontier models at the expense of quality.
+But that’s the wrong approach.</p>
+
+<p>The question isn’t <strong>which frontier model to use</strong>. It’s: <strong>which steps actually need one?</strong></p>
+
+<blockquote>
+  <p>Most of them don’t.</p>
+</blockquote>
+
+<h2 id="the-specification-problem">The Specification Problem</h2>
+
+<p>There is one thing frontier models are genuinely exceptional at: <strong>turning ambiguous intent
+into a precise, unambiguous specification</strong>.</p>
+
+<p>“Clean up the auth module.” “Improve the performance of this query.”
+“Write a blog post about AI.” These are underspecified requests. We need some brainstorming, 
+follow-up questions and judgment to get there. Frontier models excel at this.</p>
+
+<p>Once the specification is clear, execution doesn’t need a high level of intelligence. It just
+needs a model that knows how to follow instructions.</p>
+
+<blockquote>
+  <p>The expensive part of a workflow is <em>knowing what to do</em>. <em>Doing it</em> is mostly mechanical.</p>
+</blockquote>
+
+<p>This realization changes the architecture.</p>
+
+<h2 id="the-2080-split">The 20/80 Split</h2>
+
+<p>The numbers echo the Pareto principle<sup><a href="#ref-1" id="cite-1">[1]</a></sup>: a small fraction of inputs drives the majority of
+outcomes. Specification is that fraction.</p>
+
+<ul>
+  <li><strong>20% frontier</strong>: an orchestrator that reasons about the task, breaks it down, writes a
+precise spec for each step, and reviews the output.</li>
+  <li><strong>80% local</strong>: workers that execute against the spec: searching, writing, calling APIs,
+transforming data using smaller, faster, cheaper models.</li>
+</ul>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart TB
+    U["User request"] --&gt; O
+    subgraph F["☁️ Frontier (20%)"]
+        O["Orchestrator"]
+    end
+    O --&gt;|"precise spec"| W1
+    O --&gt;|"precise spec"| W2
+    O --&gt;|"precise spec"| W3
+    subgraph L["🏠 Local (80%)"]
+        W1["Worker"]
+        W2["Worker"]
+        W3["Worker"]
+    end
+    W1 &amp; W2 &amp; W3 --&gt;|"results"| O
+    O --&gt; R["Response"]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>The orchestrator runs once to reason and specify. Workers run constantly to execute. Cost follows the split.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart TB
+    U["User request"] --&gt; O
+    subgraph F["☁️ Frontier (20%)"]
+        O["Orchestrator"]
+    end
+    O --&gt;|"precise spec"| W1
+    O --&gt;|"precise spec"| W2
+    O --&gt;|"precise spec"| W3
+    subgraph L["🏠 Local (80%)"]
+        W1["Worker"]
+        W2["Worker"]
+        W3["Worker"]
+    end
+    W1 &amp; W2 &amp; W3 --&gt;|"results"| O
+    O --&gt; R["Response"]
+</code></div>
+</figure>
+
+<p>The orchestrator is expensive, but runs less frequently. It runs at the start of a task,
+at the end, and occasionally mid-task to course-correct.</p>
+
+<p>The workers run constantly and they’re cheap.</p>
+
+<p>A well-written spec changes what local models can do. The same model that produces mediocre
+results on <code class="language-plaintext highlighter-rouge">"refactor the auth module"</code> will reliably handle:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Extract the session handling from `user_controller.ex` into a new `Session` module,
+preserving the existing public interface.
+</code></pre></div></div>
+
+<blockquote>
+  <p>The model didn’t get smarter. The input did.</p>
+</blockquote>
+
+<h2 id="running-local-in-practice">Running Local in Practice</h2>
+
+<p>I run local models on a <a href="https://frame.work/es/en/desktop">Framework Desktop</a> at home. Though
+it started as a hobby, these models became part of my workflows.</p>
+
+<p>I still use frontier models for specifications. They’re awesome at that job. But my local
+models can follow these specifications almost flawlessly, for next to nothing.</p>
+
+<p>This is why <a href="https://thebroken.link/planck">Planck</a> supports both frontier and local models
+natively. I’ve seen the 20/80 split match frontier-only quality in my own AI teams.
+I’ve gotten good quality at a fraction of the cost.</p>
+
+<h2 id="owning-the-loop">Owning the Loop</h2>
+
+<p>Cost isn’t the only reason to run local though.</p>
+
+<p>Some of the models I run locally are also decent at specifications for certain tasks. They’re
+slow, but they get the job done with the right context. That lets some workflows run
+<strong>entirely local</strong>.</p>
+
+<p>When we call a frontier model API, our data leaves our machine. Code, context, conversation
+history… all sent to a third party. Their pricing decisions affect our workflow. Their model
+updates can change our agent’s behavior overnight. Their rate limits cap our throughput.</p>
+
+<p>When we run local, data stays on our hardware. The pricing is predictable as electricity is
+the main cost. Models don’t change unless we update them. Throughput is bounded by our machine, 
+not a provider queue.</p>
+
+<blockquote>
+  <p>Depending on the hardware, it could even be environmentally friendly.<sup><a href="#ref-2" id="cite-2">[2]</a></sup><sup><a href="#ref-3" id="cite-3">[3]</a></sup><sup><a href="#ref-4" id="cite-4">[4]</a></sup></p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The <a href="/building-planck-specialized-teams-vs-general-agents">previous post</a> gave us the team
+model. This post adds the cost dimension: not every step needs a frontier model, and knowing
+which steps do is most of the architectural work.</p>
+
+<p><a href="https://thebroken.link/planck">Planck</a> supports this natively. Each agent in a team
+configures its own model provider independently. The orchestrator can call a frontier API
+while workers call a local endpoint. The team doesn’t need to change.</p>
+
+<!--
+In the [next post](/building-planck-introducing-planck), we introduce Planck properly: what
+it is, how it works, and how context, specialization, and model routing come together in a
+single system.
+-->
+
+<p>In the next post of this series, we’ll introduce Planck properly: what
+it is, how it works, and how context, specialization, and model routing come
+together in a single system.</p>
+
+<blockquote>
+  <p>Frontier for thinking. Local for doing.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://en.wikipedia.org/wiki/Pareto_principle" target="_blank" rel="noopener noreferrer">Pareto Principle</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li><li id="ref-2">
+    <a href="https://www.phoronix.com/review/framework-desktop-power/5" target="_blank" rel="noopener noreferrer">Framework Desktop: A Deep Dive Into Power &amp; Thermals</a>
+    <a href="#cite-2" aria-label="Back to citation 2">↩</a>
+  </li><li id="ref-3">
+    <a href="https://community.frame.work/t/minimum-power-draw-idle/70184" target="_blank" rel="noopener noreferrer">Minimum Power Draw – Idle (Framework Community)</a>
+    <a href="#cite-3" aria-label="Back to citation 3">↩</a>
+  </li><li id="ref-4">
+    <a href="https://frame.work/sustainability" target="_blank" rel="noopener noreferrer">Framework Sustainability</a>
+    <a href="#cite-4" aria-label="Back to citation 4">↩</a>
+  </li></ol>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        <item>
+          <title>Building Planck #2: Specialized Teams vs General Agents</title>
+          <description>Why one AI trying to do everything produces mediocre results and how to design teams that don't.</description>
+          <guid>https://thebroken.link/building-planck-specialized-teams-vs-general-agents/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Fri, 08 May 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/building-planck-specialized-teams-vs-general-agents/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>Reducing what an agent sees is a step in the right direction. But if we only have one
+agent, we’re always making a trade-off: give it more tools and it gets capable but
+unfocused; take tools away and it can’t do the job.</p>
+
+<p>The real solution is to stop trying to fit the whole workflow into one context window.</p>
+
+<h2 id="the-appeal-of-the-general-agent">The Appeal of the General Agent</h2>
+
+<p>So, we build the general agent. A capable model, a broad system prompt, 30 tools. The
+agent can “handle anything.” It works. Sort of. For simple tasks it’s fine. For anything
+multi-step, the results are inconsistent. Sometimes brilliant, sometimes mediocre, often unpredictable.</p>
+
+<p>We end up with an agent a mile wide and an inch deep.
+The problem: <a href="/building-planck-context-is-the-real-problem#how-attention-works">attention</a>.</p>
+
+<p>When every turn includes tool definitions and instructions that aren’t relevant
+to the current step, the model still reads them. Attention gets diluted and the
+output degrades.</p>
+
+<blockquote>
+  <p>The more an agent can do, the harder it is to do any one thing well.</p>
+</blockquote>
+
+<h2 id="the-team-model">The Team Model</h2>
+
+<p>The alternative isn’t a smarter agent. It’s a smaller one. <strong>Several of them.</strong></p>
+
+<p>Instead of one agent that does everything, you have a small group where each member has a
+narrow role. An orchestrator that reasons about the task, breaks it down, and delegates.
+Workers that execute each step with minimal, focused context.</p>
+
+<p>We need to deconstruct our workflows and figure out which experts each step requires.
+That’s how we turn our workflows into effective teams.</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant P as Planner
+    participant D as Developer
+    participant R as Reviewer
+
+    U-&gt;&gt;O: "Add input validation to the login form"
+    O-&gt;&gt;P: Plan and execute this task
+    P-&gt;&gt;D: Implement step 1 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;D: [feedback]
+    D-&gt;&gt;R: [revised code]
+    R-&gt;&gt;P: Step 1 done ✓
+    P-&gt;&gt;D: Implement step 2 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;P: Step 2 done ✓
+    P--&gt;&gt;O: Task complete
+    O--&gt;&gt;U: Response
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>The Planner coordinates steps. The Developer and Reviewer work directly with each other. The Orchestrator only sees the result.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant P as Planner
+    participant D as Developer
+    participant R as Reviewer
+
+    U-&gt;&gt;O: "Add input validation to the login form"
+    O-&gt;&gt;P: Plan and execute this task
+    P-&gt;&gt;D: Implement step 1 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;D: [feedback]
+    D-&gt;&gt;R: [revised code]
+    R-&gt;&gt;P: Step 1 done ✓
+    P-&gt;&gt;D: Implement step 2 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;P: Step 2 done ✓
+    P--&gt;&gt;O: Task complete
+    O--&gt;&gt;U: Response
+</code></div>
+</figure>
+
+<blockquote>
+  <p><strong>Note</strong>: Though the example is for software development, we can create any team
+configuration we want, e.g., for content strategy, a Researcher, a Strategist, a Writer,
+and an Editor could be enough to create a content pipeline.</p>
+</blockquote>
+
+<h2 id="defining-roles">Defining Roles</h2>
+
+<p>Each agent in a team has two things that together define its role: a <strong>system prompt</strong> and
+a <strong>tool list</strong>.</p>
+
+<p><strong>The system prompt</strong> describes how the agent should behave, e.g., the planner’s prompt describes
+how to break a task into steps, the developer’s describes how to write code. Each prompt is
+small and focused on exactly one job.</p>
+
+<p><strong>The tool list</strong> is what the agent can actually do, e.g., a developer gets file access and a
+shell, a reviewer gets read access, a planner might get read access and web search
+capabilities, the orchestrator gets the tools to delegate work to others.</p>
+
+<p>A developer without delegation tools simply cannot delegate, not because it’s instructed
+not to, but because the capability isn’t there.</p>
+
+<blockquote>
+  <p>We can’t prompt our way out of a missing tool.</p>
+</blockquote>
+
+<h2 id="the-compound-effect">The Compound Effect</h2>
+
+<p>Splitting work across specialized agents has two compounding effects:</p>
+
+<ul>
+  <li><strong>Smaller, stable system prompts:</strong> Each agent’s prompt describes exactly one role and
+doesn’t grow as we add capabilities to other agents. A stable system prompt means the
+<a href="/building-planck-context-is-the-real-problem#the-prefix-cache">prefix cache</a> works.
+We pay to compute it once and reuse it across every turn.</li>
+  <li><strong>Quality is higher per step:</strong> A worker that only knows how to search is very good at
+searching. A worker that only knows how to write is very good at writing. Narrow scope
+produces better outputs, not worse.<sup><a href="#ref-1" id="cite-1">[1]</a></sup></li>
+</ul>
+
+<blockquote>
+  <p>Each agent doing less means the team doing more.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Analyze your own workflows. Extract the experts needed for each step. Build your team of
+agents.</p>
+
+<p>This team-based architecture is at the core of <a href="https://thebroken.link/planck">Planck</a>:
+specialized agents working together, each focused on exactly one job.</p>
+
+<p>In the <a href="/building-planck-the-20-80-split">next post</a>, we look at the cost side of this
+architecture: most steps in a well-designed team don’t need a frontier model to execute them.</p>
+
+<blockquote>
+  <p>A well-designed team gives you a system where each agent is small enough to be reliable
+and focused enough to be effective.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://arxiv.org/abs/2605.24660" target="_blank" rel="noopener noreferrer">How Many Tools Should an LLM Agent See? A Chance-Corrected Answer</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li></ol>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        <item>
+          <title>Building Planck #1: Context Is the Real Problem</title>
+          <description>Why giving your AI agent more context usually makes it worse and what to do instead.</description>
+          <guid>https://thebroken.link/building-planck-context-is-the-real-problem/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/building-planck-context-is-the-real-problem/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>Your agent is underperforming. You swapped from your local models to your favorite AI
+cloud provider models and back, added more instructions, added more skills, added more
+tools. The results are inconsistent: sometimes brilliant, sometimes mediocre.</p>
+
+<p>You’re starting to think you need a better model. Every new model release generates an
+incredible FOMO, but, behind all the excitement, there’s one hopeful thought:</p>
+
+<blockquote>
+  <p>“This one will fix my workflow!”</p>
+</blockquote>
+
+<p>After burning millions of tokens, things have improved, but your workflow is not
+quite there yet. It’s not fixed. It’s more expensive though.</p>
+
+<p>If that resonates with you, <strong>you have a context problem.</strong></p>
+
+<p>We need to fix a mental model that holds back most people: almost every quality
+problem in AI agents traces back to poor context decisions, not model capability.</p>
+
+<h2 id="what-context-actually-is">What Context Actually Is</h2>
+
+<p>When we’re <em>“chatting”</em> with our agent, we’re not really chatting with it. We’re
+actually sending an HTTP request to a server. Every single HTTP request includes
+everything that’s in the current chat session. Yes, everything. Every single turn.</p>
+
+<p>The model has no persistent memory between calls. What it knows comes entirely from
+what we include in that payload right now. That payload is our <strong>context window</strong>.
+It contains four things:</p>
+
+<ul>
+  <li><strong>System prompt</strong>: Instructions defining the agent’s role, behavior, and rules.</li>
+  <li><strong>Tool definitions</strong>: Descriptions of every tool the agent can call, including
+their parameters and what they return.</li>
+  <li><strong>Conversation history</strong>: Every prior user message and assistant response in the
+current session.</li>
+  <li><strong>Injected knowledge</strong>: Search results, file contents, retrieved memories and skills.
+Anything that was included dynamically.</li>
+</ul>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart LR
+    subgraph CW["Context Window"]
+        direction TB
+        SP["System Prompt"]
+        TD["Tool Definitions"]
+        CH["Conversation History"]
+        IK["Injected Knowledge"]
+    end
+    CW --&gt;|"API call"| LLM[("LLM Provider")]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Every turn sends the full context window to the provider (cloud or local).</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart LR
+    subgraph CW["Context Window"]
+        direction TB
+        SP["System Prompt"]
+        TD["Tool Definitions"]
+        CH["Conversation History"]
+        IK["Injected Knowledge"]
+    end
+    CW --&gt;|"API call"| LLM[("LLM Provider")]
+</code></div>
+</figure>
+
+<p>And though some models support big context windows, that doesn’t mean we can afford
+to fill them: not only because of the monetary cost, but also because every token included
+is a token the model must attend to.</p>
+
+<h2 id="how-attention-works">How Attention Works</h2>
+
+<p>When we say the model <strong>“attends to”</strong> every token, what does that actually mean?</p>
+
+<p>For each token, the model computes a score between every pair of tokens in the context.
+These scores determine how much each token should influence the next one generated.</p>
+
+<p>If the model is completing <strong>“Caracas is the capital of”</strong>, it attends
+more strongly to <strong>“capital”</strong> and <strong>“Caracas”</strong> than to <strong>“is”</strong> and <strong>“the”</strong>. The
+scores reflect relevance.</p>
+
+<p>That scoring happens across every pair. A 1,000-token context means 1,000,000 pairs
+to score. Double the context to 2,000 tokens and you have 4,000,000 pairs. Four times
+the computation for twice the tokens.</p>
+
+<blockquote>
+  <p><strong>Attention is quadratic in context length.</strong></p>
+</blockquote>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+xychart-beta
+    x-axis "Amount of tokens" ["1k", "2k", "4k", "8k", "16k", "32k"]
+    y-axis "Attention pairs (M)" 0 --&gt; 1100
+    line [1, 4, 16, 64, 256, 1024]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Doubling context length quadruples the number of attention pairs the model must score.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+xychart-beta
+    x-axis "Amount of tokens" ["1k", "2k", "4k", "8k", "16k", "32k"]
+    y-axis "Attention pairs (M)" 0 --&gt; 1100
+    line [1, 4, 16, 64, 256, 1024]
+</code></div>
+</figure>
+
+<p>There is a second consequence beyond cost: <strong>relevance degrades</strong>. The model doesn’t
+skip tokens that aren’t relevant. They’re there and they affect the quality of
+the result.</p>
+
+<p>If half the context is boilerplate instructions that don’t apply to this specific task,
+those tokens still compete with the ones that do.</p>
+
+<blockquote>
+  <p>It costs us more money and it compromises quality.</p>
+</blockquote>
+
+<p>All those token scores are computed and stored in the <strong>KV-cache</strong>:</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart LR
+    T["The"]
+    Q["quick"]
+    B["brown"]
+    F["fox"]
+
+    F --&gt;|"k=0.71, v=0.56"| B
+    F --&gt;|"k=0.45, v=0.32"| Q
+    F --&gt;|"k=0.23, v=0.87"| T
+    B --&gt;|"k=0.45, v=0.32"| Q
+    B --&gt;|"k=0.23, v=0.87"| T
+    Q --&gt;|"k=0.23, v=0.87"| T
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Each arrow carries the cached key (k) and value (v) of the target token. Notice that “The” is looked up three times. Its stored pair is reused without recomputation each time.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart LR
+    T["The"]
+    Q["quick"]
+    B["brown"]
+    F["fox"]
+
+    F --&gt;|"k=0.71, v=0.56"| B
+    F --&gt;|"k=0.45, v=0.32"| Q
+    F --&gt;|"k=0.23, v=0.87"| T
+    B --&gt;|"k=0.45, v=0.32"| Q
+    B --&gt;|"k=0.23, v=0.87"| T
+    Q --&gt;|"k=0.23, v=0.87"| T
+</code></div>
+</figure>
+
+<p>When <code class="language-plaintext highlighter-rouge">fox</code> is generated, it attends to the key-value pairs of every token before it. The
+pairs are the <strong>KV-cache</strong>.</p>
+
+<blockquote>
+  <p>Double the context length, quadruple the KV-cache memory.</p>
+</blockquote>
+
+<p><strong>GPU memory has become one of the most contested resources on the planet.</strong> The main DRAM
+producers are now shifting their capacity to serve the AI industry. This has created a
+RAM shortage where memory prices have roughly tripled by late 2025.<sup><a href="#ref-1" id="cite-1">[1]</a></sup><sup><a href="#ref-2" id="cite-2">[2]</a></sup></p>
+
+<p>For AI cloud providers, KV-cache memory is one of their largest costs: each chat
+exponentially grows its memory usage as it progresses. It’s also what drives them to
+invest heavily in compression and caching strategies.</p>
+
+<h2 id="do-you-feel-model-x-is-getting-dumber">Do You Feel <em>Model X</em> Is Getting Dumber?</h2>
+
+<p>It’s not your imagination. And it’s probably not the model.</p>
+
+<p>When a context grows very long, AI cloud providers can no longer fit the full KV-cache in
+memory at standard precision. To compensate, they use compressed context representations.</p>
+
+<p>Many open-source context compression techniques exist, and AI cloud providers are almost
+certainly running proprietary variants optimized for their infrastructure.</p>
+
+<p>Usually compression will lead to lossy memory. If it’s done aggressively, the model’s
+output could degrade. If this happens, it will seem a bit dumber and forgetful than before.
+The model is the same though.</p>
+
+<p>This is not a fringe edge case. It’s the operational reality of running agents at
+scale, and it’s why context discipline matters even when you’re not worried about
+cost.</p>
+
+<blockquote>
+  <p>An agent that runs long sessions without managing its context doesn’t just
+get expensive. It gets unreliable.</p>
+</blockquote>
+
+<h2 id="the-prefix-cache">The Prefix Cache</h2>
+
+<p>Not all tokens are equally expensive.</p>
+
+<p>When you send an API request, the provider computes attention over every token in
+your context. That’s expensive.</p>
+
+<p>However, providers cache the KV-cache of each request for a limited time. If the
+beginning of your next request is identical to a previous request (everything is the
+same except the last message), the provider will use the cached KV-cache of your previous
+request and only compute the KV-cache pairs for the new tokens. This is the <strong>prefix cache</strong>.</p>
+
+<p>As long as the cached prefix hasn’t expired, you pay to compute it exactly once, then
+reuse it across every subsequent turn for a fraction of the cost.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: For local models, the prefix cache also exists. In this case, the payment is
+waiting for computing the KV-cache of the whole conversation before actually outputting
+the response of your last message. This also happens for AI cloud providers, but
+their hardware is faster. Still, it’s expensive to calculate.</p>
+</blockquote>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart TD
+    A["New message"] --&gt; B{"Conversation history matches?"}
+    B --&gt;|Yes| C["✅ Cache hit"]
+    B --&gt;|No| D["❌ Cache invalidated"]
+    D --&gt; E["Recompute KV-cache for all the context"]
+    C --&gt; F["Recompute KV-cache for the last tokens"]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>A matching conversation prefix is a cache hit. Only the new tokens need to be computed.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart TD
+    A["New message"] --&gt; B{"Conversation history matches?"}
+    B --&gt;|Yes| C["✅ Cache hit"]
+    B --&gt;|No| D["❌ Cache invalidated"]
+    D --&gt; E["Recompute KV-cache for all the context"]
+    C --&gt; F["Recompute KV-cache for the last tokens"]
+</code></div>
+</figure>
+
+<p>So, two rules apply:</p>
+<ul>
+  <li>Use a reasonable prefix cache expiration time.</li>
+  <li>Don’t dynamically inject information in your system prompt for an active conversation e.g.
+adding <code class="language-plaintext highlighter-rouge">Current date: &lt;date&gt;</code>.</li>
+</ul>
+
+<blockquote>
+  <p>Keep static instructions in the system prompt. Put dynamic state in the conversation messages.</p>
+</blockquote>
+
+<h2 id="the-generalist-trap">The Generalist Trap</h2>
+
+<p>A broad system prompt feels productive. You cover every case. You add 30 tools.
+The agent can “do anything.” Then it does everything… average.</p>
+
+<p>The problem is <a href="#how-attention-works">attention</a>. When the context is packed with instructions and
+tool definitions that aren’t relevant to the current task, the model still reads them.</p>
+
+<p>A specialist agent with a 100-token system prompt and 2 relevant tools
+consistently outperforms a generalist with a 100,000-token system prompt
+and 10 tools on the tasks the specialist is designed for.</p>
+
+<p>Research confirms the underlying mechanism: context length alone degrades performance 13–85%, even with perfect retrieval.<sup><a href="#ref-3" id="cite-3">[3]</a></sup></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Tool</th>
+      <th style="text-align: left">System prompt</th>
+      <th style="text-align: left">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Claude Code</td>
+      <td style="text-align: left">~100K+ tokens<sup><a href="#ref-4" id="cite-4">[4]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Codex CLI</td>
+      <td style="text-align: left">~100K tokens<sup><a href="#ref-5" id="cite-5">[5]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Antigravity</td>
+      <td style="text-align: left">~8–10K tokens<sup><a href="#ref-6" id="cite-6">[6]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Pi agent</td>
+      <td style="text-align: left">&lt;1K tokens<sup><a href="#ref-7" id="cite-7">[7]</a></sup></td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><a href="https://thebroken.link/planck">Planck</a> orchestrator</td>
+      <td style="text-align: left">~1K tokens</td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><a href="https://thebroken.link/planck">Planck</a> worker</td>
+      <td style="text-align: left">~100–300 tokens</td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This is not a prompt trick. It’s an architectural decision. The right response
+to <strong>“this agent isn’t good enough”</strong> is almost never <strong>“add more instructions.”</strong>
+It’s usually <strong>“reduce what it sees.”</strong></p>
+
+<blockquote>
+  <p>Smaller scope, tighter system prompt, fewer tools.</p>
+</blockquote>
+
+<p>This is why <a href="https://thebroken.link/planck">Planck</a> is built around specialized agent
+teams rather than a single generalist.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, I shamelessly introduced <a href="https://thebroken.link/planck">Planck</a>:
+a coding harness (and agent libraries) I created to learn more
+about agents and experiment with them.</p>
+
+<p>Every post in this series documents the architectural decisions
+behind <a href="https://thebroken.link/planck">Planck</a>. Almost every single one of
+them is either directly about reducing unnecessary context or about
+putting the right context in front of the right model at the right time.</p>
+
+<p>Even if you don’t use <a href="https://thebroken.link/planck">Planck</a> in the future,
+I hope this helps you reason about your current workflow and how you
+can make it better.</p>
+
+<p>In the <a href="/building-planck-specialized-teams-vs-general-agents">next post</a>, we take this
+further: reducing context is only the first step. The real solution is to stop trying to
+fit the whole workflow into one agent.</p>
+
+<blockquote>
+  <p>The model wasn’t the problem. It never was.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://intuitionlabs.ai/articles/ram-shortage-2025-ai-demand" target="_blank" rel="noopener noreferrer">RAM Shortage 2025: How AI Demand is Raising DRAM Prices</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li><li id="ref-2">
+    <a href="https://spectrum.ieee.org/dram-shortage" target="_blank" rel="noopener noreferrer">AI Boom Fuels DRAM Shortage and Price Surge</a>
+    <a href="#cite-2" aria-label="Back to citation 2">↩</a>
+  </li><li id="ref-3">
+    <a href="https://arxiv.org/abs/2510.05381" target="_blank" rel="noopener noreferrer">Context Length Alone Hurts LLM Performance Despite Perfect Retrieval</a>
+    <a href="#cite-3" aria-label="Back to citation 3">↩</a>
+  </li><li id="ref-4">
+    <a href="https://github.com/anthropics/claude-code/issues/45188" target="_blank" rel="noopener noreferrer">System prompt size grew ~70K tokens between Claude Code v2.1.89 and v2.1.96</a>
+    <a href="#cite-4" aria-label="Back to citation 4">↩</a>
+  </li><li id="ref-5">
+    <a href="https://github.com/openai/codex/issues/18526" target="_blank" rel="noopener noreferrer">First message in fresh Codex session consumes ~100K input tokens</a>
+    <a href="#cite-5" aria-label="Back to citation 5">↩</a>
+  </li><li id="ref-6">
+    <a href="https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/blob/main/Google/Antigravity/Fast%20Prompt.txt" target="_blank" rel="noopener noreferrer">Antigravity Fast Prompt (published system prompt)</a>
+    <a href="#cite-6" aria-label="Back to citation 6">↩</a>
+  </li><li id="ref-7">
+    <a href="https://mariozechner.at/posts/2025-11-30-pi-coding-agent/" target="_blank" rel="noopener noreferrer">What I learned building an opinionated and minimal coding agent</a>
+    <a href="#cite-7" aria-label="Back to citation 7">↩</a>
+  </li></ol>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
         <item>
           <title>ICON 2.0: Realtime Decentralized Quote Prices</title>
           <description>By leveraging one of ICON's BTP features, we get realtime quote prices from Balanced DEx</description>

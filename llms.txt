@@ -4,7 +4,7 @@
 
 ## About
 
-Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries including AyeSQL (raw SQL), Skogsrå (configuration), Planck (coding harness), and Yggdrasil (pub-sub).
+Alex de Sousa is a software engineer specialising in Elixir and distributed systems. He started his career with Erlang in 2012, giving him deep OTP expertise. He is the author of several open source Elixir libraries/apps including Planck (coding harness), AyeSQL (raw SQL), Skogsrå (configuration), and Yggdrasil (pub-sub).
 
 - Site: https://thebroken.link
 - CV: https://thebroken.link/cv
@@ -13,6 +13,10 @@ Alex de Sousa is a software engineer specialising in Elixir and distributed syst
 - LinkedIn: https://www.linkedin.com/in/ajdesousa
 
 ## Posts
+- [J-Space: Where AI Thoughts Live](https://thebroken.link/j-space-where-ai-thoughts-live/) — Anthropic just found a hidden workspace inside Claude where silent reasoning happens before a single token is written. Here is where it lives and how it works.
+- [Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local](https://thebroken.link/building-planck-the-20-80-split/) — Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them.
+- [Building Planck #2: Specialized Teams vs General Agents](https://thebroken.link/building-planck-specialized-teams-vs-general-agents/) — Why one AI trying to do everything produces mediocre results and how to design teams that don't.
+- [Building Planck #1: Context Is the Real Problem](https://thebroken.link/building-planck-context-is-the-real-problem/) — Why giving your AI agent more context usually makes it worse and what to do instead.
 - [ICON 2.0: Realtime Decentralized Quote Prices](https://thebroken.link/icon-2.0-realtime-decentralized-quote-prices/) — By leveraging one of ICON's BTP features, we get realtime quote prices from Balanced DEx
 - [My Worst Bug](https://thebroken.link/my-worst-bug/) — Debugging C/C++ can sometimes be a nightmare.
 - [My Road to 8 Week Streak](https://thebroken.link/my-road-to-8-week-streak/) — Writing is hard. Writing requires practice.

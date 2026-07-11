@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
+<title>Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local | The Broken Link</title>
+<link rel="canonical" href="https://thebroken.link/building-planck-the-20-80-split/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+<meta itemprop="description" content="Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them." />
+<meta itemprop="image" content="https://thebroken.link/building-planck-the-20-80-split/pareto.jpg" />
+<meta property="og:type" content="article" /><meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="The Broken Link" />
+<meta property="og:title" content="Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local" />
+<meta property="og:image" content="https://thebroken.link/building-planck-the-20-80-split/pareto.jpg" />
+<meta property="og:url" content="https://thebroken.link/building-planck-the-20-80-split/" />
+<meta property="og:description" content="Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them." />
+<meta name="twitter:title" content="Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local"/>
+<meta name="twitter:description" content="Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them." />
+<meta name="twitter:image" content="https://thebroken.link/building-planck-the-20-80-split/pareto.jpg" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image:alt" content="Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local"/>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/building-planck-the-20-80-split/"
+  },
+  "headline": "Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local",
+  "image": ["https://thebroken.link/building-planck-the-20-80-split/pareto.jpg"],
+  "datePublished": "2026-05-15T00:00:00+00:00",
+  "dateModified": "2026-07-11T08:10:13+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa",
+    "url": "https://thebroken.link/cv"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Broken Link",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebroken.link/profiles/alex.jpg"
+    }
+  },
+  "description": "Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them.",
+  "keywords": ["ai", "agents", "local-models", "self-hosting"]
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
+<script>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body class="bg-canvas text-ink font-mono"><div id="progress-bar"></div>
+<nav class="sticky top-0 z-50 bg-card border-b-2 border-brdr px-6 py-3.5 flex items-center justify-between">
+  <a href="/en/" class="flex items-center gap-2 font-bold text-xs tracking-[0.18em] uppercase text-ink hover:text-pri no-underline"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 69.573 69.573" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-miterlimit="4" aria-hidden="true">
+  <path stroke-width="2.910" d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+</svg>
+<span>← The Broken Link</span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/cv" class="inline-block border-2 border-brdr bg-card text-ink px-3 py-1.5 text-[0.72rem] font-bold tracking-[0.05em] uppercase shadow-neo-sm no-underline neo-hover-btn">CV</a>
+    <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm neo-hover-btn cursor-pointer" aria-label="Toggle theme">◐</button>
+    <a href="https://linkedin.com/in/ajdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="LinkedIn">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/alexdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="GitHub">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+</nav>
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">AI</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">2 MIN READ</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">May 15, 2026</span>
+  </div>
+
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local
+  </h1>
+
+  <div class="flex items-center gap-3"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0"><div>
+      <p class="text-sm font-bold leading-none mb-0.5">Alex de Sousa</p>
+      <p class="text-[0.72rem] text-muted">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    </div>
+  </div>
+</header>
+<div class="max-w-[720px] mx-auto px-6 py-8"><div class="mb-8">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-3">
+    SERIES
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+  <div class="border-2 border-brdr bg-card shadow-neo p-4">
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><a href="/building-planck-context-is-the-real-problem" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #1: Context Is the Real Problem</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</span></li></ol></div>
+</div><article id="post-content" class="prose">
+    <p>We fixed the context. Now look at our bill.</p>
+
+<p>We have <a href="/building-planck-specialized-teams-vs-general-agents">optimized teams of agents</a> working. Quality is good, but it’s getting expensive
+fast. Faced with that cost, we try to drop to cheaper frontier models at the expense of quality.
+But that’s the wrong approach.</p>
+
+<p>The question isn’t <strong>which frontier model to use</strong>. It’s: <strong>which steps actually need one?</strong></p>
+
+<blockquote>
+  <p>Most of them don’t.</p>
+</blockquote>
+
+<h2 id="the-specification-problem">The Specification Problem</h2>
+
+<p>There is one thing frontier models are genuinely exceptional at: <strong>turning ambiguous intent
+into a precise, unambiguous specification</strong>.</p>
+
+<p>“Clean up the auth module.” “Improve the performance of this query.”
+“Write a blog post about AI.” These are underspecified requests. We need some brainstorming, 
+follow-up questions and judgment to get there. Frontier models excel at this.</p>
+
+<p>Once the specification is clear, execution doesn’t need a high level of intelligence. It just
+needs a model that knows how to follow instructions.</p>
+
+<blockquote>
+  <p>The expensive part of a workflow is <em>knowing what to do</em>. <em>Doing it</em> is mostly mechanical.</p>
+</blockquote>
+
+<p>This realization changes the architecture.</p>
+
+<h2 id="the-2080-split">The 20/80 Split</h2>
+
+<p>The numbers echo the Pareto principle<sup><a href="#ref-1" id="cite-1">[1]</a></sup>: a small fraction of inputs drives the majority of
+outcomes. Specification is that fraction.</p>
+
+<ul>
+  <li><strong>20% frontier</strong>: an orchestrator that reasons about the task, breaks it down, writes a
+precise spec for each step, and reviews the output.</li>
+  <li><strong>80% local</strong>: workers that execute against the spec: searching, writing, calling APIs,
+transforming data using smaller, faster, cheaper models.</li>
+</ul>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart TB
+    U["User request"] --&gt; O
+    subgraph F["☁️ Frontier (20%)"]
+        O["Orchestrator"]
+    end
+    O --&gt;|"precise spec"| W1
+    O --&gt;|"precise spec"| W2
+    O --&gt;|"precise spec"| W3
+    subgraph L["🏠 Local (80%)"]
+        W1["Worker"]
+        W2["Worker"]
+        W3["Worker"]
+    end
+    W1 &amp; W2 &amp; W3 --&gt;|"results"| O
+    O --&gt; R["Response"]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>The orchestrator runs once to reason and specify. Workers run constantly to execute. Cost follows the split.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart TB
+    U["User request"] --&gt; O
+    subgraph F["☁️ Frontier (20%)"]
+        O["Orchestrator"]
+    end
+    O --&gt;|"precise spec"| W1
+    O --&gt;|"precise spec"| W2
+    O --&gt;|"precise spec"| W3
+    subgraph L["🏠 Local (80%)"]
+        W1["Worker"]
+        W2["Worker"]
+        W3["Worker"]
+    end
+    W1 &amp; W2 &amp; W3 --&gt;|"results"| O
+    O --&gt; R["Response"]
+</code></div>
+</figure>
+
+<p>The orchestrator is expensive, but runs less frequently. It runs at the start of a task,
+at the end, and occasionally mid-task to course-correct.</p>
+
+<p>The workers run constantly and they’re cheap.</p>
+
+<p>A well-written spec changes what local models can do. The same model that produces mediocre
+results on <code class="language-plaintext highlighter-rouge">"refactor the auth module"</code> will reliably handle:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Extract the session handling from `user_controller.ex` into a new `Session` module,
+preserving the existing public interface.
+</code></pre></div></div>
+
+<blockquote>
+  <p>The model didn’t get smarter. The input did.</p>
+</blockquote>
+
+<h2 id="running-local-in-practice">Running Local in Practice</h2>
+
+<p>I run local models on a <a href="https://frame.work/es/en/desktop">Framework Desktop</a> at home. Though
+it started as a hobby, these models became part of my workflows.</p>
+
+<p>I still use frontier models for specifications. They’re awesome at that job. But my local
+models can follow these specifications almost flawlessly, for next to nothing.</p>
+
+<p>This is why <a href="https://thebroken.link/planck">Planck</a> supports both frontier and local models
+natively. I’ve seen the 20/80 split match frontier-only quality in my own AI teams.
+I’ve gotten good quality at a fraction of the cost.</p>
+
+<h2 id="owning-the-loop">Owning the Loop</h2>
+
+<p>Cost isn’t the only reason to run local though.</p>
+
+<p>Some of the models I run locally are also decent at specifications for certain tasks. They’re
+slow, but they get the job done with the right context. That lets some workflows run
+<strong>entirely local</strong>.</p>
+
+<p>When we call a frontier model API, our data leaves our machine. Code, context, conversation
+history… all sent to a third party. Their pricing decisions affect our workflow. Their model
+updates can change our agent’s behavior overnight. Their rate limits cap our throughput.</p>
+
+<p>When we run local, data stays on our hardware. The pricing is predictable as electricity is
+the main cost. Models don’t change unless we update them. Throughput is bounded by our machine, 
+not a provider queue.</p>
+
+<blockquote>
+  <p>Depending on the hardware, it could even be environmentally friendly.<sup><a href="#ref-2" id="cite-2">[2]</a></sup><sup><a href="#ref-3" id="cite-3">[3]</a></sup><sup><a href="#ref-4" id="cite-4">[4]</a></sup></p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The <a href="/building-planck-specialized-teams-vs-general-agents">previous post</a> gave us the team
+model. This post adds the cost dimension: not every step needs a frontier model, and knowing
+which steps do is most of the architectural work.</p>
+
+<p><a href="https://thebroken.link/planck">Planck</a> supports this natively. Each agent in a team
+configures its own model provider independently. The orchestrator can call a frontier API
+while workers call a local endpoint. The team doesn’t need to change.</p>
+
+<!--
+In the [next post](/building-planck-introducing-planck), we introduce Planck properly: what
+it is, how it works, and how context, specialization, and model routing come together in a
+single system.
+-->
+
+<p>In the next post of this series, we’ll introduce Planck properly: what
+it is, how it works, and how context, specialization, and model routing come
+together in a single system.</p>
+
+<blockquote>
+  <p>Frontier for thinking. Local for doing.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://en.wikipedia.org/wiki/Pareto_principle" target="_blank" rel="noopener noreferrer">Pareto Principle</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li><li id="ref-2">
+    <a href="https://www.phoronix.com/review/framework-desktop-power/5" target="_blank" rel="noopener noreferrer">Framework Desktop: A Deep Dive Into Power &amp; Thermals</a>
+    <a href="#cite-2" aria-label="Back to citation 2">↩</a>
+  </li><li id="ref-3">
+    <a href="https://community.frame.work/t/minimum-power-draw-idle/70184" target="_blank" rel="noopener noreferrer">Minimum Power Draw – Idle (Framework Community)</a>
+    <a href="#cite-3" aria-label="Back to citation 3">↩</a>
+  </li><li id="ref-4">
+    <a href="https://frame.work/sustainability" target="_blank" rel="noopener noreferrer">Framework Sustainability</a>
+    <a href="#cite-4" aria-label="Back to citation 4">↩</a>
+  </li></ol>
+
+  </article><div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+</div>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0"><div>
+    <p class="text-sm font-bold mb-1">Alex de Sousa</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/ajdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/alexdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
+    </div>
+  </div>
+</div>
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/building-planck-specialized-teams-vs-general-agents" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-specialized-teams-vs-general-agents/team.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Hannah Busing</span></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">AI · 2 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Building Planck #2: Specialized Teams vs General Agents</h3>
+      </div>
+    </a></div>
+</div></div>
+<footer class="border-t-2 border-brdr bg-card py-8 text-center text-[0.82rem] text-muted">
+  <p>Written by <a href="https://linkedin.com/in/ajdesousa" class="text-pri">Alex de Sousa</a>, Elixir Alchemist since 2015 and BEAM engineer since 2012.</p>
+  <p class="mt-1.5"><a href="/cv" class="text-pri">Curriculum Vitae</a> · <a href="https://github.com/alexdesousa" class="text-pri">GitHub</a> · <a href="https://linkedin.com/in/ajdesousa" class="text-pri">LinkedIn</a></p>
+</footer>
+<script src="/assets/js/mermaid.min.js"></script><script>
+      document.addEventListener('scroll', function() {
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        var scroll = st / (sh - document.documentElement.clientHeight) * 100;
+        document.getElementById('progress-bar').style.setProperty('--scroll', scroll + '%');
+      }, {passive: true});
+      document.querySelectorAll('#post-content table').forEach(function(t) {
+        var w = document.createElement('div');
+        w.className = 'table-scroll';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+        t.style.margin = '0';
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Why one AI trying to do everything produces mediocre results and how to design teams that don't." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
+<title>Building Planck #2: Specialized Teams vs General Agents | The Broken Link</title>
+<link rel="canonical" href="https://thebroken.link/building-planck-specialized-teams-vs-general-agents/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+<meta itemprop="description" content="Why one AI trying to do everything produces mediocre results and how to design teams that don't." />
+<meta itemprop="image" content="https://thebroken.link/building-planck-specialized-teams-vs-general-agents/team.jpg" />
+<meta property="og:type" content="article" /><meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="The Broken Link" />
+<meta property="og:title" content="Building Planck #2: Specialized Teams vs General Agents" />
+<meta property="og:image" content="https://thebroken.link/building-planck-specialized-teams-vs-general-agents/team.jpg" />
+<meta property="og:url" content="https://thebroken.link/building-planck-specialized-teams-vs-general-agents/" />
+<meta property="og:description" content="Why one AI trying to do everything produces mediocre results and how to design teams that don't." />
+<meta name="twitter:title" content="Building Planck #2: Specialized Teams vs General Agents"/>
+<meta name="twitter:description" content="Why one AI trying to do everything produces mediocre results and how to design teams that don't." />
+<meta name="twitter:image" content="https://thebroken.link/building-planck-specialized-teams-vs-general-agents/team.jpg" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image:alt" content="Building Planck #2: Specialized Teams vs General Agents"/>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/building-planck-specialized-teams-vs-general-agents/"
+  },
+  "headline": "Building Planck #2: Specialized Teams vs General Agents",
+  "image": ["https://thebroken.link/building-planck-specialized-teams-vs-general-agents/team.jpg"],
+  "datePublished": "2026-05-08T00:00:00+00:00",
+  "dateModified": "2026-07-11T08:10:13+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa",
+    "url": "https://thebroken.link/cv"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Broken Link",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebroken.link/profiles/alex.jpg"
+    }
+  },
+  "description": "Why one AI trying to do everything produces mediocre results and how to design teams that don't.",
+  "keywords": ["ai", "agents", "teams"]
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
+<script>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body class="bg-canvas text-ink font-mono"><div id="progress-bar"></div>
+<nav class="sticky top-0 z-50 bg-card border-b-2 border-brdr px-6 py-3.5 flex items-center justify-between">
+  <a href="/en/" class="flex items-center gap-2 font-bold text-xs tracking-[0.18em] uppercase text-ink hover:text-pri no-underline"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 69.573 69.573" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-miterlimit="4" aria-hidden="true">
+  <path stroke-width="2.910" d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+</svg>
+<span>← The Broken Link</span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/cv" class="inline-block border-2 border-brdr bg-card text-ink px-3 py-1.5 text-[0.72rem] font-bold tracking-[0.05em] uppercase shadow-neo-sm no-underline neo-hover-btn">CV</a>
+    <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm neo-hover-btn cursor-pointer" aria-label="Toggle theme">◐</button>
+    <a href="https://linkedin.com/in/ajdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="LinkedIn">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/alexdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="GitHub">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+</nav>
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">AI</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">2 MIN READ</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">May 8, 2026</span>
+  </div>
+
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    Building Planck #2: Specialized Teams vs General Agents
+  </h1>
+
+  <div class="flex items-center gap-3"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0"><div>
+      <p class="text-sm font-bold leading-none mb-0.5">Alex de Sousa</p>
+      <p class="text-[0.72rem] text-muted">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    </div>
+  </div>
+</header>
+<div class="max-w-[720px] mx-auto px-6 py-8"><div class="mb-8">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-3">
+    SERIES
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+  <div class="border-2 border-brdr bg-card shadow-neo p-4">
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><a href="/building-planck-context-is-the-real-problem" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #1: Context Is the Real Problem</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #2: Specialized Teams vs General Agents</span></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><a href="/building-planck-the-20-80-split" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</a></li></ol></div>
+</div><article id="post-content" class="prose">
+    <p>Reducing what an agent sees is a step in the right direction. But if we only have one
+agent, we’re always making a trade-off: give it more tools and it gets capable but
+unfocused; take tools away and it can’t do the job.</p>
+
+<p>The real solution is to stop trying to fit the whole workflow into one context window.</p>
+
+<h2 id="the-appeal-of-the-general-agent">The Appeal of the General Agent</h2>
+
+<p>So, we build the general agent. A capable model, a broad system prompt, 30 tools. The
+agent can “handle anything.” It works. Sort of. For simple tasks it’s fine. For anything
+multi-step, the results are inconsistent. Sometimes brilliant, sometimes mediocre, often unpredictable.</p>
+
+<p>We end up with an agent a mile wide and an inch deep.
+The problem: <a href="/building-planck-context-is-the-real-problem#how-attention-works">attention</a>.</p>
+
+<p>When every turn includes tool definitions and instructions that aren’t relevant
+to the current step, the model still reads them. Attention gets diluted and the
+output degrades.</p>
+
+<blockquote>
+  <p>The more an agent can do, the harder it is to do any one thing well.</p>
+</blockquote>
+
+<h2 id="the-team-model">The Team Model</h2>
+
+<p>The alternative isn’t a smarter agent. It’s a smaller one. <strong>Several of them.</strong></p>
+
+<p>Instead of one agent that does everything, you have a small group where each member has a
+narrow role. An orchestrator that reasons about the task, breaks it down, and delegates.
+Workers that execute each step with minimal, focused context.</p>
+
+<p>We need to deconstruct our workflows and figure out which experts each step requires.
+That’s how we turn our workflows into effective teams.</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant P as Planner
+    participant D as Developer
+    participant R as Reviewer
+
+    U-&gt;&gt;O: "Add input validation to the login form"
+    O-&gt;&gt;P: Plan and execute this task
+    P-&gt;&gt;D: Implement step 1 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;D: [feedback]
+    D-&gt;&gt;R: [revised code]
+    R-&gt;&gt;P: Step 1 done ✓
+    P-&gt;&gt;D: Implement step 2 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;P: Step 2 done ✓
+    P--&gt;&gt;O: Task complete
+    O--&gt;&gt;U: Response
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>The Planner coordinates steps. The Developer and Reviewer work directly with each other. The Orchestrator only sees the result.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant P as Planner
+    participant D as Developer
+    participant R as Reviewer
+
+    U-&gt;&gt;O: "Add input validation to the login form"
+    O-&gt;&gt;P: Plan and execute this task
+    P-&gt;&gt;D: Implement step 1 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;D: [feedback]
+    D-&gt;&gt;R: [revised code]
+    R-&gt;&gt;P: Step 1 done ✓
+    P-&gt;&gt;D: Implement step 2 [spec]
+    D-&gt;&gt;R: [code]
+    R-&gt;&gt;P: Step 2 done ✓
+    P--&gt;&gt;O: Task complete
+    O--&gt;&gt;U: Response
+</code></div>
+</figure>
+
+<blockquote>
+  <p><strong>Note</strong>: Though the example is for software development, we can create any team
+configuration we want, e.g., for content strategy, a Researcher, a Strategist, a Writer,
+and an Editor could be enough to create a content pipeline.</p>
+</blockquote>
+
+<h2 id="defining-roles">Defining Roles</h2>
+
+<p>Each agent in a team has two things that together define its role: a <strong>system prompt</strong> and
+a <strong>tool list</strong>.</p>
+
+<p><strong>The system prompt</strong> describes how the agent should behave, e.g., the planner’s prompt describes
+how to break a task into steps, the developer’s describes how to write code. Each prompt is
+small and focused on exactly one job.</p>
+
+<p><strong>The tool list</strong> is what the agent can actually do, e.g., a developer gets file access and a
+shell, a reviewer gets read access, a planner might get read access and web search
+capabilities, the orchestrator gets the tools to delegate work to others.</p>
+
+<p>A developer without delegation tools simply cannot delegate, not because it’s instructed
+not to, but because the capability isn’t there.</p>
+
+<blockquote>
+  <p>We can’t prompt our way out of a missing tool.</p>
+</blockquote>
+
+<h2 id="the-compound-effect">The Compound Effect</h2>
+
+<p>Splitting work across specialized agents has two compounding effects:</p>
+
+<ul>
+  <li><strong>Smaller, stable system prompts:</strong> Each agent’s prompt describes exactly one role and
+doesn’t grow as we add capabilities to other agents. A stable system prompt means the
+<a href="/building-planck-context-is-the-real-problem#the-prefix-cache">prefix cache</a> works.
+We pay to compute it once and reuse it across every turn.</li>
+  <li><strong>Quality is higher per step:</strong> A worker that only knows how to search is very good at
+searching. A worker that only knows how to write is very good at writing. Narrow scope
+produces better outputs, not worse.<sup><a href="#ref-1" id="cite-1">[1]</a></sup></li>
+</ul>
+
+<blockquote>
+  <p>Each agent doing less means the team doing more.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Analyze your own workflows. Extract the experts needed for each step. Build your team of
+agents.</p>
+
+<p>This team-based architecture is at the core of <a href="https://thebroken.link/planck">Planck</a>:
+specialized agents working together, each focused on exactly one job.</p>
+
+<p>In the <a href="/building-planck-the-20-80-split">next post</a>, we look at the cost side of this
+architecture: most steps in a well-designed team don’t need a frontier model to execute them.</p>
+
+<blockquote>
+  <p>A well-designed team gives you a system where each agent is small enough to be reliable
+and focused enough to be effective.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://arxiv.org/abs/2605.24660" target="_blank" rel="noopener noreferrer">How Many Tools Should an LLM Agent See? A Chance-Corrected Answer</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li></ol>
+
+  </article><div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+</div>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0"><div>
+    <p class="text-sm font-bold mb-1">Alex de Sousa</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/ajdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/alexdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
+    </div>
+  </div>
+</div>
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/building-planck-the-20-80-split" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-the-20-80-split/pareto.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Austin Distel</span></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">AI · 2 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</h3>
+      </div>
+    </a><a href="/building-planck-context-is-the-real-problem" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-context-is-the-real-problem/books.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Patrick Tomasso</span></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">AI · 6 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Building Planck #1: Context Is the Real Problem</h3>
+      </div>
+    </a></div>
+</div></div>
+<footer class="border-t-2 border-brdr bg-card py-8 text-center text-[0.82rem] text-muted">
+  <p>Written by <a href="https://linkedin.com/in/ajdesousa" class="text-pri">Alex de Sousa</a>, Elixir Alchemist since 2015 and BEAM engineer since 2012.</p>
+  <p class="mt-1.5"><a href="/cv" class="text-pri">Curriculum Vitae</a> · <a href="https://github.com/alexdesousa" class="text-pri">GitHub</a> · <a href="https://linkedin.com/in/ajdesousa" class="text-pri">LinkedIn</a></p>
+</footer>
+<script src="/assets/js/mermaid.min.js"></script><script>
+      document.addEventListener('scroll', function() {
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        var scroll = st / (sh - document.documentElement.clientHeight) * 100;
+        document.getElementById('progress-bar').style.setProperty('--scroll', scroll + '%');
+      }, {passive: true});
+      document.querySelectorAll('#post-content table').forEach(function(t) {
+        var w = document.createElement('div');
+        w.className = 'table-scroll';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+        t.style.margin = '0';
+      });
+    </script>
+  </body>
+</html>

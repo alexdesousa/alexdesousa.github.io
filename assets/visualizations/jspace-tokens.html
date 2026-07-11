@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J-Space: Token Residual Streams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+  (function() {
+    function applyTheme() {
+      var stored = localStorage.getItem('tbl-theme');
+      var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', mode);
+    }
+    applyTheme();
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'tbl-theme') applyTheme();
+    });
+  })();
+</script>
+<style>
+  :root {
+    --bg:         #f8f9fb;
+    --bg-card:    #ffffff;
+    --bg-last:    #f0f5ff;
+    --text:       #0b0b0b;
+    --text-muted: #898781;
+    --border:     #e2e1da;
+    --border-last:#bdd0f5;
+    --grid:       #ebebea;
+
+    --zone-bg-input:  #f4f4f2;
+    --zone-bg-jspace: #eef3fc;
+    --zone-bg-output: #fef2f2;
+    --zone-c-input:   #898781;
+    --zone-c-jspace:  #2a78d6;
+    --zone-c-output:  #e34948;
+
+    --c-input:   #9e9d96;
+    --c-jspace:  #2a78d6;
+    --c-output:  #e34948;
+
+    --track-bg:  #e2e1da;
+    --track-input:  #d0cfca;
+    --track-jspace: #bdd0f5;
+    --track-output: #fac7c7;
+    --marker-bg: #0b0b0b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:         #111213;
+      --bg-card:    #1a1b1d;
+      --bg-last:    #17202e;
+      --text:       #f0efe8;
+      --text-muted: #898781;
+      --border:     #2c2c2a;
+      --border-last:#2a4a7a;
+      --grid:       #232323;
+      --zone-bg-input:  #1e1e1c;
+      --zone-bg-jspace: #172030;
+      --zone-bg-output: #2a1414;
+      --zone-c-input:   #898781;
+      --zone-c-jspace:  #3987e5;
+      --zone-c-output:  #e66767;
+      --c-input:   #5a5956;
+      --c-jspace:  #3987e5;
+      --c-output:  #e66767;
+      --track-bg:  #2c2c2a;
+      --track-input:  #3a3937;
+      --track-jspace: #1e3a5a;
+      --track-output: #3a1a1a;
+      --marker-bg: #f0efe8;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f8f9fb; --bg-card: #ffffff; --bg-last: #f0f5ff;
+    --text: #0b0b0b; --text-muted: #898781; --border: #e2e1da; --border-last: #bdd0f5;
+    --zone-bg-input: #f4f4f2; --zone-bg-jspace: #eef3fc; --zone-bg-output: #fef2f2;
+    --zone-c-input: #898781; --zone-c-jspace: #2a78d6; --zone-c-output: #e34948;
+    --c-input: #9e9d96; --c-jspace: #2a78d6; --c-output: #e34948;
+    --track-bg: #e2e1da; --track-input: #d0cfca; --track-jspace: #bdd0f5; --track-output: #fac7c7;
+    --marker-bg: #0b0b0b;
+  }
+  :root[data-theme="dark"] {
+    --bg: #111213; --bg-card: #1a1b1d; --bg-last: #17202e;
+    --text: #f0efe8; --text-muted: #898781; --border: #2c2c2a; --border-last: #2a4a7a;
+    --zone-bg-input: #1e1e1c; --zone-bg-jspace: #172030; --zone-bg-output: #2a1414;
+    --zone-c-input: #898781; --zone-c-jspace: #3987e5; --zone-c-output: #e66767;
+    --c-input: #5a5956; --c-jspace: #3987e5; --c-output: #e66767;
+    --track-bg: #2c2c2a; --track-input: #3a3937; --track-jspace: #1e3a5a; --track-output: #3a1a1a;
+    --marker-bg: #f0efe8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', 'Courier New', monospace;
+    padding: 28px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .wrap { width: 100%; max-width: 860px; }
+
+  .header { margin-bottom: 16px; }
+
+  .prompt-badge {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.72rem;
+    background: var(--grid);
+    color: var(--text-muted);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 6px;
+  }
+
+  h2 { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
+  .subtitle { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* Zone track */
+  .zone-track {
+    display: flex;
+    height: 6px;
+    border-radius: 3px;
+    overflow: visible;
+    margin: 18px 0 6px;
+    position: relative;
+    gap: 2px;
+  }
+
+  .zone-seg {
+    height: 6px;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .zone-marker {
+    position: absolute;
+    top: -2px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--marker-bg);
+    transform: translateX(-50%);
+    transition: left 0.25s ease;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .zone-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .zone-label-item {
+    font-size: 0.67rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 500;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .btn-play {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .btn-play:hover { background: var(--grid); }
+
+  .layer-counter {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-width: 64px;
+  }
+
+  .slider-wrap { flex: 1; }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--c-jspace);
+    cursor: pointer;
+    height: 4px;
+  }
+
+  /* Token cards */
+  .tokens-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    align-items: start;
+  }
+
+  .token-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .token-card.last-token {
+    background: var(--bg-last);
+    border-color: var(--border-last);
+  }
+
+  .token-header {
+    padding: 8px 10px 6px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .token-card.last-token .token-header {
+    border-bottom-color: var(--border-last);
+  }
+
+  .token-name {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .last-badge {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--c-jspace);
+    font-weight: 600;
+  }
+
+  .concepts-list {
+    padding: 10px 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 140px;
+  }
+
+  .concept-word {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.76rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .concept-word.group-input  { color: var(--c-input); }
+  .concept-word.group-jspace { color: var(--c-jspace); }
+  .concept-word.group-output { color: var(--c-output); }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Token processing states */
+  .token-card { transition: opacity 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease; }
+
+  .token-card.state-active {
+    opacity: 1;
+    border-color: var(--c-jspace);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-jspace) 20%, transparent);
+  }
+  .token-card.state-active.last-token {
+    border-color: var(--c-output);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-output) 20%, transparent);
+  }
+  .token-card.state-done   { opacity: 0.38; }
+  .token-card.state-pending { opacity: 0.18; }
+
+  /* Token step indicator */
+  .token-steps {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .token-step {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    background: var(--bg-card);
+  }
+  .token-step.active {
+    color: var(--text);
+    border-color: var(--c-jspace);
+    background: color-mix(in srgb, var(--c-jspace) 10%, var(--bg-card));
+    font-weight: 600;
+  }
+  .token-step.done {
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+  .token-step-arrow {
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="prompt-badge">"The fourth planet color is"</div>
+    <h2>Residual Stream per Token</h2>
+    <p class="subtitle">What each token's internal state holds across layers &nbsp;·&nbsp; simulated activations</p>
+  </div>
+
+  <div class="controls">
+    <button class="btn-play" id="btnPlay" aria-label="Play/Pause">▶</button>
+    <span class="layer-counter" id="layerCounter">Layer 0</span>
+    <div class="slider-wrap">
+      <input type="range" id="slider" min="0" max="100" value="0" step="1">
+    </div>
+  </div>
+
+  <div class="zone-track" id="zoneTrack">
+    <div class="zone-seg" style="width:38%; background:var(--track-input)"></div>
+    <div class="zone-seg" style="width:54%; background:var(--track-jspace)"></div>
+    <div class="zone-seg" style="width:8%;  background:var(--track-output)"></div>
+    <div class="zone-marker" id="zoneMarker"></div>
+  </div>
+
+  <div class="zone-labels">
+    <span class="zone-label-item" style="color:var(--zone-c-input)">Input zone</span>
+    <span class="zone-label-item" style="color:var(--zone-c-jspace)">J-space</span>
+    <span class="zone-label-item" style="color:var(--zone-c-output)">Output zone</span>
+  </div>
+
+  <div class="token-steps" id="tokenSteps"></div>
+  <div class="tokens-row" id="tokensRow"></div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--c-input)"></div>
+      Input echo
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--c-jspace)"></div>
+      J-space concept (silent)
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--c-output)"></div>
+      Output candidate
+    </div>
+  </div>
+</div>
+
+<script>
+// Layer keyframes: 0, 10, 20, ..., 100
+const KF = [0,10,20,30,40,50,60,70,80,90,100];
+
+// Tokens: name, concepts, isLast
+const tokens = [
+  {
+    name: '"The"', isLast: false,
+    concepts: [
+      { word: "the",     group: "input",  vals: [0.80,0.65,0.45,0.25,0.10,0.03,0.00,0.00,0.00,0.00,0.00] },
+      { word: "article", group: "input",  vals: [0.20,0.15,0.08,0.03,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+    ]
+  },
+  {
+    name: '"fourth"', isLast: false,
+    concepts: [
+      { word: "fourth",  group: "input",  vals: [0.90,0.78,0.60,0.40,0.20,0.08,0.02,0.00,0.00,0.00,0.00] },
+      { word: "4th",     group: "input",  vals: [0.25,0.22,0.15,0.08,0.03,0.00,0.00,0.00,0.00,0.00,0.00] },
+      { word: "ordinal", group: "input",  vals: [0.10,0.18,0.15,0.08,0.02,0.00,0.00,0.00,0.00,0.00,0.00] },
+    ]
+  },
+  {
+    name: '"planet"', isLast: false,
+    concepts: [
+      { word: "planet",  group: "input",  vals: [0.80,0.68,0.50,0.30,0.12,0.03,0.00,0.00,0.00,0.00,0.00] },
+      { word: "fourth",  group: "input",  vals: [0.20,0.25,0.20,0.12,0.04,0.00,0.00,0.00,0.00,0.00,0.00] },
+      { word: "Mars",    group: "jspace", vals: [0.00,0.08,0.25,0.45,0.55,0.45,0.28,0.12,0.03,0.00,0.00] },
+      { word: "space",   group: "jspace", vals: [0.00,0.04,0.14,0.28,0.32,0.22,0.10,0.03,0.00,0.00,0.00] },
+      { word: "orbit",   group: "jspace", vals: [0.00,0.02,0.10,0.18,0.18,0.10,0.04,0.00,0.00,0.00,0.00] },
+    ]
+  },
+  {
+    name: '"color"', isLast: false,
+    concepts: [
+      { word: "color",   group: "input",  vals: [0.70,0.55,0.35,0.15,0.04,0.00,0.00,0.00,0.00,0.00,0.00] },
+      { word: "Mars",    group: "jspace", vals: [0.00,0.12,0.35,0.62,0.75,0.60,0.38,0.15,0.04,0.00,0.00] },
+      { word: "space",   group: "jspace", vals: [0.00,0.05,0.18,0.32,0.36,0.25,0.12,0.03,0.00,0.00,0.00] },
+      { word: "rocky",   group: "jspace", vals: [0.00,0.02,0.10,0.20,0.22,0.14,0.05,0.00,0.00,0.00,0.00] },
+      { word: "red",     group: "output", vals: [0.00,0.02,0.08,0.22,0.42,0.62,0.78,0.88,0.92,0.95,0.96] },
+      { word: "crimson", group: "output", vals: [0.00,0.00,0.03,0.10,0.22,0.30,0.28,0.18,0.08,0.02,0.00] },
+    ]
+  },
+  {
+    name: '"is"', isLast: true,
+    concepts: [
+      { word: "is",      group: "input",  vals: [0.60,0.42,0.22,0.08,0.02,0.00,0.00,0.00,0.00,0.00,0.00] },
+      { word: "Mars",    group: "jspace", vals: [0.00,0.15,0.40,0.72,0.90,0.78,0.55,0.28,0.08,0.01,0.00] },
+      { word: "space",   group: "jspace", vals: [0.00,0.06,0.20,0.38,0.42,0.30,0.15,0.05,0.00,0.00,0.00] },
+      { word: "rocky",   group: "jspace", vals: [0.00,0.03,0.12,0.25,0.28,0.18,0.08,0.02,0.00,0.00,0.00] },
+      { word: "red",     group: "output", vals: [0.00,0.03,0.12,0.28,0.52,0.72,0.88,0.96,1.00,1.00,1.00] },
+      { word: "crimson", group: "output", vals: [0.00,0.01,0.05,0.14,0.28,0.35,0.32,0.20,0.08,0.02,0.00] },
+    ]
+  },
+];
+
+// Interpolate between keyframes
+function interp(vals, layer) {
+  const idx = layer / 10;
+  const lo = Math.floor(idx), hi = Math.min(lo + 1, KF.length - 1);
+  if (lo === hi) return vals[lo];
+  const t = idx - lo;
+  return vals[lo] * (1 - t) + vals[hi] * t;
+}
+
+// Build DOM
+const row = document.getElementById("tokensRow");
+
+tokens.forEach(token => {
+  const card = document.createElement("div");
+  card.className = "token-card" + (token.isLast ? " last-token" : "");
+
+  const header = document.createElement("div");
+  header.className = "token-header";
+
+  const nameEl = document.createElement("span");
+  nameEl.className = "token-name";
+  nameEl.textContent = token.name;
+  header.appendChild(nameEl);
+
+  if (token.isLast) {
+    const badge = document.createElement("span");
+    badge.className = "last-badge";
+    badge.textContent = "→ next";
+    header.appendChild(badge);
+  }
+
+  card.appendChild(header);
+
+  const list = document.createElement("div");
+  list.className = "concepts-list";
+
+  token.concepts.forEach(c => {
+    const span = document.createElement("span");
+    span.className = `concept-word group-${c.group}`;
+    span.textContent = c.word;
+    span.dataset.key = c.word;
+    list.appendChild(span);
+  });
+
+  card.appendChild(list);
+  row.appendChild(card);
+});
+
+// State
+let currentToken = 0;
+let currentLayer = 0;
+let playing = false;
+let animFrame = null;
+let lastTime = null;
+let pauseUntil = 0;
+const SPEED = 50;
+const PAUSE_MS = 500;
+
+// Token step indicators
+const stepsEl = document.getElementById("tokenSteps");
+tokens.forEach((token, i) => {
+  if (i > 0) {
+    const arrow = document.createElement("span");
+    arrow.className = "token-step-arrow";
+    arrow.textContent = "→";
+    stepsEl.appendChild(arrow);
+  }
+  const step = document.createElement("span");
+  step.className = "token-step";
+  step.id = `step-${i}`;
+  step.textContent = token.name;
+  stepsEl.appendChild(step);
+});
+
+function getWords(tokenIdx) {
+  return row.children[tokenIdx].querySelectorAll(".concept-word");
+}
+
+function applyToken(tokenIdx, layer) {
+  const words = getWords(tokenIdx);
+  tokens[tokenIdx].concepts.forEach((c, ci) => {
+    const v = interp(c.vals, layer);
+    const minOp = c.group === "jspace" ? 0.22 : 0.07;
+    words[ci].style.opacity = minOp + v * (1 - minOp);
+  });
+}
+
+function render() {
+  document.getElementById("layerCounter").textContent = `Layer ${Math.round(currentLayer)}`;
+  document.getElementById("slider").value = Math.round(currentLayer);
+  document.getElementById("zoneMarker").style.left = currentLayer + "%";
+
+  tokens.forEach((_, ti) => {
+    const card = row.children[ti];
+    card.classList.remove("state-active", "state-done", "state-pending");
+    if (ti < currentToken) {
+      card.classList.add("state-done");
+      applyToken(ti, 100);
+    } else if (ti === currentToken) {
+      card.classList.add("state-active");
+      applyToken(ti, currentLayer);
+    } else {
+      card.classList.add("state-pending");
+      applyToken(ti, 0);
+    }
+  });
+
+  tokens.forEach((_, ti) => {
+    const step = document.getElementById(`step-${ti}`);
+    step.classList.remove("active", "done");
+    if (ti < currentToken)  step.classList.add("done");
+    if (ti === currentToken) step.classList.add("active");
+  });
+}
+
+function animate(ts) {
+  if (ts < pauseUntil) { animFrame = requestAnimationFrame(animate); return; }
+  if (!lastTime) lastTime = ts;
+  const dt = Math.min((ts - lastTime) / 1000, 0.1);
+  lastTime = ts;
+  currentLayer += dt * SPEED;
+
+  if (currentLayer >= 100) {
+    currentLayer = 100;
+    render();
+    if (currentToken < tokens.length - 1) {
+      currentToken++;
+      currentLayer = 0;
+      lastTime = null;
+      pauseUntil = ts + PAUSE_MS;
+    } else {
+      setTimeout(() => { currentToken = 0; currentLayer = 0; lastTime = null; render(); }, 1200);
+      cancelAnimationFrame(animFrame);
+      playing = false;
+      document.getElementById("btnPlay").textContent = "▶";
+      return;
+    }
+  }
+
+  render();
+  animFrame = requestAnimationFrame(animate);
+}
+
+const btn = document.getElementById("btnPlay");
+btn.addEventListener("click", () => {
+  playing = !playing;
+  btn.textContent = playing ? "⏸" : "▶";
+  if (playing) { lastTime = null; animFrame = requestAnimationFrame(animate); }
+  else cancelAnimationFrame(animFrame);
+});
+
+document.getElementById("slider").addEventListener("input", e => {
+  if (playing) { playing = false; btn.textContent = "▶"; cancelAnimationFrame(animFrame); }
+  currentLayer = parseInt(e.target.value);
+  render();
+});
+
+render();
+</script>
+</body>
+</html>

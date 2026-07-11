@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Why giving your AI agent more context usually makes it worse and what to do instead." />
+<meta name="robots" content="index, follow">
+<meta name="author" content="Alex de Sousa" />
+<link rel="alternate" type="application/rss+xml" title="The Broken Link" href="https://thebroken.link/feed_en.xml" />
+<title>Building Planck #1: Context Is the Real Problem | The Broken Link</title>
+<link rel="canonical" href="https://thebroken.link/building-planck-context-is-the-real-problem/"/>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+<link rel="manifest" href="/assets/favicon/site.webmanifest">
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#FFFFFF">
+<meta name="msapplication-TileColor" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF">
+<meta itemprop="description" content="Why giving your AI agent more context usually makes it worse and what to do instead." />
+<meta itemprop="image" content="https://thebroken.link/building-planck-context-is-the-real-problem/books.jpg" />
+<meta property="og:type" content="article" /><meta property="og:locale" content="en_US" />
+<meta property="og:site_name" content="The Broken Link" />
+<meta property="og:title" content="Building Planck #1: Context Is the Real Problem" />
+<meta property="og:image" content="https://thebroken.link/building-planck-context-is-the-real-problem/books.jpg" />
+<meta property="og:url" content="https://thebroken.link/building-planck-context-is-the-real-problem/" />
+<meta property="og:description" content="Why giving your AI agent more context usually makes it worse and what to do instead." />
+<meta name="twitter:title" content="Building Planck #1: Context Is the Real Problem"/>
+<meta name="twitter:description" content="Why giving your AI agent more context usually makes it worse and what to do instead." />
+<meta name="twitter:image" content="https://thebroken.link/building-planck-context-is-the-real-problem/books.jpg" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image:alt" content="Building Planck #1: Context Is the Real Problem"/>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://thebroken.link/building-planck-context-is-the-real-problem/"
+  },
+  "headline": "Building Planck #1: Context Is the Real Problem",
+  "image": ["https://thebroken.link/building-planck-context-is-the-real-problem/books.jpg"],
+  "datePublished": "2026-04-30T00:00:00+00:00",
+  "dateModified": "2026-07-11T08:10:13+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Alex de Sousa",
+    "url": "https://thebroken.link/cv"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Broken Link",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://thebroken.link/profiles/alex.jpg"
+    }
+  },
+  "description": "Why giving your AI agent more context usually makes it worse and what to do instead.",
+  "keywords": ["ai", "agents", "llm"]
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tailwind.css"/>
+<script>
+  (function() {
+    var stored = localStorage.getItem('tbl-theme');
+    var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', mode);
+  })();
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = (html.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbl-theme', next);
+  }
+</script>
+<script type="text/javascript" src="/assets/js/app.js"></script>
+</head>
+  <body class="bg-canvas text-ink font-mono"><div id="progress-bar"></div>
+<nav class="sticky top-0 z-50 bg-card border-b-2 border-brdr px-6 py-3.5 flex items-center justify-between">
+  <a href="/en/" class="flex items-center gap-2 font-bold text-xs tracking-[0.18em] uppercase text-ink hover:text-pri no-underline"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 69.573 69.573" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-miterlimit="4" aria-hidden="true">
+  <path stroke-width="2.910" d="m 23.864295,1.579337 14.99178,24.721084 -12.37421,0.60924 15.62853,23.161723 L 2.4193453,17.515564 18.357715,17.818914 5.3962653,1.455208 Z"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 41.021355,10.837556 c 0,0 17.70631,-8.639798 23.91889,7.395197 6.504443,16.788311 -13.56254,23.213201 -13.56254,23.213201"/>
+  <path stroke-width="4.7625" stroke-linecap="square" d="m 36.521655,54.560714 c 0,0 -8.42371,19.61708 -23.89037,9.96633 -15.4666597,-9.65075 -3.0563697,-26.62966 -3.0563697,-26.62966"/>
+</svg>
+<span>← The Broken Link</span>
+  </a>
+  <div class="flex items-center gap-2">
+    <a href="/cv" class="inline-block border-2 border-brdr bg-card text-ink px-3 py-1.5 text-[0.72rem] font-bold tracking-[0.05em] uppercase shadow-neo-sm no-underline neo-hover-btn">CV</a>
+    <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm neo-hover-btn cursor-pointer" aria-label="Toggle theme">◐</button>
+    <a href="https://linkedin.com/in/ajdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="LinkedIn">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/alexdesousa" class="flex items-center justify-center w-8 h-8 border-2 border-brdr bg-card text-ink shadow-neo-sm no-underline neo-hover-btn" aria-label="GitHub">
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+    </a>
+  </div>
+</nav>
+<header class="max-w-[720px] mx-auto px-6 pt-12 pb-8">
+  <div class="flex items-center gap-3 mb-5">
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri">AI</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-muted">6 MIN READ</span>
+    <span class="text-[0.62rem] text-muted">·</span>
+    <span class="text-[0.62rem] text-muted">Apr 30, 2026</span>
+  </div>
+
+  <h1 class="text-[clamp(1.6rem,4vw,2.4rem)] font-bold uppercase tracking-[0.04em] leading-tight mb-6">
+    Building Planck #1: Context Is the Real Problem
+  </h1>
+
+  <div class="flex items-center gap-3"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-9 h-9 border-2 border-brdr object-cover flex-shrink-0"><div>
+      <p class="text-sm font-bold leading-none mb-0.5">Alex de Sousa</p>
+      <p class="text-[0.72rem] text-muted">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    </div>
+  </div>
+</header>
+<div class="max-w-[720px] mx-auto px-6 py-8"><div class="mb-8">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-3">
+    SERIES
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+  <div class="border-2 border-brdr bg-card shadow-neo p-4">
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #1: Context Is the Real Problem</span></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><a href="/building-planck-the-20-80-split" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</a></li></ol></div>
+</div><article id="post-content" class="prose">
+    <p>Your agent is underperforming. You swapped from your local models to your favorite AI
+cloud provider models and back, added more instructions, added more skills, added more
+tools. The results are inconsistent: sometimes brilliant, sometimes mediocre.</p>
+
+<p>You’re starting to think you need a better model. Every new model release generates an
+incredible FOMO, but, behind all the excitement, there’s one hopeful thought:</p>
+
+<blockquote>
+  <p>“This one will fix my workflow!”</p>
+</blockquote>
+
+<p>After burning millions of tokens, things have improved, but your workflow is not
+quite there yet. It’s not fixed. It’s more expensive though.</p>
+
+<p>If that resonates with you, <strong>you have a context problem.</strong></p>
+
+<p>We need to fix a mental model that holds back most people: almost every quality
+problem in AI agents traces back to poor context decisions, not model capability.</p>
+
+<h2 id="what-context-actually-is">What Context Actually Is</h2>
+
+<p>When we’re <em>“chatting”</em> with our agent, we’re not really chatting with it. We’re
+actually sending an HTTP request to a server. Every single HTTP request includes
+everything that’s in the current chat session. Yes, everything. Every single turn.</p>
+
+<p>The model has no persistent memory between calls. What it knows comes entirely from
+what we include in that payload right now. That payload is our <strong>context window</strong>.
+It contains four things:</p>
+
+<ul>
+  <li><strong>System prompt</strong>: Instructions defining the agent’s role, behavior, and rules.</li>
+  <li><strong>Tool definitions</strong>: Descriptions of every tool the agent can call, including
+their parameters and what they return.</li>
+  <li><strong>Conversation history</strong>: Every prior user message and assistant response in the
+current session.</li>
+  <li><strong>Injected knowledge</strong>: Search results, file contents, retrieved memories and skills.
+Anything that was included dynamically.</li>
+</ul>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart LR
+    subgraph CW["Context Window"]
+        direction TB
+        SP["System Prompt"]
+        TD["Tool Definitions"]
+        CH["Conversation History"]
+        IK["Injected Knowledge"]
+    end
+    CW --&gt;|"API call"| LLM[("LLM Provider")]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Every turn sends the full context window to the provider (cloud or local).</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart LR
+    subgraph CW["Context Window"]
+        direction TB
+        SP["System Prompt"]
+        TD["Tool Definitions"]
+        CH["Conversation History"]
+        IK["Injected Knowledge"]
+    end
+    CW --&gt;|"API call"| LLM[("LLM Provider")]
+</code></div>
+</figure>
+
+<p>And though some models support big context windows, that doesn’t mean we can afford
+to fill them: not only because of the monetary cost, but also because every token included
+is a token the model must attend to.</p>
+
+<h2 id="how-attention-works">How Attention Works</h2>
+
+<p>When we say the model <strong>“attends to”</strong> every token, what does that actually mean?</p>
+
+<p>For each token, the model computes a score between every pair of tokens in the context.
+These scores determine how much each token should influence the next one generated.</p>
+
+<p>If the model is completing <strong>“Caracas is the capital of”</strong>, it attends
+more strongly to <strong>“capital”</strong> and <strong>“Caracas”</strong> than to <strong>“is”</strong> and <strong>“the”</strong>. The
+scores reflect relevance.</p>
+
+<p>That scoring happens across every pair. A 1,000-token context means 1,000,000 pairs
+to score. Double the context to 2,000 tokens and you have 4,000,000 pairs. Four times
+the computation for twice the tokens.</p>
+
+<blockquote>
+  <p><strong>Attention is quadratic in context length.</strong></p>
+</blockquote>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+xychart-beta
+    x-axis "Amount of tokens" ["1k", "2k", "4k", "8k", "16k", "32k"]
+    y-axis "Attention pairs (M)" 0 --&gt; 1100
+    line [1, 4, 16, 64, 256, 1024]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Doubling context length quadruples the number of attention pairs the model must score.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+xychart-beta
+    x-axis "Amount of tokens" ["1k", "2k", "4k", "8k", "16k", "32k"]
+    y-axis "Attention pairs (M)" 0 --&gt; 1100
+    line [1, 4, 16, 64, 256, 1024]
+</code></div>
+</figure>
+
+<p>There is a second consequence beyond cost: <strong>relevance degrades</strong>. The model doesn’t
+skip tokens that aren’t relevant. They’re there and they affect the quality of
+the result.</p>
+
+<p>If half the context is boilerplate instructions that don’t apply to this specific task,
+those tokens still compete with the ones that do.</p>
+
+<blockquote>
+  <p>It costs us more money and it compromises quality.</p>
+</blockquote>
+
+<p>All those token scores are computed and stored in the <strong>KV-cache</strong>:</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart LR
+    T["The"]
+    Q["quick"]
+    B["brown"]
+    F["fox"]
+
+    F --&gt;|"k=0.71, v=0.56"| B
+    F --&gt;|"k=0.45, v=0.32"| Q
+    F --&gt;|"k=0.23, v=0.87"| T
+    B --&gt;|"k=0.45, v=0.32"| Q
+    B --&gt;|"k=0.23, v=0.87"| T
+    Q --&gt;|"k=0.23, v=0.87"| T
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Each arrow carries the cached key (k) and value (v) of the target token. Notice that “The” is looked up three times. Its stored pair is reused without recomputation each time.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart LR
+    T["The"]
+    Q["quick"]
+    B["brown"]
+    F["fox"]
+
+    F --&gt;|"k=0.71, v=0.56"| B
+    F --&gt;|"k=0.45, v=0.32"| Q
+    F --&gt;|"k=0.23, v=0.87"| T
+    B --&gt;|"k=0.45, v=0.32"| Q
+    B --&gt;|"k=0.23, v=0.87"| T
+    Q --&gt;|"k=0.23, v=0.87"| T
+</code></div>
+</figure>
+
+<p>When <code class="language-plaintext highlighter-rouge">fox</code> is generated, it attends to the key-value pairs of every token before it. The
+pairs are the <strong>KV-cache</strong>.</p>
+
+<blockquote>
+  <p>Double the context length, quadruple the KV-cache memory.</p>
+</blockquote>
+
+<p><strong>GPU memory has become one of the most contested resources on the planet.</strong> The main DRAM
+producers are now shifting their capacity to serve the AI industry. This has created a
+RAM shortage where memory prices have roughly tripled by late 2025.<sup><a href="#ref-1" id="cite-1">[1]</a></sup><sup><a href="#ref-2" id="cite-2">[2]</a></sup></p>
+
+<p>For AI cloud providers, KV-cache memory is one of their largest costs: each chat
+exponentially grows its memory usage as it progresses. It’s also what drives them to
+invest heavily in compression and caching strategies.</p>
+
+<h2 id="do-you-feel-model-x-is-getting-dumber">Do You Feel <em>Model X</em> Is Getting Dumber?</h2>
+
+<p>It’s not your imagination. And it’s probably not the model.</p>
+
+<p>When a context grows very long, AI cloud providers can no longer fit the full KV-cache in
+memory at standard precision. To compensate, they use compressed context representations.</p>
+
+<p>Many open-source context compression techniques exist, and AI cloud providers are almost
+certainly running proprietary variants optimized for their infrastructure.</p>
+
+<p>Usually compression will lead to lossy memory. If it’s done aggressively, the model’s
+output could degrade. If this happens, it will seem a bit dumber and forgetful than before.
+The model is the same though.</p>
+
+<p>This is not a fringe edge case. It’s the operational reality of running agents at
+scale, and it’s why context discipline matters even when you’re not worried about
+cost.</p>
+
+<blockquote>
+  <p>An agent that runs long sessions without managing its context doesn’t just
+get expensive. It gets unreliable.</p>
+</blockquote>
+
+<h2 id="the-prefix-cache">The Prefix Cache</h2>
+
+<p>Not all tokens are equally expensive.</p>
+
+<p>When you send an API request, the provider computes attention over every token in
+your context. That’s expensive.</p>
+
+<p>However, providers cache the KV-cache of each request for a limited time. If the
+beginning of your next request is identical to a previous request (everything is the
+same except the last message), the provider will use the cached KV-cache of your previous
+request and only compute the KV-cache pairs for the new tokens. This is the <strong>prefix cache</strong>.</p>
+
+<p>As long as the cached prefix hasn’t expired, you pay to compute it exactly once, then
+reuse it across every subsequent turn for a fraction of the cost.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: For local models, the prefix cache also exists. In this case, the payment is
+waiting for computing the KV-cache of the whole conversation before actually outputting
+the response of your last message. This also happens for AI cloud providers, but
+their hardware is faster. Still, it’s expensive to calculate.</p>
+</blockquote>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart TD
+    A["New message"] --&gt; B{"Conversation history matches?"}
+    B --&gt;|Yes| C["✅ Cache hit"]
+    B --&gt;|No| D["❌ Cache invalidated"]
+    D --&gt; E["Recompute KV-cache for all the context"]
+    C --&gt; F["Recompute KV-cache for the last tokens"]
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>A matching conversation prefix is a cache hit. Only the new tokens need to be computed.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart TD
+    A["New message"] --&gt; B{"Conversation history matches?"}
+    B --&gt;|Yes| C["✅ Cache hit"]
+    B --&gt;|No| D["❌ Cache invalidated"]
+    D --&gt; E["Recompute KV-cache for all the context"]
+    C --&gt; F["Recompute KV-cache for the last tokens"]
+</code></div>
+</figure>
+
+<p>So, two rules apply:</p>
+<ul>
+  <li>Use a reasonable prefix cache expiration time.</li>
+  <li>Don’t dynamically inject information in your system prompt for an active conversation e.g.
+adding <code class="language-plaintext highlighter-rouge">Current date: &lt;date&gt;</code>.</li>
+</ul>
+
+<blockquote>
+  <p>Keep static instructions in the system prompt. Put dynamic state in the conversation messages.</p>
+</blockquote>
+
+<h2 id="the-generalist-trap">The Generalist Trap</h2>
+
+<p>A broad system prompt feels productive. You cover every case. You add 30 tools.
+The agent can “do anything.” Then it does everything… average.</p>
+
+<p>The problem is <a href="#how-attention-works">attention</a>. When the context is packed with instructions and
+tool definitions that aren’t relevant to the current task, the model still reads them.</p>
+
+<p>A specialist agent with a 100-token system prompt and 2 relevant tools
+consistently outperforms a generalist with a 100,000-token system prompt
+and 10 tools on the tasks the specialist is designed for.</p>
+
+<p>Research confirms the underlying mechanism: context length alone degrades performance 13–85%, even with perfect retrieval.<sup><a href="#ref-3" id="cite-3">[3]</a></sup></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Tool</th>
+      <th style="text-align: left">System prompt</th>
+      <th style="text-align: left">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Claude Code</td>
+      <td style="text-align: left">~100K+ tokens<sup><a href="#ref-4" id="cite-4">[4]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Codex CLI</td>
+      <td style="text-align: left">~100K tokens<sup><a href="#ref-5" id="cite-5">[5]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Antigravity</td>
+      <td style="text-align: left">~8–10K tokens<sup><a href="#ref-6" id="cite-6">[6]</a></sup></td>
+      <td style="text-align: left">Generalist</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Pi agent</td>
+      <td style="text-align: left">&lt;1K tokens<sup><a href="#ref-7" id="cite-7">[7]</a></sup></td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><a href="https://thebroken.link/planck">Planck</a> orchestrator</td>
+      <td style="text-align: left">~1K tokens</td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><a href="https://thebroken.link/planck">Planck</a> worker</td>
+      <td style="text-align: left">~100–300 tokens</td>
+      <td style="text-align: left">Specialist harness</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This is not a prompt trick. It’s an architectural decision. The right response
+to <strong>“this agent isn’t good enough”</strong> is almost never <strong>“add more instructions.”</strong>
+It’s usually <strong>“reduce what it sees.”</strong></p>
+
+<blockquote>
+  <p>Smaller scope, tighter system prompt, fewer tools.</p>
+</blockquote>
+
+<p>This is why <a href="https://thebroken.link/planck">Planck</a> is built around specialized agent
+teams rather than a single generalist.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, I shamelessly introduced <a href="https://thebroken.link/planck">Planck</a>:
+a coding harness (and agent libraries) I created to learn more
+about agents and experiment with them.</p>
+
+<p>Every post in this series documents the architectural decisions
+behind <a href="https://thebroken.link/planck">Planck</a>. Almost every single one of
+them is either directly about reducing unnecessary context or about
+putting the right context in front of the right model at the right time.</p>
+
+<p>Even if you don’t use <a href="https://thebroken.link/planck">Planck</a> in the future,
+I hope this helps you reason about your current workflow and how you
+can make it better.</p>
+
+<p>In the <a href="/building-planck-specialized-teams-vs-general-agents">next post</a>, we take this
+further: reducing context is only the first step. The real solution is to stop trying to
+fit the whole workflow into one agent.</p>
+
+<blockquote>
+  <p>The model wasn’t the problem. It never was.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ol class="references"><li id="ref-1">
+    <a href="https://intuitionlabs.ai/articles/ram-shortage-2025-ai-demand" target="_blank" rel="noopener noreferrer">RAM Shortage 2025: How AI Demand is Raising DRAM Prices</a>
+    <a href="#cite-1" aria-label="Back to citation 1">↩</a>
+  </li><li id="ref-2">
+    <a href="https://spectrum.ieee.org/dram-shortage" target="_blank" rel="noopener noreferrer">AI Boom Fuels DRAM Shortage and Price Surge</a>
+    <a href="#cite-2" aria-label="Back to citation 2">↩</a>
+  </li><li id="ref-3">
+    <a href="https://arxiv.org/abs/2510.05381" target="_blank" rel="noopener noreferrer">Context Length Alone Hurts LLM Performance Despite Perfect Retrieval</a>
+    <a href="#cite-3" aria-label="Back to citation 3">↩</a>
+  </li><li id="ref-4">
+    <a href="https://github.com/anthropics/claude-code/issues/45188" target="_blank" rel="noopener noreferrer">System prompt size grew ~70K tokens between Claude Code v2.1.89 and v2.1.96</a>
+    <a href="#cite-4" aria-label="Back to citation 4">↩</a>
+  </li><li id="ref-5">
+    <a href="https://github.com/openai/codex/issues/18526" target="_blank" rel="noopener noreferrer">First message in fresh Codex session consumes ~100K input tokens</a>
+    <a href="#cite-5" aria-label="Back to citation 5">↩</a>
+  </li><li id="ref-6">
+    <a href="https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools/blob/main/Google/Antigravity/Fast%20Prompt.txt" target="_blank" rel="noopener noreferrer">Antigravity Fast Prompt (published system prompt)</a>
+    <a href="#cite-6" aria-label="Back to citation 6">↩</a>
+  </li><li id="ref-7">
+    <a href="https://mariozechner.at/posts/2025-11-30-pi-coding-agent/" target="_blank" rel="noopener noreferrer">What I learned building an opinionated and minimal coding agent</a>
+    <a href="#cite-7" aria-label="Back to citation 7">↩</a>
+  </li></ol>
+
+  </article><div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mt-10 mb-4">
+  ABOUT THE AUTHOR
+  <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+</div>
+<div class="border-2 border-brdr bg-card shadow-neo flex items-start gap-5 p-6"><img src="/profiles/alex.jpg" alt="Alex de Sousa" class="w-14 h-14 border-2 border-brdr object-cover flex-shrink-0"><div>
+    <p class="text-sm font-bold mb-1">Alex de Sousa</p>
+    <p class="text-[0.78rem] text-muted leading-relaxed">BEAM engineer since 2012, Elixir alchemist since 2015, and open source author. Writing about Elixir, OTP, and software engineering.</p>
+    <div class="flex gap-3 mt-3">
+      <a href="https://linkedin.com/in/ajdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">LinkedIn</a>
+      <a href="https://github.com/alexdesousa" class="text-[0.68rem] font-bold uppercase tracking-wider text-pri hover:underline">GitHub</a>
+    </div>
+  </div>
+</div>
+<div class="mt-10 mb-4">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
+    MORE POSTS
+    <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/building-planck-specialized-teams-vs-general-agents" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-specialized-teams-vs-general-agents/team.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Hannah Busing</span></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">AI · 2 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Building Planck #2: Specialized Teams vs General Agents</h3>
+      </div>
+    </a></div>
+</div></div>
+<footer class="border-t-2 border-brdr bg-card py-8 text-center text-[0.82rem] text-muted">
+  <p>Written by <a href="https://linkedin.com/in/ajdesousa" class="text-pri">Alex de Sousa</a>, Elixir Alchemist since 2015 and BEAM engineer since 2012.</p>
+  <p class="mt-1.5"><a href="/cv" class="text-pri">Curriculum Vitae</a> · <a href="https://github.com/alexdesousa" class="text-pri">GitHub</a> · <a href="https://linkedin.com/in/ajdesousa" class="text-pri">LinkedIn</a></p>
+</footer>
+<script src="/assets/js/mermaid.min.js"></script><script>
+      document.addEventListener('scroll', function() {
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        var scroll = st / (sh - document.documentElement.clientHeight) * 100;
+        document.getElementById('progress-bar').style.setProperty('--scroll', scroll + '%');
+      }, {passive: true});
+      document.querySelectorAll('#post-content table').forEach(function(t) {
+        var w = document.createElement('div');
+        w.className = 'table-scroll';
+        t.parentNode.insertBefore(w, t);
+        w.appendChild(t);
+        t.style.margin = '0';
+      });
+    </script>
+  </body>
+</html>
