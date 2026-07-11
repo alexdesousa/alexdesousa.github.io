@@ -1,0 +1,21 @@
+{%- comment -%}
+Mermaid diagram with optional caption.
+Use a capture block to collect the diagram definition, then pass it here.
+Without a caption, prefer a plain fenced mermaid code block instead.
+
+Options:
+  - content: Mermaid diagram definition (required).
+  - caption: Caption below the diagram (optional). Supports basic markdown.
+{%- endcomment -%}
+{%- if include.caption -%}
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">{{ include.content }}</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    {{ include.caption | markdownify }}
+  </figcaption>
+  <div class="sr-only"><code>{{ include.content }}</code></div>
+</figure>
+{%- else -%}
+<div class="mermaid">{{ include.content }}</div>
+<p class="sr-only">{{ include.content }}</p>
+{%- endif -%}

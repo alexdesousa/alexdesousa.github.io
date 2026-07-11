@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>J-Space: Concepts Across Layers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+  (function() {
+    function applyTheme() {
+      var stored = localStorage.getItem('tbl-theme');
+      var mode = stored ? stored : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', mode);
+    }
+    applyTheme();
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'tbl-theme') applyTheme();
+    });
+  })();
+</script>
+<style>
+  :root {
+    --bg:           #f8f9fb;
+    --bg-panel:     #ffffff;
+    --text:         #0b0b0b;
+    --text-muted:   #717070;
+    --border:       #e2e1da;
+    --grid:         #ebebea;
+
+    --zone-input:   rgba(113,112,112,0.06);
+    --zone-jspace:  rgba(42,120,214,0.07);
+    --zone-output:  rgba(227,73,72,0.06);
+
+    --c-the:        #c8c7bf;
+    --c-is:         #bebdb5;
+    --c-fourth:     #9e9d96;
+    --c-planet:     #b5b4ac;
+    --c-color:      #cccbc3;
+    --c-mars:       #2a78d6;
+    --c-space:      #1baf7a;
+    --c-rocky:      #4a3aa7;
+    --c-red:        #e34948;
+    --c-crimson:    #e87ba4;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:           #111213;
+      --bg-panel:     #1a1b1d;
+      --text:         #f0efe8;
+      --text-muted:   #898781;
+      --border:       #2c2c2a;
+      --grid:         #232323;
+
+      --zone-input:   rgba(255,255,255,0.03);
+      --zone-jspace:  rgba(57,135,229,0.08);
+      --zone-output:  rgba(230,103,103,0.07);
+
+      --c-the:        #4a4947;
+      --c-is:         #424140;
+      --c-fourth:     #5a5956;
+      --c-planet:     #4a4947;
+      --c-color:      #3a3937;
+      --c-mars:       #3987e5;
+      --c-space:      #199e70;
+      --c-rocky:      #9085e9;
+      --c-red:        #e66767;
+      --c-crimson:    #d55181;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg:           #f8f9fb;
+    --bg-panel:     #ffffff;
+    --text:         #0b0b0b;
+    --text-muted:   #717070;
+    --border:       #e2e1da;
+    --grid:         #ebebea;
+    --zone-input:   rgba(113,112,112,0.06);
+    --zone-jspace:  rgba(42,120,214,0.07);
+    --zone-output:  rgba(227,73,72,0.06);
+    --c-the:        #c8c7bf;
+    --c-is:         #bebdb5;
+    --c-fourth:     #9e9d96;
+    --c-planet:     #b5b4ac;
+    --c-color:      #cccbc3;
+    --c-mars:       #2a78d6;
+    --c-space:      #1baf7a;
+    --c-rocky:      #4a3aa7;
+    --c-red:        #e34948;
+    --c-crimson:    #e87ba4;
+  }
+
+  :root[data-theme="dark"] {
+    --bg:           #111213;
+    --bg-panel:     #1a1b1d;
+    --text:         #f0efe8;
+    --text-muted:   #898781;
+    --border:       #2c2c2a;
+    --grid:         #232323;
+    --zone-input:   rgba(255,255,255,0.03);
+    --zone-jspace:  rgba(57,135,229,0.08);
+    --zone-output:  rgba(230,103,103,0.07);
+    --c-fourth:     #5a5956;
+    --c-planet:     #4a4947;
+    --c-color:      #3a3937;
+    --c-mars:       #3987e5;
+    --c-space:      #199e70;
+    --c-rocky:      #9085e9;
+    --c-red:        #e66767;
+    --c-crimson:    #d55181;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', 'Courier New', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 28px 24px;
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .header {
+    margin-bottom: 6px;
+  }
+
+  .prompt-badge {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.72rem;
+    background: var(--grid);
+    color: var(--text-muted);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .chart-wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  svg { display: block; width: 100%; overflow: visible; }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .legend-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    width: 100%;
+  }
+
+  .legend-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 2px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tooltip {
+    position: fixed;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 13px;
+    font-size: 0.75rem;
+    color: var(--text);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    min-width: 160px;
+  }
+
+  .tooltip.visible { opacity: 1; }
+  .tooltip-layer {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+  }
+
+  .tooltip-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 2px 0;
+    font-size: 0.75rem;
+  }
+
+  .tooltip-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tooltip-name { flex: 1; color: var(--text); }
+  .tooltip-val {
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <div class="prompt-badge">"The fourth planet color is"</div>
+    <h2>Concepts in the Residual Stream of "is"</h2>
+    <p class="subtitle">The last token accumulates all context &nbsp;·&nbsp; simulated activations across 100 layers</p>
+  </div>
+
+  <div class="chart-wrap">
+    <svg id="chart"></svg>
+  </div>
+
+  <div class="legend">
+    <div class="legend-group">
+      <div class="legend-label">Input tokens (fading)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-the)"></div>"the"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-fourth)"></div>"fourth"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-planet)"></div>"planet"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-color)"></div>"color"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-is)"></div>"is"</div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-label">J-space concepts (silent reasoning)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-mars)"></div>"Mars"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-space)"></div>"space"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-rocky)"></div>"rocky"</div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-label">Output candidates (emerging)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-red)"></div>"red"</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--c-crimson)"></div>"crimson"</div>
+    </div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+const layers = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
+
+const concepts = [
+  { key: "the",     label: '"the"',     group: "input",  color: "--c-the",     dash: "4,3",
+    vals: [0.50,0.40,0.28,0.18,0.10,0.04,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "fourth",  label: '"fourth"',  group: "input",  color: "--c-fourth",  dash: "4,3",
+    vals: [0.90,0.82,0.70,0.56,0.40,0.26,0.14,0.05,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "planet",  label: '"planet"',  group: "input",  color: "--c-planet",  dash: "4,3",
+    vals: [0.80,0.72,0.62,0.50,0.37,0.24,0.13,0.05,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "color",   label: '"color"',   group: "input",  color: "--c-color",   dash: "4,3",
+    vals: [0.70,0.63,0.53,0.43,0.32,0.21,0.12,0.05,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "is",      label: '"is"',      group: "input",  color: "--c-is",      dash: "4,3",
+    vals: [0.60,0.50,0.38,0.26,0.15,0.07,0.02,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "mars",    label: '"Mars"',    group: "jspace", color: "--c-mars",    dash: "",
+    vals: [0.00,0.02,0.08,0.18,0.34,0.52,0.70,0.84,0.90,0.88,0.80,0.68,0.52,0.36,0.22,0.11,0.04,0.01,0.00,0.00,0.00] },
+  { key: "space",   label: '"space"',   group: "jspace", color: "--c-space",   dash: "",
+    vals: [0.00,0.01,0.04,0.10,0.20,0.32,0.40,0.43,0.40,0.33,0.24,0.15,0.08,0.03,0.01,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "rocky",   label: '"rocky"',   group: "jspace", color: "--c-rocky",   dash: "",
+    vals: [0.00,0.00,0.02,0.06,0.14,0.22,0.27,0.27,0.23,0.17,0.11,0.06,0.02,0.01,0.00,0.00,0.00,0.00,0.00,0.00,0.00] },
+  { key: "red",     label: '"red"',     group: "output", color: "--c-red",     dash: "",
+    vals: [0.00,0.00,0.00,0.01,0.04,0.10,0.20,0.34,0.50,0.64,0.76,0.86,0.93,0.97,0.99,1.00,1.00,1.00,1.00,1.00,1.00] },
+  { key: "crimson", label: '"crimson"', group: "output", color: "--c-crimson", dash: "",
+    vals: [0.00,0.00,0.00,0.00,0.02,0.06,0.13,0.22,0.30,0.34,0.32,0.26,0.18,0.10,0.05,0.02,0.00,0.00,0.00,0.00,0.00] },
+];
+
+const W = 660, H = 300;
+const PAD = { top: 36, right: 16, bottom: 36, left: 36 };
+const iW = W - PAD.left - PAD.right;
+const iH = H - PAD.top - PAD.bottom;
+
+const svg = document.getElementById("chart");
+svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+function ns(tag, attrs = {}) {
+  const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, v);
+  return e;
+}
+
+function appendTo(parent, el) { parent.appendChild(el); return el; }
+
+function sx(layer) { return PAD.left + (layer / 100) * iW; }
+function sy(v)     { return PAD.top + iH - v * iH; }
+
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// Zone backgrounds
+const zones = [
+  { x1: 0,  x2: 38, fill: "var(--zone-input)",  label: "Input zone",  labelX: 19,  labelY: PAD.top - 10 },
+  { x1: 38, x2: 92, fill: "var(--zone-jspace)", label: "J-space",     labelX: 65,  labelY: PAD.top - 10 },
+  { x1: 92, x2: 100,fill: "var(--zone-output)", label: "Output zone", labelX: 96,  labelY: PAD.top - 10 },
+];
+
+zones.forEach(z => {
+  appendTo(svg, ns("rect", {
+    x: sx(z.x1), y: PAD.top,
+    width: sx(z.x2) - sx(z.x1), height: iH,
+    fill: z.fill
+  }));
+  const t = appendTo(svg, ns("text", {
+    x: sx(z.labelX), y: z.labelY,
+    "text-anchor": "middle",
+    "font-size": "9.5",
+    "font-family": "system-ui, sans-serif",
+    "letter-spacing": "0.06em",
+    "text-transform": "uppercase",
+    fill: "var(--text-muted)",
+    opacity: "0.8"
+  }));
+  t.textContent = z.label.toUpperCase();
+});
+
+// Zone dividers
+[38, 92].forEach(l => {
+  appendTo(svg, ns("line", {
+    x1: sx(l), y1: PAD.top - 4,
+    x2: sx(l), y2: PAD.top + iH,
+    stroke: "var(--border)", "stroke-width": 1,
+    "stroke-dasharray": "3,3"
+  }));
+});
+
+// Horizontal grid
+[0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
+  appendTo(svg, ns("line", {
+    x1: PAD.left, y1: sy(v),
+    x2: PAD.left + iW, y2: sy(v),
+    stroke: "var(--grid)", "stroke-width": 1
+  }));
+  if (v > 0) {
+    const t = appendTo(svg, ns("text", {
+      x: PAD.left - 5, y: sy(v) + 3.5,
+      "text-anchor": "end",
+      "font-size": "9",
+      "font-family": "ui-monospace, monospace",
+      fill: "var(--text-muted)"
+    }));
+    t.textContent = v.toFixed(2);
+  }
+});
+
+// X-axis ticks
+[0, 20, 40, 60, 80, 100].forEach(l => {
+  const t = appendTo(svg, ns("text", {
+    x: sx(l), y: PAD.top + iH + 14,
+    "text-anchor": "middle",
+    "font-size": "9",
+    "font-family": "ui-monospace, monospace",
+    fill: "var(--text-muted)"
+  }));
+  t.textContent = l;
+});
+
+// X-axis label
+const xLabel = appendTo(svg, ns("text", {
+  x: PAD.left + iW / 2, y: H - 2,
+  "text-anchor": "middle",
+  "font-size": "9",
+  "font-family": "system-ui, sans-serif",
+  "letter-spacing": "0.04em",
+  fill: "var(--text-muted)"
+}));
+xLabel.textContent = "LAYER";
+
+// Lines
+concepts.forEach(c => {
+  const pts = layers.map((l, i) => `${sx(l)},${sy(c.vals[i])}`).join(" ");
+  const line = appendTo(svg, ns("polyline", {
+    points: pts,
+    fill: "none",
+    stroke: `var(${c.color})`,
+    "stroke-width": c.group === "input" ? 1.5 : 2,
+    "stroke-dasharray": c.dash || "none",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+    opacity: c.group === "input" ? 0.6 : 1
+  }));
+});
+
+// Highlight: Mars peak dot + label
+const marsConcept = concepts.find(c => c.key === "mars");
+const marsMaxIdx = marsConcept.vals.indexOf(Math.max(...marsConcept.vals));
+const mpx = sx(layers[marsMaxIdx]), mpy = sy(marsConcept.vals[marsMaxIdx]);
+
+appendTo(svg, ns("circle", {
+  cx: mpx, cy: mpy, r: 4,
+  fill: "var(--c-mars)", stroke: "var(--bg-panel)", "stroke-width": 2
+}));
+
+// End dot for red
+const redConcept = concepts.find(c => c.key === "red");
+appendTo(svg, ns("circle", {
+  cx: sx(100), cy: sy(1.0), r: 4,
+  fill: "var(--c-red)", stroke: "var(--bg-panel)", "stroke-width": 2
+}));
+
+// Hover crosshair + tooltip
+const crosshair = appendTo(svg, ns("line", {
+  x1: 0, y1: PAD.top, x2: 0, y2: PAD.top + iH,
+  stroke: "var(--text-muted)", "stroke-width": 1,
+  "stroke-dasharray": "3,3", opacity: 0
+}));
+
+const hitArea = appendTo(svg, ns("rect", {
+  x: PAD.left, y: PAD.top,
+  width: iW, height: iH,
+  fill: "transparent", cursor: "crosshair"
+}));
+
+const tooltip = document.getElementById("tooltip");
+
+hitArea.addEventListener("mousemove", e => {
+  const rect = svg.getBoundingClientRect();
+  const scaleX = W / rect.width;
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const fraction = Math.max(0, Math.min(1, (mouseX - PAD.left) / iW));
+  const layerVal = Math.round(fraction * 100);
+
+  // Find nearest layer index
+  let nearestIdx = 0;
+  let minDist = Infinity;
+  layers.forEach((l, i) => {
+    const d = Math.abs(l - layerVal);
+    if (d < minDist) { minDist = d; nearestIdx = i; }
+  });
+
+  const cx = sx(layers[nearestIdx]);
+  crosshair.setAttribute("x1", cx);
+  crosshair.setAttribute("x2", cx);
+  crosshair.setAttribute("opacity", 0.5);
+
+  const activeRows = concepts
+    .map(c => ({ ...c, v: c.vals[nearestIdx] }))
+    .filter(c => c.v > 0.01)
+    .sort((a, b) => b.v - a.v);
+
+  let html = `<div class="tooltip-layer">Layer ${layers[nearestIdx]}</div>`;
+  activeRows.forEach(c => {
+    const col = getComputedStyle(document.documentElement).getPropertyValue(c.color).trim();
+    html += `<div class="tooltip-row">
+      <span class="tooltip-dot" style="background:${col}"></span>
+      <span class="tooltip-name">${c.label}</span>
+      <span class="tooltip-val">${c.v.toFixed(2)}</span>
+    </div>`;
+  });
+
+  tooltip.innerHTML = html;
+  tooltip.classList.add("visible");
+
+  const tx = e.clientX + 16;
+  const ty = e.clientY - 10;
+  tooltip.style.left = Math.min(tx, window.innerWidth - 200) + "px";
+  tooltip.style.top = ty + "px";
+});
+
+hitArea.addEventListener("mouseleave", () => {
+  crosshair.setAttribute("opacity", 0);
+  tooltip.classList.remove("visible");
+});
+</script>
+</body>
+</html>

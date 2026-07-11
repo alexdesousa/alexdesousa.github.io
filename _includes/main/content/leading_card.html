@@ -16,6 +16,7 @@
 <a href="{{ latest.id }}" class="flex flex-col md:flex-row border-2 border-brdr bg-card shadow-neo-lg no-underline text-ink neo-hover-lg overflow-hidden">
   <div class="relative flex-none md:w-[58%] min-h-[340px] flex items-end p-4" style="background-image:url('{{ latest_image }}'); background-size:cover; background-position:center;">
     <span class="absolute top-4 left-4 bg-accent text-black text-[0.6rem] font-bold tracking-[0.15em] uppercase px-2 py-0.5 border-2 border-black shadow-[2px_2px_0_#000]">NEW</span>
+    {%- if latest.image_author -%}<span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by {{ latest.image_author }}</span>{%- endif -%}
   </div>
   <div class="flex flex-col flex-1 p-7 border-t-2 md:border-t-0 md:border-l-2 border-brdr">
     <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri mb-3.5">{% if category %}{{ category }} · {% endif %}{{ read_time | upcase }}</span>

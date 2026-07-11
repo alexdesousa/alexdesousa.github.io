@@ -1,0 +1,62 @@
+{%- assign lang = include.lang | default: "en" -%}
+{%- if page.series -%}
+{%- assign series_posts = site.posts | where: "series", page.series | sort: "series_order" -%}
+{%- assign series_label = site.data.defaults.t[lang].series_label | default: "SERIES" -%}
+{%- assign total = series_posts | size -%}
+{%- assign cur = page.series_order -%}
+{%- if cur == 1 -%}
+  {%- assign window_min = 1 -%}
+  {%- assign window_max = 3 -%}
+{%- elsif cur == total -%}
+  {%- assign window_min = total | minus: 2 -%}
+  {%- assign window_max = total -%}
+{%- else -%}
+  {%- assign window_min = cur | minus: 1 -%}
+  {%- assign window_max = cur | plus: 1 -%}
+{%- endif -%}
+{%- assign hidden_count = total | minus: 3 -%}
+{%- if hidden_count < 0 -%}{%- assign hidden_count = 0 -%}{%- endif -%}
+<div class="mb-8">
+  <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-3">
+    {{ series_label }}
+    <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
+  </div>
+  <div class="border-2 border-brdr bg-card shadow-neo p-4">
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2">
+      {%- for p in series_posts -%}
+      {%- if p.series_order >= window_min and p.series_order <= window_max -%}
+      <li class="flex items-baseline gap-2.5">
+      {%- else -%}
+      <li class="flex items-baseline gap-2.5" style="display:none" data-series-extra>
+      {%- endif -%}
+        <span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">{{ p.series_order }}</span>
+        {%- if p.ref == page.ref -%}
+        <span class="text-[0.82rem] font-bold text-ink leading-snug">{{ p.title }}</span>
+        {%- else -%}
+        <a href="{{ p.id }}" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">{{ p.title }}</a>
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ol>
+    {%- if hidden_count > 0 -%}
+    <button id="series-toggle" class="mt-3 text-[0.62rem] font-bold tracking-[0.18em] uppercase text-muted hover:text-pri cursor-pointer bg-transparent border-0 p-0">
+      Show all &middot; {{ total }} posts
+    </button>
+    <script>
+      (function() {
+        var btn = document.getElementById('series-toggle');
+        var extras = document.querySelectorAll('[data-series-extra]');
+        var expanded = false;
+        btn.addEventListener('click', function() {
+          expanded = !expanded;
+          extras.forEach(function(el) {
+            el.style.display = expanded ? 'flex' : 'none';
+          });
+          btn.textContent = expanded ? 'Show less' : 'Show all · {{ total }} posts';
+        });
+      })();
+    </script>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}

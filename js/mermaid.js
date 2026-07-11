@@ -1,9 +1,21 @@
 import mermaid from 'mermaid';
 
-document.addEventListener('DOMContentLoaded', function() {
-  var theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
-  mermaid.initialize({ startOnLoad: false, theme: theme });
+function getTheme() {
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+}
 
+function renderDiagrams() {
+  mermaid.initialize({ startOnLoad: false, theme: getTheme(), useMaxWidth: true });
+  document.querySelectorAll('.mermaid').forEach(function(el) {
+    if (el.dataset.source) {
+      el.removeAttribute('data-processed');
+      el.textContent = el.dataset.source;
+    }
+  });
+  mermaid.run();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('pre code.language-mermaid').forEach(function(el) {
     var div = document.createElement('div');
     div.className = 'mermaid';
@@ -11,5 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     el.closest('pre').replaceWith(div);
   });
 
-  mermaid.run();
+  document.querySelectorAll('.mermaid').forEach(function(el) {
+    el.dataset.source = el.textContent.trim();
+  });
+
+  renderDiagrams();
+
+  var originalToggle = window.toggleTheme;
+  window.toggleTheme = function() {
+    originalToggle();
+    renderDiagrams();
+  };
 });

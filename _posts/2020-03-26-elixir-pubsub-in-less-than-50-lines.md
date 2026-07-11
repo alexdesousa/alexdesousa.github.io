@@ -5,7 +5,6 @@ ref: "Elixir-pub-sub-in-less-than-50-lines"
 title: "Elixir Pubsub In Less Than 50 Lines"
 description: "A small Elixir pubsub implementation using built-in module :pg2"
 image: web.jpg
-image_link: "https://unsplash.com/photos/kME9jbKd--s"
 image_author: "Nathan Dumlao"
 handle: alex
 tags: [elixir]

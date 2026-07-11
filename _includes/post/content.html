@@ -1,5 +1,6 @@
 {%- assign lang = include.lang | default: "en" -%}
 <div class="max-w-[720px] mx-auto px-6 py-8">
+  {%- include post/content/series.html lang=lang -%}
   <article id="post-content" class="prose">
     {{ content }}
   </article>

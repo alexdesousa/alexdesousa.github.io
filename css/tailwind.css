@@ -236,6 +236,10 @@ html { font-size: 14px; }
 .highlight .vi { color: #f8f8f2 }
 .highlight .il { color: #ae81ff }
 
+/* ── Mermaid diagrams ── */
+.prose .mermaid { display: block; width: 100%; overflow-x: auto; margin: 1.5rem 0 2rem; }
+.prose .mermaid svg { width: 100%; height: auto; }
+
 /* ── YouTube embed ── */
 .youtube-video { position: relative; padding-top: 57%; }
 .youtube-video > iframe { position: absolute; width: 100%; height: 100%; left: 0; top: 0; }

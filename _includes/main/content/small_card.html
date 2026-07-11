@@ -13,7 +13,8 @@
 {%- assign category = post.categories | first | default: post.tags | first | upcase -%}
 {%- capture read_time -%}{%- include main/read_time.html lang=lang post=post -%}{%- endcapture -%}
 <a href="{{ post.id }}" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
-  <div class="w-full h-40 flex items-end p-2.5 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ post_image }}'); background-size:cover; background-position:center;">
+  <div class="relative w-full h-40 flex items-end p-2.5 border-b-2 border-brdr flex-shrink-0" style="background-image:url('{{ post_image }}'); background-size:cover; background-position:center;">
+    {%- if post.image_author -%}<span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by {{ post.image_author }}</span>{%- endif -%}
   </div>
   <div class="flex flex-col flex-1 p-4 pb-3.5">
     <span class="text-[0.62rem] font-bold tracking-[0.15em] uppercase text-pri mb-2">{% if category %}{{ category }} · {% endif %}{{ read_time | upcase }}</span>
