@@ -127,15 +127,9 @@ which steps do is most of the architectural work.
 configures its own model provider independently. The orchestrator can call a frontier API
 while workers call a local endpoint. The team doesn't need to change.
 
-<!--
 In the [next post](/building-planck-introducing-planck), we introduce Planck properly: what
 it is, how it works, and how context, specialization, and model routing come together in a
 single system.
--->
-
-In the next post of this series, we'll introduce Planck properly: what
-it is, how it works, and how context, specialization, and model routing come
-together in a single system.
 
 > Frontier for thinking. Local for doing.
 
