@@ -14,7 +14,7 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Sat, 11 Jul 2026 08:10:13 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 Jul 2026 14:12:25 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
           <title>J-Space: Where AI Thoughts Live</title>
@@ -199,6 +199,376 @@ completely opaque. That is new.</p>
           </content:encoded>
         </item>
         <item>
+          <title>Building Planck #4: Introducing Planck, an Agent Harness in Elixir</title>
+          <description>Three constraints shaped Planck: context, specialization, and model cost. Here is what an AI agent framework looks like when you build on OTP.</description>
+          <guid>https://thebroken.link/building-planck-introducing-planck/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/building-planck-introducing-planck/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>The first three posts in this series each identified a constraint:</p>
+
+<ol>
+  <li>Context is quadratically expensive. Keep it small.</li>
+  <li>One agent cannot focus on everything. Build a team.</li>
+  <li>Most steps don’t need the most advanced model. Route accordingly.</li>
+</ol>
+
+<p>Those three constraints shaped <a href="https://thebroken.link/planck">Planck</a>.
+The framework doesn’t enforce them, but its structure nudges you toward all three.</p>
+
+<h2 id="what-is-an-agent-harness">What is an Agent Harness</h2>
+
+<p>If the model is the brains and context is the memory, the harness is the body. It gives
+the model a way to act: read files, call APIs, run commands, delegate to other agents.</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart LR
+    subgraph Agent["Agent = model + context + harness"]
+        M["Model\n(reasons)"]
+        C["Context\n(sees)"]
+        H["Harness\n(acts)"]
+        H --&gt;|"assembles"| C
+        C --&gt; M
+        M --&gt;|"tool calls"| H
+    end
+    W["World\n(files · APIs · shell)"]
+    H --&gt;|"executes"| W
+    W --&gt;|"results"| H
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>The harness assembles context, feeds it to the model, and executes what the model returns.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart LR
+    subgraph Agent["Agent = model + context + harness"]
+        M["Model\n(reasons)"]
+        C["Context\n(sees)"]
+        H["Harness\n(acts)"]
+        H --&gt;|"assembles"| C
+        C --&gt; M
+        M --&gt;|"tool calls"| H
+    end
+    W["World\n(files · APIs · shell)"]
+    H --&gt;|"executes"| W
+    W --&gt;|"results"| H
+</code></div>
+</figure>
+
+<h2 id="the-name">The Name</h2>
+
+<p>Planck is named after the Planck length, the smallest meaningful distance in physics. The
+philosophy transfers: <strong>agents should be as small as meaningful</strong>. One job, one system prompt,
+one focused tool list. A team of specialized agents.</p>
+
+<h2 id="the-language">The Language</h2>
+
+<p>Agents are concurrent processes that send messages to each other, fail independently, and
+need supervision. That is exactly what the BEAM was designed for. The EVM handles tens of
+thousands of lightweight processes natively, with built-in message passing, fault isolation,
+and supervision trees.</p>
+
+<p>With all those features covered in the runtime, I only needed to implement the agent logic.</p>
+
+<blockquote>
+  <p>An AI agent team is a supervision tree. Each agent is a process.</p>
+</blockquote>
+
+<h2 id="the-foundations">The Foundations</h2>
+
+<p>Planck is organized as three libraries that can be used independently or composed together.
+The monorepo also ships <a href="https://github.com/alexdesousa/planck/tree/main/planck_cli"><code class="language-plaintext highlighter-rouge">planck_cli</code></a>,
+a complete web agent harness built on the three libraries.</p>
+
+<figure class="flex flex-col items-center w-full mx-auto my-6">
+  <div class="mermaid">
+flowchart TB
+    CLI["planck_cli\n(App: Web UI + HTTP API)"]
+    HL["planck_headless\n(Lib: Sessions · Config · Teams · Sidecar)"]
+    AG["planck_agent\n(Lib: Agent processes · PubSub · Tools)"]
+    AI["planck_ai\n(Lib: LLM abstraction · Streaming · Models)"]
+    SC["Sidecar\n(App: Custom tools)"]
+
+    CLI --&gt; HL
+    HL --&gt; AG
+    AG --&gt; AI
+    HL -. connects .-&gt; SC
+</div>
+  <figcaption class="text-center text-sm italic mt-3 text-muted">
+    <p>Each library has a single responsibility. Sidecar tools extend the pool without touching the core.</p>
+
+  </figcaption>
+  <div class="sr-only"><code>
+flowchart TB
+    CLI["planck_cli\n(App: Web UI + HTTP API)"]
+    HL["planck_headless\n(Lib: Sessions · Config · Teams · Sidecar)"]
+    AG["planck_agent\n(Lib: Agent processes · PubSub · Tools)"]
+    AI["planck_ai\n(Lib: LLM abstraction · Streaming · Models)"]
+    SC["Sidecar\n(App: Custom tools)"]
+
+    CLI --&gt; HL
+    HL --&gt; AG
+    AG --&gt; AI
+    HL -. connects .-&gt; SC
+</code></div>
+</figure>
+
+<ul>
+  <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_ai"><code class="language-plaintext highlighter-rouge">planck_ai</code></a> is the LLM abstraction
+layer. Built on top of <a href="https://github.com/agentjido/req_llm"><code class="language-plaintext highlighter-rouge">req_llm</code></a>,
+it provides typed structs, a streaming event protocol, and a provider-agnostic API that
+speaks to Anthropic, Google and any OpenAI-compatible endpoint.</li>
+  <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_agent"><code class="language-plaintext highlighter-rouge">planck_agent</code></a> is the agent
+core. Each agent is a <code class="language-plaintext highlighter-rouge">GenServer</code> that manages its own conversation history,
+handles tool calls, and publishes events over Phoenix <code class="language-plaintext highlighter-rouge">PubSub</code>.</li>
+  <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_headless"><code class="language-plaintext highlighter-rouge">planck_headless</code></a> is
+the application layer. It owns configuration (from JSON files,
+environment variables, or application config), loads resources at startup
+(teams, skills, models), manages session lifecycles, and handles the
+optional sidecar connection.</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">planck_headless</code> also supports the sidecar: an optional app that adds custom tools without
+touching the core libraries (more on that later).</p>
+
+<h2 id="the-principles">The Principles</h2>
+
+<p>In a Planck team definition, we can see the three principles in action. A team lives in a
+directory under <code class="language-plaintext highlighter-rouge">.planck/teams/</code>. The <code class="language-plaintext highlighter-rouge">TEAM.json</code> file declares its members:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dev-team"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A planner, builder, and reviewer for software tasks."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"members"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w">          </span><span class="s2">"orchestrator"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"provider"</span><span class="p">:</span><span class="w">      </span><span class="s2">"anthropic"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"model_id"</span><span class="p">:</span><span class="w">      </span><span class="s2">"claude-sonnet-4-6"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"system_prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"members/orchestrator.md"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tools"</span><span class="p">:</span><span class="w">         </span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"list_team"</span><span class="p">,</span><span class="w"> </span><span class="s2">"call_agent"</span><span class="p">,</span><span class="w"> </span><span class="s2">"interrupt_agent"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w">          </span><span class="s2">"planner"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"provider"</span><span class="p">:</span><span class="w">      </span><span class="s2">"anthropic"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"model_id"</span><span class="p">:</span><span class="w">      </span><span class="s2">"claude-opus-4-8"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"system_prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"members/planner.md"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tools"</span><span class="p">:</span><span class="w">         </span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"write"</span><span class="p">,</span><span class="w"> </span><span class="s2">"edit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"respond_agent"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w">          </span><span class="s2">"builder"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"provider"</span><span class="p">:</span><span class="w">      </span><span class="s2">"local_gemma"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"model_id"</span><span class="p">:</span><span class="w">      </span><span class="s2">"gemma-4-12b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"system_prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"members/builder.md"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tools"</span><span class="p">:</span><span class="w">         </span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"write"</span><span class="p">,</span><span class="w"> </span><span class="s2">"edit"</span><span class="p">,</span><span class="w"> </span><span class="s2">"bash"</span><span class="p">,</span><span class="w"> </span><span class="s2">"respond_agent"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"skills"</span><span class="p">:</span><span class="w">        </span><span class="p">[</span><span class="s2">"elixir-dev"</span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w">          </span><span class="s2">"reviewer"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"provider"</span><span class="p">:</span><span class="w">      </span><span class="s2">"local_qwen"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"model_id"</span><span class="p">:</span><span class="w">      </span><span class="s2">"qwen3.6-27b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"system_prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"members/reviewer.md"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tools"</span><span class="p">:</span><span class="w">         </span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"send_agent"</span><span class="p">,</span><span class="w"> </span><span class="s2">"respond_agent"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The team definition itself reflects all three principles. Each agent has:</p>
+
+<ul>
+  <li>Their own system prompt, tools and skills:
+<a href="/building-planck-context-is-the-real-problem">keep context small</a>,</li>
+  <li>Their own clear role within the workflow:
+<a href="/building-planck-specialized-teams-vs-general-agents">build a specialized team</a>,</li>
+  <li>Their own model, matched to how much reasoning the step actually needs:
+<a href="/building-planck-the-20-80-split">route accordingly</a>.</li>
+</ul>
+
+<blockquote>
+  <p>We can’t prompt our way around a missing tool. And we can’t accidentally grant one.</p>
+</blockquote>
+
+<h2 id="the-tools">The Tools</h2>
+
+<p>Planck has several built-in tools, organized in four categories: basic tools,
+inter-agent tools, skill tools, and informational tools.</p>
+
+<h3 id="basic-tools">Basic Tools</h3>
+
+<p>They are the basic tools an agent needs to interact with its environment:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">read</code>: reads files with offset and limit support</li>
+  <li><code class="language-plaintext highlighter-rouge">write</code>: creates or overwrites files</li>
+  <li><code class="language-plaintext highlighter-rouge">edit</code>: replaces exact strings; the surgical alternative to rewriting</li>
+  <li><code class="language-plaintext highlighter-rouge">bash</code>: runs shell commands, with process group cleanup on timeout</li>
+</ul>
+
+<h3 id="inter-agent-tools">Inter-agent Tools</h3>
+
+<p>Inter-agent tools are how agents talk to each other. They are the mechanism behind the
+team model:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">call_agent</code>: sends a task to another agent and blocks until it responds. Use when the
+result is needed before continuing. The target agent calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done.</li>
+  <li><code class="language-plaintext highlighter-rouge">send_agent</code>: sends a task and returns immediately. The target agent works in parallel
+and calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done.</li>
+  <li><code class="language-plaintext highlighter-rouge">respond_agent</code>: signals completion back to the delegator. Every worker that receives
+work via <code class="language-plaintext highlighter-rouge">send_agent</code> uses this to return its result.</li>
+  <li><code class="language-plaintext highlighter-rouge">spawn_agent</code>: orchestrator-only. Creates a new worker at runtime with a given role,
+system prompt, and tool list. The team can grow dynamically without restarting.</li>
+  <li><code class="language-plaintext highlighter-rouge">destroy_agent</code>: terminates a worker permanently and removes it from the team.</li>
+  <li><code class="language-plaintext highlighter-rouge">interrupt_agent</code>: aborts a worker’s current turn without terminating it. The
+worker stays alive and returns to idle.</li>
+</ul>
+
+<h3 id="skill-tools">Skill Tools</h3>
+
+<p>A skill is a reusable markdown file an agent can load on demand: a rubric, a style guide,
+a set of procedures. When skills are configured, two tools are injected automatically
+without any <code class="language-plaintext highlighter-rouge">TEAM.json</code> declaration:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">load_skill</code>: loads a skill’s full instructions by name. Every agent gets this
+automatically.</li>
+  <li><code class="language-plaintext highlighter-rouge">list_skills</code>: lists all available skills in the pool. Orchestrators get this
+automatically; workers opt in by declaring it in their <code class="language-plaintext highlighter-rouge">"tools"</code> array.</li>
+</ul>
+
+<h3 id="informational-tools">Informational Tools</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">list_team</code>: returns all agents in the team with their type, name, description, and
+status. Pass <code class="language-plaintext highlighter-rouge">verbose: true</code> to also get tool names and model per member, useful when
+reasoning about which worker to delegate a task to.</li>
+  <li><code class="language-plaintext highlighter-rouge">list_models</code>: orchestrator-only. Returns all configured and connected models available
+for spawning agents, including provider, context window, and base URL.</li>
+</ul>
+
+<h2 id="the-events">The Events</h2>
+
+<p>Planck’s communication model has two layers.</p>
+
+<p><strong>Between agents</strong>, all communication is message passing via the inter-agent tools.</p>
+
+<p><strong>Between Planck and the outside world</strong>, communication is events. Every agent publishes to
+a PubSub topic. Any process that subscribes gets a real-time stream:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">session_id</span><span class="p">}</span> <span class="o">=</span> <span class="no">Planck</span><span class="o">.</span><span class="no">Headless</span><span class="o">.</span><span class="n">start_session</span><span class="p">(</span><span class="ss">template:</span> <span class="s2">"dev-team"</span><span class="p">)</span>
+
+<span class="no">Phoenix</span><span class="o">.</span><span class="no">PubSub</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="no">Planck</span><span class="o">.</span><span class="no">Agent</span><span class="o">.</span><span class="no">PubSub</span><span class="p">,</span> <span class="s2">"session:</span><span class="si">#{</span><span class="n">session_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="no">Planck</span><span class="o">.</span><span class="no">Headless</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="n">session_id</span><span class="p">,</span> <span class="s2">"Refactor lib/auth.ex into a separate module"</span><span class="p">)</span>
+
+<span class="k">receive</span> <span class="k">do</span>
+  <span class="p">{</span><span class="ss">:agent_event</span><span class="p">,</span> <span class="ss">:text_delta</span><span class="p">,</span> <span class="p">%{</span><span class="ss">text:</span> <span class="n">chunk</span><span class="p">}}</span> <span class="o">-&gt;</span> <span class="no">IO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+  <span class="p">{</span><span class="ss">:agent_event</span><span class="p">,</span> <span class="ss">:turn_end</span><span class="p">,</span> <span class="n">_</span><span class="p">}</span>                <span class="o">-&gt;</span> <span class="ss">:done</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The subscriber never reaches into agent internals. It sends a prompt and listens for
+events: <code class="language-plaintext highlighter-rouge">:text_delta</code>, <code class="language-plaintext highlighter-rouge">:turn_start</code>, <code class="language-plaintext highlighter-rouge">:turn_end</code>, <code class="language-plaintext highlighter-rouge">:tool_start</code>, <code class="language-plaintext highlighter-rouge">:tool_end</code>,
+<code class="language-plaintext highlighter-rouge">:usage_delta</code>, <code class="language-plaintext highlighter-rouge">:worker_spawned</code>.</p>
+
+<h2 id="the-sidecar">The Sidecar</h2>
+
+<p>The builtin tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
+application that connects over distributed Erlang. Database queries, API calls, specialized
+analyzers: anything the core doesn’t ship with.</p>
+
+<p>The sidecar implements one callback:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defmodule</span> <span class="no">MySidecar</span><span class="o">.</span><span class="no">Planck</span> <span class="k">do</span>
+  <span class="kn">use</span> <span class="no">Planck</span><span class="o">.</span><span class="no">Agent</span><span class="o">.</span><span class="no">Sidecar</span>
+
+  <span class="nv">@impl</span> <span class="no">true</span>
+  <span class="k">def</span> <span class="n">tools</span> <span class="k">do</span>
+    <span class="p">[</span>
+      <span class="no">Planck</span><span class="o">.</span><span class="no">Agent</span><span class="o">.</span><span class="no">Tool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+        <span class="ss">name:</span> <span class="s2">"run_tests"</span><span class="p">,</span>
+        <span class="ss">description:</span> <span class="s2">"Run the test suite and return output."</span><span class="p">,</span>
+        <span class="ss">parameters:</span> <span class="p">%{</span>
+          <span class="s2">"type"</span> <span class="o">=&gt;</span> <span class="s2">"object"</span><span class="p">,</span>
+          <span class="s2">"properties"</span> <span class="o">=&gt;</span> <span class="p">%{</span>
+            <span class="s2">"timeout_ms"</span> <span class="o">=&gt;</span> <span class="p">%{</span>
+              <span class="s2">"type"</span>        <span class="o">=&gt;</span> <span class="s2">"integer"</span><span class="p">,</span>
+              <span class="s2">"description"</span> <span class="o">=&gt;</span> <span class="s2">"Max milliseconds to wait (default 300000)"</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="ss">execute_fn:</span> <span class="k">fn</span> <span class="n">_agent_id</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">args</span> <span class="o">-&gt;</span>
+          <span class="n">timeout</span> <span class="o">=</span> <span class="no">Map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"timeout_ms"</span><span class="p">,</span> <span class="mi">300_000</span><span class="p">)</span>
+          <span class="k">case</span> <span class="no">System</span><span class="o">.</span><span class="n">cmd</span><span class="p">(</span><span class="s2">"mix"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"test"</span><span class="p">],</span> <span class="ss">timeout:</span> <span class="n">timeout</span><span class="p">)</span> <span class="k">do</span>
+            <span class="p">{</span><span class="n">output</span><span class="p">,</span> <span class="mi">0</span><span class="p">}</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">output</span><span class="p">}</span>
+            <span class="p">{</span><span class="n">output</span><span class="p">,</span> <span class="n">_</span><span class="p">}</span> <span class="o">-&gt;</span> <span class="p">{</span><span class="ss">:error</span><span class="p">,</span> <span class="n">output</span><span class="p">}</span>
+          <span class="k">end</span>
+        <span class="k">end</span>
+      <span class="p">)</span>
+    <span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When Planck starts, it connects to the sidecar node and calls <code class="language-plaintext highlighter-rouge">list_tools/0</code>. The returned
+tools are loaded into the resource pool and available to any agent that declares them. The
+sidecar can be as minimal as a single module or as rich as a full Phoenix application with
+its own database connection, supervision tree, and tests.</p>
+
+<p>The core library does not change regardless.</p>
+
+<blockquote>
+  <p>The sidecar is the extension point. The harness is the stable surface.</p>
+</blockquote>
+
+<h2 id="the-cli-web-ui">The <del>CLI</del> Web UI</h2>
+
+<p>I considered a TUI when starting the CLI harness. A terminal interface felt natural for a
+coding agent. But I didn’t want just a coding agent. I wanted a team of agents for different
+tasks.</p>
+
+<p>I wanted to have a better way to access it. A web UI allows me to host it on a server and reach
+it from any device with a browser. I no longer need to be in my shell. I can be on my phone,
+on my tablet, on a random toaster screen.</p>
+
+<p>A Phoenix LiveView application handles Markdown rendering, syntax-highlighted code blocks,
+streaming text, and a real-time sidebar showing each agent’s token usage and cost.</p>
+
+<p>The same Phoenix app also serves an HTTP/SSE API at <code class="language-plaintext highlighter-rouge">/api</code>. Any process that can make an
+HTTP request or consume a Server-Sent Events stream gets full access to the session.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET  /api/sessions              # list all sessions
+POST /api/sessions              # start a session
+POST /api/sessions/:id/prompt   # send a prompt
+GET  /api/sessions/:id/events   # SSE event stream
+</code></pre></div></div>
+
+<p>This API allows users to control Planck with other agent harnesses e.g., Claude Code could
+control a full Planck team remotely.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>The previous three posts described three independent constraints. Planck is where they
+connect: small agents with focused context, organized into specialized teams, routing each
+step to the right model.</p>
+
+<p><a href="https://hex.pm/packages/planck_ai"><code class="language-plaintext highlighter-rouge">planck_ai</code></a>, <a href="https://hex.pm/packages/planck_agent"><code class="language-plaintext highlighter-rouge">planck_agent</code></a>,
+and <a href="https://hex.pm/packages/planck_headless"><code class="language-plaintext highlighter-rouge">planck_headless</code></a> are each published to Hex as
+standalone libraries. You can use them independently to build your own harness, or start
+from Planck’s agent harness and extend it via the sidecar.</p>
+
+<p>In the next post, we package Planck into a self-contained Docker bundle and ship a sidecar
+with it: memory management, context compaction, credential handling, and hooks.</p>
+
+<blockquote>
+  <p>As small as meaningful. As focused as necessary. As local as possible.</p>
+</blockquote>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        <item>
           <title>Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</title>
           <description>Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them.</description>
           <guid>https://thebroken.link/building-planck-the-20-80-split/</guid>
@@ -347,15 +717,9 @@ which steps do is most of the architectural work.</p>
 configures its own model provider independently. The orchestrator can call a frontier API
 while workers call a local endpoint. The team doesn’t need to change.</p>
 
-<!--
-In the [next post](/building-planck-introducing-planck), we introduce Planck properly: what
+<p>In the <a href="/building-planck-introducing-planck">next post</a>, we introduce Planck properly: what
 it is, how it works, and how context, specialization, and model routing come together in a
-single system.
--->
-
-<p>In the next post of this series, we’ll introduce Planck properly: what
-it is, how it works, and how context, specialization, and model routing come
-together in a single system.</p>
+single system.</p>
 
 <blockquote>
   <p>Frontier for thinking. Local for doing.</p>

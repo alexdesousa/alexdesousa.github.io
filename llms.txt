@@ -14,6 +14,7 @@ Alex de Sousa is a software engineer specialising in Elixir and distributed syst
 
 ## Posts
 - [J-Space: Where AI Thoughts Live](https://thebroken.link/j-space-where-ai-thoughts-live/) — Anthropic just found a hidden workspace inside Claude where silent reasoning happens before a single token is written. Here is where it lives and how it works.
+- [Building Planck #4: Introducing Planck, an Agent Harness in Elixir](https://thebroken.link/building-planck-introducing-planck/) — Three constraints shaped Planck: context, specialization, and model cost. Here is what an AI agent framework looks like when you build on OTP.
 - [Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local](https://thebroken.link/building-planck-the-20-80-split/) — Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here's how to combine them.
 - [Building Planck #2: Specialized Teams vs General Agents](https://thebroken.link/building-planck-specialized-teams-vs-general-agents/) — Why one AI trying to do everything produces mediocre results and how to design teams that don't.
 - [Building Planck #1: Context Is the Real Problem](https://thebroken.link/building-planck-context-is-the-real-problem/) — Why giving your AI agent more context usually makes it worse and what to do instead.

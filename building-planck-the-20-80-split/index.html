@@ -40,7 +40,7 @@
   "headline": "Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local",
   "image": ["https://thebroken.link/building-planck-the-20-80-split/pareto.jpg"],
   "datePublished": "2026-05-15T00:00:00+00:00",
-  "dateModified": "2026-07-11T08:10:13+00:00",
+  "dateModified": "2026-07-13T14:12:25+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa",
@@ -121,7 +121,23 @@
     <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
   </div>
   <div class="border-2 border-brdr bg-card shadow-neo p-4">
-    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><a href="/building-planck-context-is-the-real-problem" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #1: Context Is the Real Problem</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</span></li></ol></div>
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5" style="display:none" data-series-extra><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><a href="/building-planck-context-is-the-real-problem" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #1: Context Is the Real Problem</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</span></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">4</span><a href="/building-planck-introducing-planck" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #4: Introducing Planck, an Agent Harness in Elixir</a></li></ol><button id="series-toggle" class="mt-3 text-[0.62rem] font-bold tracking-[0.18em] uppercase text-muted hover:text-pri cursor-pointer bg-transparent border-0 p-0">
+      Show all &middot; 4 posts
+    </button>
+    <script>
+      (function() {
+        var btn = document.getElementById('series-toggle');
+        var extras = document.querySelectorAll('[data-series-extra]');
+        var expanded = false;
+        btn.addEventListener('click', function() {
+          expanded = !expanded;
+          extras.forEach(function(el) {
+            el.style.display = expanded ? 'flex' : 'none';
+          });
+          btn.textContent = expanded ? 'Show less' : 'Show all · 4 posts';
+        });
+      })();
+    </script></div>
 </div><article id="post-content" class="prose">
     <p>We fixed the context. Now look at our bill.</p>
 
@@ -264,15 +280,9 @@ which steps do is most of the architectural work.</p>
 configures its own model provider independently. The orchestrator can call a frontier API
 while workers call a local endpoint. The team doesn’t need to change.</p>
 
-<!--
-In the [next post](/building-planck-introducing-planck), we introduce Planck properly: what
+<p>In the <a href="/building-planck-introducing-planck">next post</a>, we introduce Planck properly: what
 it is, how it works, and how context, specialization, and model routing come together in a
-single system.
--->
-
-<p>In the next post of this series, we’ll introduce Planck properly: what
-it is, how it works, and how context, specialization, and model routing come
-together in a single system.</p>
+single system.</p>
 
 <blockquote>
   <p>Frontier for thinking. Local for doing.</p>
@@ -312,7 +322,13 @@ together in a single system.</p>
     MORE POSTS
     <span class="flex-1 h-0.5 bg-brdr opacity-25"></span>
   </div>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/building-planck-specialized-teams-vs-general-agents" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5"><a href="/building-planck-introducing-planck" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
+      <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-introducing-planck/distance.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Ryunosuke Kikuno</span></div>
+      <div class="p-4">
+        <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">ELIXIR · 5 MIN READ</span>
+        <h3 class="text-[0.88rem] font-bold leading-snug">Building Planck #4: Introducing Planck, an Agent Harness in Elixir</h3>
+      </div>
+    </a><a href="/building-planck-specialized-teams-vs-general-agents" class="flex flex-col border-2 border-brdr bg-card shadow-neo no-underline text-ink neo-hover overflow-hidden">
       <div class="relative w-full h-32 border-b-2 border-brdr flex-shrink-0" style="background-image:url('/building-planck-specialized-teams-vs-general-agents/team.jpg'); background-size:cover; background-position:center;"><span class="absolute bottom-2 right-2 bg-pri text-white text-[0.55rem] px-1.5 py-0.5">Photo by Hannah Busing</span></div>
       <div class="p-4">
         <span class="text-[0.6rem] font-bold tracking-[0.15em] uppercase text-pri block mb-1.5">AI · 2 MIN READ</span>

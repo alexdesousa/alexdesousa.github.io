@@ -18,6 +18,17 @@
       <category>transformers</category>
     </item>
     <item>
+      <title>Building Planck #4: Introducing Planck, an Agent Harness in Elixir</title>
+      <description>Three constraints shaped Planck: context, specialization, and model cost. Here is what an AI agent framework looks like when you build on OTP.</description>
+      <link>https://thebroken.link/building-planck-introducing-planck/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-introducing-planck/</guid>
+      <pubDate>Sat, 16 May 2026 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+      <category>ai</category>
+      <category>agents</category>
+      <category>planck</category>
+    </item>
+    <item>
       <title>Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</title>
       <description>Frontier models are brilliant but expensive. Local models are fast and cheap but need guidance. Here&apos;s how to combine them.</description>
       <link>https://thebroken.link/building-planck-the-20-80-split/</link>

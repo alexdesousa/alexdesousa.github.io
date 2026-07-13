@@ -40,7 +40,7 @@
   "headline": "Building Planck #1: Context Is the Real Problem",
   "image": ["https://thebroken.link/building-planck-context-is-the-real-problem/books.jpg"],
   "datePublished": "2026-04-30T00:00:00+00:00",
-  "dateModified": "2026-07-11T08:10:13+00:00",
+  "dateModified": "2026-07-13T14:12:25+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa",
@@ -121,7 +121,23 @@
     <span class="flex-1 h-0.5 bg-brdr opacity-25 block"></span>
   </div>
   <div class="border-2 border-brdr bg-card shadow-neo p-4">
-    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #1: Context Is the Real Problem</span></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><a href="/building-planck-the-20-80-split" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</a></li></ol></div>
+    <ol id="series-list" class="list-none m-0 p-0 space-y-2"><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">1</span><span class="text-[0.82rem] font-bold text-ink leading-snug">Building Planck #1: Context Is the Real Problem</span></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">2</span><a href="/building-planck-specialized-teams-vs-general-agents" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #2: Specialized Teams vs General Agents</a></li><li class="flex items-baseline gap-2.5"><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">3</span><a href="/building-planck-the-20-80-split" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #3: The 20/80 Split: Why the Future Is Mostly Local</a></li><li class="flex items-baseline gap-2.5" style="display:none" data-series-extra><span class="text-[0.65rem] font-bold text-muted tabular-nums w-4 flex-shrink-0 text-right">4</span><a href="/building-planck-introducing-planck" class="text-[0.82rem] text-muted hover:text-pri no-underline leading-snug">Building Planck #4: Introducing Planck, an Agent Harness in Elixir</a></li></ol><button id="series-toggle" class="mt-3 text-[0.62rem] font-bold tracking-[0.18em] uppercase text-muted hover:text-pri cursor-pointer bg-transparent border-0 p-0">
+      Show all &middot; 4 posts
+    </button>
+    <script>
+      (function() {
+        var btn = document.getElementById('series-toggle');
+        var extras = document.querySelectorAll('[data-series-extra]');
+        var expanded = false;
+        btn.addEventListener('click', function() {
+          expanded = !expanded;
+          extras.forEach(function(el) {
+            el.style.display = expanded ? 'flex' : 'none';
+          });
+          btn.textContent = expanded ? 'Show less' : 'Show all · 4 posts';
+        });
+      })();
+    </script></div>
 </div><article id="post-content" class="prose">
     <p>Your agent is underperforming. You swapped from your local models to your favorite AI
 cloud provider models and back, added more instructions, added more skills, added more
