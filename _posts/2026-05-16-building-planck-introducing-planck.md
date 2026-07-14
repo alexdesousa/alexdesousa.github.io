@@ -23,7 +23,7 @@ The first three posts in this series each identified a constraint:
 Those three constraints shaped [Planck](https://thebroken.link/planck).
 The framework doesn't enforce them, but its structure nudges you toward all three.
 
-## What is an Agent Harness
+## The Harness
 
 If the model is the brains and context is the memory, the harness is the body. It gives
 the model a way to act: read files, call APIs, run commands, delegate to other agents.
