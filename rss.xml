@@ -14,7 +14,7 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Tue, 14 Jul 2026 12:19:21 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 14 Jul 2026 12:35:35 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
           <title>J-Space: Where AI Thoughts Live</title>
@@ -217,7 +217,7 @@ completely opaque. That is new.</p>
 <p>Those three constraints shaped <a href="https://thebroken.link/planck">Planck</a>.
 The framework doesn’t enforce them, but its structure nudges you toward all three.</p>
 
-<h2 id="what-is-an-agent-harness">What is an Agent Harness</h2>
+<h2 id="the-harness">The Harness</h2>
 
 <p>If the model is the brains and context is the memory, the harness is the body. It gives
 the model a way to act: read files, call APIs, run commands, delegate to other agents.</p>
