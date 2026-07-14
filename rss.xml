@@ -14,7 +14,7 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Mon, 13 Jul 2026 14:12:25 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 14 Jul 2026 12:19:21 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
           <title>J-Space: Where AI Thoughts Live</title>
@@ -375,16 +375,16 @@ directory under <code class="language-plaintext highlighter-rouge">.planck/teams
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The team definition itself reflects all three principles. Each agent has:</p>
+<p>Each agent has:</p>
 
-<ul>
+<ol>
   <li>Their own system prompt, tools and skills:
 <a href="/building-planck-context-is-the-real-problem">keep context small</a>,</li>
   <li>Their own clear role within the workflow:
 <a href="/building-planck-specialized-teams-vs-general-agents">build a specialized team</a>,</li>
   <li>Their own model, matched to how much reasoning the step actually needs:
 <a href="/building-planck-the-20-80-split">route accordingly</a>.</li>
-</ul>
+</ol>
 
 <blockquote>
   <p>We can’t prompt our way around a missing tool. And we can’t accidentally grant one.</p>
@@ -412,17 +412,17 @@ inter-agent tools, skill tools, and informational tools.</p>
 team model:</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">call_agent</code>: sends a task to another agent and blocks until it responds. Use when the
-result is needed before continuing. The target agent calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done.</li>
-  <li><code class="language-plaintext highlighter-rouge">send_agent</code>: sends a task and returns immediately. The target agent works in parallel
-and calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done.</li>
-  <li><code class="language-plaintext highlighter-rouge">respond_agent</code>: signals completion back to the delegator. Every worker that receives
-work via <code class="language-plaintext highlighter-rouge">send_agent</code> uses this to return its result.</li>
-  <li><code class="language-plaintext highlighter-rouge">spawn_agent</code>: orchestrator-only. Creates a new worker at runtime with a given role,
+  <li><code class="language-plaintext highlighter-rouge">call_agent</code>: sends a synchronous message from a delegator agent to a target
+agent. The target agent calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done.</li>
+  <li><code class="language-plaintext highlighter-rouge">send_agent</code>: sends an asynchronous message from a delegator agent to a target
+agent. The target also calls <code class="language-plaintext highlighter-rouge">respond_agent</code> when done. This will trigger a new turn
+in the delegator agent if it ended its previous turn.</li>
+  <li><code class="language-plaintext highlighter-rouge">respond_agent</code>: the target agent responds to the delegator agent.</li>
+  <li><code class="language-plaintext highlighter-rouge">spawn_agent</code>: creates a new worker at runtime with a given model, role,
 system prompt, and tool list. The team can grow dynamically without restarting.</li>
-  <li><code class="language-plaintext highlighter-rouge">destroy_agent</code>: terminates a worker permanently and removes it from the team.</li>
-  <li><code class="language-plaintext highlighter-rouge">interrupt_agent</code>: aborts a worker’s current turn without terminating it. The
-worker stays alive and returns to idle.</li>
+  <li><code class="language-plaintext highlighter-rouge">destroy_agent</code>: terminates an agent permanently and removes it from the team.</li>
+  <li><code class="language-plaintext highlighter-rouge">interrupt_agent</code>: aborts an agent’s current turn without terminating it. The
+agent stays alive and returns to idle.</li>
 </ul>
 
 <h3 id="skill-tools">Skill Tools</h3>
@@ -444,18 +444,19 @@ automatically; workers opt in by declaring it in their <code class="language-pla
   <li><code class="language-plaintext highlighter-rouge">list_team</code>: returns all agents in the team with their type, name, description, and
 status. Pass <code class="language-plaintext highlighter-rouge">verbose: true</code> to also get tool names and model per member, useful when
 reasoning about which worker to delegate a task to.</li>
-  <li><code class="language-plaintext highlighter-rouge">list_models</code>: orchestrator-only. Returns all configured and connected models available
-for spawning agents, including provider, context window, and base URL.</li>
+  <li><code class="language-plaintext highlighter-rouge">list_models</code>: returns all configured and connected models available for spawning
+agents, including provider, context window, and base URL.</li>
 </ul>
 
 <h2 id="the-events">The Events</h2>
 
 <p>Planck’s communication model has two layers.</p>
 
-<p><strong>Between agents</strong>, all communication is message passing via the inter-agent tools.</p>
+<p><strong>Between agents</strong>, all communication is message passing via
+<a href="#inter-agent-tools">the inter-agent tools</a>.</p>
 
-<p><strong>Between Planck and the outside world</strong>, communication is events. Every agent publishes to
-a PubSub topic. Any process that subscribes gets a real-time stream:</p>
+<p><strong>Between Planck and the outside world</strong>, communication is events. Every agent
+publishes to a PubSub topic. Any process that subscribes gets a real-time stream:</p>
 
 <div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">session_id</span><span class="p">}</span> <span class="o">=</span> <span class="no">Planck</span><span class="o">.</span><span class="no">Headless</span><span class="o">.</span><span class="n">start_session</span><span class="p">(</span><span class="ss">template:</span> <span class="s2">"dev-team"</span><span class="p">)</span>
 
@@ -475,7 +476,7 @@ events: <code class="language-plaintext highlighter-rouge">:text_delta</code>, <
 
 <h2 id="the-sidecar">The Sidecar</h2>
 
-<p>The builtin tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
+<p>The built-in tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
 application that connects over distributed Erlang. Database queries, API calls, specialized
 analyzers: anything the core doesn’t ship with.</p>
 
@@ -517,6 +518,16 @@ tools are loaded into the resource pool and available to any agent that declares
 sidecar can be as minimal as a single module or as rich as a full Phoenix application with
 its own database connection, supervision tree, and tests.</p>
 
+<p>The sidecar also provides hooks: lifecycle callbacks implemented in the sidecar.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">prompt_hook</code>: declared per-agent; runs before each LLM turn</li>
+  <li><code class="language-plaintext highlighter-rouge">turn_end_hook</code>: declared per-agent; runs after each LLM turn</li>
+  <li><code class="language-plaintext highlighter-rouge">compactor</code>: runs for all agents automatically; can be overridden per-agent in <code class="language-plaintext highlighter-rouge">TEAM.json</code></li>
+</ul>
+
+<p>Tools extend what an agent can do. Hooks extend how it behaves.</p>
+
 <p>The core library does not change regardless.</p>
 
 <blockquote>
@@ -543,12 +554,43 @@ HTTP request or consume a Server-Sent Events stream gets full access to the sess
 POST /api/sessions              # start a session
 POST /api/sessions/:id/prompt   # send a prompt
 GET  /api/sessions/:id/events   # SSE event stream
+(...)
 </code></pre></div></div>
 
 <p>This API allows users to control Planck with other agent harnesses e.g., Claude Code could
 control a full Planck team remotely.</p>
 
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="the-configuration">The Configuration</h2>
+
+<p>Planck reads configuration from <code class="language-plaintext highlighter-rouge">.planck/config.json</code>. A minimal setup declares a
+provider and at least one model alias:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"default_model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sonnet"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"providers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"anthropic"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anthropic"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"models"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sonnet"</span><span class="p">,</span><span class="w"> </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-sonnet-4-6"</span><span class="p">,</span><span class="w"> </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anthropic"</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>API keys go in <code class="language-plaintext highlighter-rouge">.planck/.env</code> (project-local) or <code class="language-plaintext highlighter-rouge">~/.planck/.env</code> (global):</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>sk-ant-...
+</code></pre></div></div>
+
+<p>Teams live under <code class="language-plaintext highlighter-rouge">.planck/teams/</code>, skills under <code class="language-plaintext highlighter-rouge">.planck/skills/</code>, the sidecar under
+<code class="language-plaintext highlighter-rouge">.planck/sidecar/</code>. Planck loads them all at startup.</p>
+
+<p>The <a href="https://github.com/alexdesousa/planck/tree/main/skills/planck_setup"><code class="language-plaintext highlighter-rouge">planck_setup</code></a>
+skill is available as a standalone download and is included in the Docker bundle (more
+on that in the next post). Install it under <code class="language-plaintext highlighter-rouge">.planck/skills/</code> and any agent in any
+session can load it for the full configuration reference: providers, models, teams,
+sidecars, hooks, and the HTTP API.</p>
+
+<h2 id="the-conclusion">The Conclusion</h2>
 
 <p>The previous three posts described three independent constraints. Planck is where they
 connect: small agents with focused context, organized into specialized teams, routing each
