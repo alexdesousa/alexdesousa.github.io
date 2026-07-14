@@ -1,30 +1,22 @@
 {%- assign lang = include.lang | default: "en" -%}
-{%- if page.series -%}
-  {%- assign series_posts = site.posts | where: "series", page.series | sort: "series_order" -%}
-  {%- assign next_order = page.series_order | plus: 1 -%}
-  {%- assign prev_order = page.series_order | minus: 1 -%}
-  {%- assign next_post = series_posts | where: "series_order", next_order | first -%}
-  {%- assign prev_post = series_posts | where: "series_order", prev_order | first -%}
-{%- else -%}
-  {%- assign current = page -%}
-  {%- for i in (1..site.posts.size) -%}
-    {%- if current.next and current.next.lang == lang -%}
-      {%- assign next_post = current.next -%}
-      {%- break -%}
-    {%- elsif current.next -%}
-      {%- assign current = current.next -%}
-    {%- endif -%}
-  {%- endfor -%}
-  {%- assign current = page -%}
-  {%- for i in (1..site.posts.size) -%}
-    {%- if current.previous and current.previous.lang == lang -%}
-      {%- assign prev_post = current.previous -%}
-      {%- break -%}
-    {%- elsif current.previous -%}
-      {%- assign current = current.previous -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
+{%- assign current = page -%}
+{%- for i in (1..site.posts.size) -%}
+  {%- if current.next and current.next.lang == lang -%}
+    {%- assign next_post = current.next -%}
+    {%- break -%}
+  {%- elsif current.next -%}
+    {%- assign current = current.next -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign current = page -%}
+{%- for i in (1..site.posts.size) -%}
+  {%- if current.previous and current.previous.lang == lang -%}
+    {%- assign prev_post = current.previous -%}
+    {%- break -%}
+  {%- elsif current.previous -%}
+    {%- assign current = current.previous -%}
+  {%- endif -%}
+{%- endfor -%}
 {%- if prev_post or next_post -%}
 <div class="mt-10 mb-4">
   <div class="text-[0.62rem] font-bold tracking-[0.22em] uppercase text-muted flex items-center gap-3 mb-5">
