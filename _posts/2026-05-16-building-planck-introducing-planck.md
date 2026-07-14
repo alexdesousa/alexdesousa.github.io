@@ -147,14 +147,14 @@ directory under `.planck/teams/`. The `TEAM.json` file declares its members:
 }
 ```
 
-The team definition itself reflects all three principles. Each agent has:
+Each agent has:
 
-- Their own system prompt, tools and skills:
-  [keep context small](/building-planck-context-is-the-real-problem),
-- Their own clear role within the workflow:
-  [build a specialized team](/building-planck-specialized-teams-vs-general-agents),
-- Their own model, matched to how much reasoning the step actually needs:
-  [route accordingly](/building-planck-the-20-80-split).
+1. Their own system prompt, tools and skills:
+   [keep context small](/building-planck-context-is-the-real-problem),
+2. Their own clear role within the workflow:
+   [build a specialized team](/building-planck-specialized-teams-vs-general-agents),
+3. Their own model, matched to how much reasoning the step actually needs:
+   [route accordingly](/building-planck-the-20-80-split).
 
 > We can't prompt our way around a missing tool. And we can't accidentally grant one.
 
@@ -177,17 +177,17 @@ They are the basic tools an agent needs to interact with its environment:
 Inter-agent tools are how agents talk to each other. They are the mechanism behind the
 team model:
 
-- `call_agent`: sends a task to another agent and blocks until it responds. Use when the
-  result is needed before continuing. The target agent calls `respond_agent` when done.
-- `send_agent`: sends a task and returns immediately. The target agent works in parallel
-  and calls `respond_agent` when done.
-- `respond_agent`: signals completion back to the delegator. Every worker that receives
-  work via `send_agent` uses this to return its result.
-- `spawn_agent`: orchestrator-only. Creates a new worker at runtime with a given role,
+- `call_agent`: sends a synchronous message from a delegator agent to a target
+  agent. The target agent calls `respond_agent` when done.
+- `send_agent`: sends an asynchronous message from a delegator agent to a target
+  agent. The target also calls `respond_agent` when done. This will trigger a new turn
+  in the delegator agent if it ended its previous turn.
+- `respond_agent`: the target agent responds to the delegator agent.
+- `spawn_agent`: creates a new worker at runtime with a given model, role,
   system prompt, and tool list. The team can grow dynamically without restarting.
-- `destroy_agent`: terminates a worker permanently and removes it from the team.
-- `interrupt_agent`: aborts a worker's current turn without terminating it. The
-  worker stays alive and returns to idle.
+- `destroy_agent`: terminates an agent permanently and removes it from the team.
+- `interrupt_agent`: aborts an agent's current turn without terminating it. The
+  agent stays alive and returns to idle.
 
 ### Skill Tools
 
@@ -205,17 +205,18 @@ without any `TEAM.json` declaration:
 - `list_team`: returns all agents in the team with their type, name, description, and
   status. Pass `verbose: true` to also get tool names and model per member, useful when
   reasoning about which worker to delegate a task to.
-- `list_models`: orchestrator-only. Returns all configured and connected models available
-  for spawning agents, including provider, context window, and base URL.
+- `list_models`: returns all configured and connected models available for spawning
+  agents, including provider, context window, and base URL.
 
 ## The Events
 
 Planck's communication model has two layers.
 
-**Between agents**, all communication is message passing via the inter-agent tools.
+**Between agents**, all communication is message passing via
+[the inter-agent tools](#inter-agent-tools).
 
-**Between Planck and the outside world**, communication is events. Every agent publishes to
-a PubSub topic. Any process that subscribes gets a real-time stream:
+**Between Planck and the outside world**, communication is events. Every agent
+publishes to a PubSub topic. Any process that subscribes gets a real-time stream:
 
 ```elixir
 {:ok, session_id} = Planck.Headless.start_session(template: "dev-team")
@@ -236,7 +237,7 @@ events: `:text_delta`, `:turn_start`, `:turn_end`, `:tool_start`, `:tool_end`,
 
 ## The Sidecar
 
-The builtin tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
+The built-in tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
 application that connects over distributed Erlang. Database queries, API calls, specialized
 analyzers: anything the core doesn't ship with.
 
@@ -279,6 +280,14 @@ tools are loaded into the resource pool and available to any agent that declares
 sidecar can be as minimal as a single module or as rich as a full Phoenix application with
 its own database connection, supervision tree, and tests.
 
+The sidecar also provides hooks: lifecycle callbacks implemented in the sidecar.
+
+- `prompt_hook`: declared per-agent; runs before each LLM turn
+- `turn_end_hook`: declared per-agent; runs after each LLM turn
+- `compactor`: runs for all agents automatically; can be overridden per-agent in `TEAM.json`
+
+Tools extend what an agent can do. Hooks extend how it behaves.
+
 The core library does not change regardless.
 
 > The sidecar is the extension point. The harness is the stable surface.
@@ -304,12 +313,45 @@ GET  /api/sessions              # list all sessions
 POST /api/sessions              # start a session
 POST /api/sessions/:id/prompt   # send a prompt
 GET  /api/sessions/:id/events   # SSE event stream
+(...)
 ```
 
 This API allows users to control Planck with other agent harnesses e.g., Claude Code could
 control a full Planck team remotely.
 
-## Conclusion
+## The Configuration
+
+Planck reads configuration from `.planck/config.json`. A minimal setup declares a
+provider and at least one model alias:
+
+```json
+{
+  "default_model": "sonnet",
+  "providers": {
+    "anthropic": { "type": "anthropic" }
+  },
+  "models": [
+    { "id": "sonnet", "model": "claude-sonnet-4-6", "provider": "anthropic" }
+  ]
+}
+```
+
+API keys go in `.planck/.env` (project-local) or `~/.planck/.env` (global):
+
+```sh
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Teams live under `.planck/teams/`, skills under `.planck/skills/`, the sidecar under
+`.planck/sidecar/`. Planck loads them all at startup.
+
+The [`planck_setup`](https://github.com/alexdesousa/planck/tree/main/skills/planck_setup)
+skill is available as a standalone download and is included in the Docker bundle (more
+on that in the next post). Install it under `.planck/skills/` and any agent in any
+session can load it for the full configuration reference: providers, models, teams,
+sidecars, hooks, and the HTTP API.
+
+## The Conclusion
 
 The previous three posts described three independent constraints. Planck is where they
 connect: small agents with focused context, organized into specialized teams, routing each
