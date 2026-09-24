@@ -174,7 +174,9 @@ same except the last message), the provider will use the cached KV-cache of your
 request and only compute the KV-cache pairs for the new tokens. This is the **prefix cache**.
 
 As long as the cached prefix hasn't expired, you pay to compute it exactly once, then
-reuse it across every subsequent turn for a fraction of the cost.
+reuse it across every subsequent turn for a fraction of the cost. If the prefix cache
+is invalidated and you send even a short message, **you'll pay for the whole
+conversation again!**
 
 > **Note**: For local models, the prefix cache also exists. In this case, the payment is
 > waiting for computing the KV-cache of the whole conversation before actually outputting

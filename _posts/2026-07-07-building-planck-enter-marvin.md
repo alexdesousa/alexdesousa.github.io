@@ -7,7 +7,7 @@ description: "Putting it all together: a personal AI agent with its own team, pe
 handle: alex
 tags: [ai, agents, planck, marvin]
 series: "building-planck"
-series_order: 13
+series_order: 7
 published: false
 ---
 

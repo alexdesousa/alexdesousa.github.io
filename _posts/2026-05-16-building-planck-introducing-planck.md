@@ -160,10 +160,10 @@ Each agent has:
 
 ## The Tools
 
-Planck has several built-in tools, organized in four categories: basic tools,
-inter-agent tools, skill tools, and informational tools.
+Planck has several built-in tools, organized in five categories: files, delegate,
+orchestrate, skills, and classify.
 
-### Basic Tools
+### Read, Write, Edit, Run
 
 They are the basic tools an agent needs to interact with its environment:
 
@@ -172,24 +172,41 @@ They are the basic tools an agent needs to interact with its environment:
 - `edit`: replaces exact strings; the surgical alternative to rewriting
 - `bash`: runs shell commands, with process group cleanup on timeout
 
-### Inter-agent Tools
+### Delegate
 
-Inter-agent tools are how agents talk to each other. They are the mechanism behind the
-team model:
+Delegate tools are how agents hand work to each other. Every agent gets them,
+not just the orchestrator:
 
 - `call_agent`: sends a synchronous message from a delegator agent to a target
-  agent. The target agent calls `respond_agent` when done.
+  agent and blocks until the target's turn naturally ends. No explicit
+  reply needed on the target's part.
 - `send_agent`: sends an asynchronous message from a delegator agent to a target
   agent. The target also calls `respond_agent` when done. This will trigger a new turn
   in the delegator agent if it ended its previous turn.
 - `respond_agent`: the target agent responds to the delegator agent.
+- `list_team`: returns all agents in the team with their type, name, description, and
+  status. Pass `verbose: true` to also get tool names and model per member, useful when
+  reasoning about which worker to delegate a task to. The `id` it returns is what
+  `call_agent`/`send_agent` target.
+
+Both `call_agent` and `send_agent` accept an optional `reset_previous_context: true`
+parameter that archives the target's prior history before sending, giving the worker
+a clean slate for a new task.
+
+### Orchestrate
+
+Orchestrate tools only go to the orchestrator. They're how the team grows, shrinks,
+and redirects at runtime, with no restart required:
+
 - `spawn_agent`: creates a new worker at runtime with a given model, role,
   system prompt, and tool list. The team can grow dynamically without restarting.
 - `destroy_agent`: terminates an agent permanently and removes it from the team.
 - `interrupt_agent`: aborts an agent's current turn without terminating it. The
   agent stays alive and returns to idle.
+- `list_models`: returns all configured and connected models available for spawning
+  agents, including provider, context window, and base URL.
 
-### Skill Tools
+### Skill Up
 
 A skill is a reusable markdown file an agent can load on demand: a rubric, a style guide,
 a set of procedures. When skills are configured, two tools are injected automatically
@@ -200,20 +217,39 @@ without any `TEAM.json` declaration:
 - `list_skills`: lists all available skills in the pool. Orchestrators get this
   automatically; workers opt in by declaring it in their `"tools"` array.
 
-### Informational Tools
+> Each agent has their own rank of skills injected on their system prompt. The more
+> they load a skill, the more relevant these skill gets for said agent. This allows
+> agents to adapt to their current job over time.
 
-- `list_team`: returns all agents in the team with their type, name, description, and
-  status. Pass `verbose: true` to also get tool names and model per member, useful when
-  reasoning about which worker to delegate a task to.
-- `list_models`: returns all configured and connected models available for spawning
-  agents, including provider, context window, and base URL.
+### Classify
+
+Not every decision needs a chat model burning tokens parsing free text. `classify`
+asks a Typesafe/RLCD model ([Typesafe](https://typesafe.ai)'s own System One
+models, or a wire-compatible self-hosted server like
+[`decider`](https://github.com/Mapika/decider)) a set of typed questions about
+some state and gets calibrated probabilities back instead of prose:
+
+- `classify`: takes a `provider`/`model_id` pointing at an RLCD model, a `state` to
+  evaluate, and named `questions` (Choice, Score, or Boolean). It never starts an
+  agent. It's a single stateless call, so it can't chat, stream, or use tools.
+
+{% include image.html
+   src = "classify.png"
+   alt = "A classify tool call and its calibrated response"
+   caption = "A `classify` call: typed questions in, calibrated probabilities out."
+%}
+
+`classify` isn't declared in `TEAM.json` like a normal tool. It's granted to the
+orchestrator automatically whenever at least one `typesafe`-provider model is
+configured, and it's absent entirely otherwise. A worker never gets it automatically.
+Grant it explicitly, exactly like any other built-in tool.
 
 ## The Events
 
 Planck's communication model has two layers.
 
 **Between agents**, all communication is message passing via
-[the inter-agent tools](#inter-agent-tools).
+[the delegate tools](#delegate).
 
 **Between Planck and the outside world**, communication is events. Every agent
 publishes to a PubSub topic. Any process that subscribes gets a real-time stream:
@@ -232,14 +268,31 @@ end
 ```
 
 The subscriber never reaches into agent internals. It sends a prompt and listens for
-events: `:text_delta`, `:turn_start`, `:turn_end`, `:tool_start`, `:tool_end`,
-`:usage_delta`, `:worker_spawned`.
+events: `:text_delta`, `:thinking_delta`, `:turn_start`, `:turn_end`, `:tool_start`,
+`:tool_end`, `:usage_delta`, `:worker_spawned`, `:worker_exit`, `:rewind`, `:error`,
+`:compacting`, `:compacted`.
 
 ## The Sidecar
 
 The built-in tools cover the basics. Custom tools live in a sidecar: a separate Elixir/OTP
 application that connects over distributed Erlang. Database queries, API calls, specialized
 analyzers: anything the core doesn't ship with.
+
+{% capture sidecar_diagram %}
+flowchart LR
+    subgraph Core["planck node"]
+        AG["planck_agent"]
+    end
+    subgraph Side["sidecar node"]
+        T["tools"]
+    end
+    AG -->|"1: connect + list_tools/0"| Side
+    AG <-->|"2: tool call / result"| Side
+{% endcapture %}
+{% include diagram.html
+   content=sidecar_diagram
+   caption="Two BEAM nodes over distributed Erlang: tools are discovered once at startup, then called like any other tool at runtime."
+%}
 
 The sidecar implements one callback:
 
@@ -280,13 +333,55 @@ tools are loaded into the resource pool and available to any agent that declares
 sidecar can be as minimal as a single module or as rich as a full Phoenix application with
 its own database connection, supervision tree, and tests.
 
+### Widgets
+
+A tool's result isn't limited to what the model reads, either. It can attach a UI side
+effect (invisible to the model's own context, so it costs no tokens), pairing the tool
+with a widget: real, sidecar-rendered UI that streams into the chat.
+
+```elixir
+defmodule MySidecar.Widgets.Counter do
+  use Planck.Agent.Widget
+
+  def id, do: "counter"
+  def render(_myself), do: "<div>count: #{count()}</div>"
+  def handle_action("increment", _args), do: increment()
+end
+```
+
+```elixir
+Planck.Agent.Tool.new(
+  name: "show_counter",
+  description: "Show a live counter widget.",
+  parameters: %{"type" => "object", "properties" => %{}},
+  widget: MySidecar.Widgets.Counter,
+  execute_fn: fn _agent_id, _id, _args ->
+    {:ok, "Counter shown.",
+     %{ui: %{kind: :widget, label: "Open counter", widget: "counter", data: nil}}}
+  end
+)
+```
+
+The model only sees "Counter shown." Whoever's watching the chat also sees a button that
+opens the widget itself. It's HTML the sidecar builds, not a fixed catalog Planck ships with.
+
+{% include image.html
+   src = "beads-widget.gif"
+   alt = "The beads task board widget opening in the chat"
+   caption = "The beads board widget opening in the chat. More on beads and the rest of the opinionated sidecar stack in [the next post](/building-planck-opinionated-harness)."
+%}
+
+### Hooks
+
 The sidecar also provides hooks: lifecycle callbacks implemented in the sidecar.
 
 - `prompt_hook`: declared per-agent; runs before each LLM turn
 - `turn_end_hook`: declared per-agent; runs after each LLM turn
 - `compactor`: runs for all agents automatically; can be overridden per-agent in `TEAM.json`
 
-Tools extend what an agent can do. Hooks extend how it behaves.
+### UI Extension
+
+Tools extend what an agent can do. Widgets extend what it can show. Hooks extend how it behaves.
 
 The core library does not change regardless.
 
@@ -347,9 +442,9 @@ Teams live under `.planck/teams/`, skills under `.planck/skills/`, the sidecar u
 
 The [`planck_setup`](https://github.com/alexdesousa/planck/tree/main/skills/planck_setup)
 skill is available as a standalone download and is included in the Docker bundle (more
-on that in the next post). Install it under `.planck/skills/` and any agent in any
-session can load it for the full configuration reference: providers, models, teams,
-sidecars, hooks, and the HTTP API.
+on that in the [next post](/building-planck-opinionated-harness)). Install it under
+`.planck/skills/` and any agent in any session can load it for the full configuration
+reference: providers, models, teams, sidecars, hooks, widget, and the HTTP API.
 
 ## The Conclusion
 
@@ -362,7 +457,9 @@ and [`planck_headless`](https://hex.pm/packages/planck_headless) are each publis
 standalone libraries. You can use them independently to build your own harness, or start
 from Planck's agent harness and extend it via the sidecar.
 
-In the next post, we package Planck into a self-contained Docker bundle and ship a sidecar
-with it: memory management, context compaction, credential handling, and hooks.
+In the [next post](/building-planck-opinionated-harness), we package Planck into a
+self-contained Docker bundle and ship a sidecar with it: credential safety, private search,
+workspace and web efficiency, document extraction, long- and short-term memory,
+self-improving skills, and shared task coordination.
 
 > As small as meaningful. As focused as necessary. As local as possible.
