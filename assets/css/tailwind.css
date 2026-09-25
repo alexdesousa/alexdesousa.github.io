@@ -799,6 +799,9 @@ html { font-size: 14px; }
 .visible {
   visibility: visible;
 }
+.invisible {
+  visibility: hidden;
+}
 .static {
   position: static;
 }

@@ -1,0 +1,968 @@
+<title>Context Engineering Workshop</title>
+<meta name="description" content="A workshop on how LLM context windows, attention, and prefix caching actually work — and how to use that to get more out of your agents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #f5f5f5;
+    --fg:       #1a1a1a;
+    --card:     #ffffff;
+    --primary:  #5F4FE6;
+    --accent:   #FED13B;
+    --muted:    #CFCCEA;
+    --muted-fg: #5B5686;
+    --border:   #1a1a1a;
+    --shadow:   #1a1a1a;
+    --code-bg:  #1e2024;
+    --code-fg:  #abb2bf;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:       #0f0f12;
+      --fg:       #f5f5f5;
+      --card:     #1a1a1d;
+      --primary:  #7b6df5;
+      --accent:   #FED13B;
+      --muted:    #3d395a;
+      --muted-fg: #a49fce;
+      --border:   #f5f5f5;
+      --shadow:   #f5f5f5;
+      --code-bg:  #1e2024;
+      --code-fg:  #abb2bf;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:       #0f0f12;
+    --fg:       #f5f5f5;
+    --card:     #1a1a1d;
+    --primary:  #7b6df5;
+    --accent:   #FED13B;
+    --muted:    #3d395a;
+    --muted-fg: #a49fce;
+    --border:   #f5f5f5;
+    --shadow:   #f5f5f5;
+    --code-bg:  #1e2024;
+    --code-fg:  #abb2bf;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  h1, h2, h3, p, ul, ol, table { margin: 0; }
+  a { color: var(--primary); }
+  code { font-family: 'Space Mono', monospace; }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    background: var(--fg);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
+
+  .app { display: flex; flex-direction: column; height: 100%; }
+
+  /* ── Chrome: top bar ─────────────────────────────────────────────── */
+  .chrome-top {
+    flex: 0 0 auto;
+    border-bottom: 2px solid var(--border);
+    background: var(--card);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .logo {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+  .chrome-right { display: flex; align-items: center; gap: 0.75rem; }
+  .deck-counter {
+    font-size: 0.72rem;
+    color: var(--muted-fg);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .theme-toggle {
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--shadow);
+    transition: box-shadow 0.1s, transform 0.1s;
+    flex: 0 0 auto;
+  }
+  .theme-toggle:hover { box-shadow: 0 0 0 var(--shadow); transform: translate(2px, 2px); }
+
+  .progress-track { flex: 0 0 auto; height: 3px; background: var(--muted); }
+  .progress-fill { height: 100%; background: var(--primary); transition: width 0.2s ease; }
+
+  /* ── Deck ────────────────────────────────────────────────────────── */
+  .deck { flex: 1 1 auto; position: relative; overflow: hidden; }
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide-inner {
+    margin: auto;
+    width: 100%;
+    max-width: 880px;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .eyebrow {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    color: var(--primary);
+    letter-spacing: 0.03em;
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+  h2.headline {
+    font-size: clamp(1.4rem, 4vw, 2.3rem);
+    font-weight: 700;
+    line-height: 1.25;
+    text-wrap: balance;
+    margin-bottom: 1.25rem;
+  }
+  h2.headline em { font-style: normal; color: var(--primary); }
+  .lede {
+    font-size: 0.95rem;
+    color: var(--muted-fg);
+    max-width: 640px;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+  .body-text { font-size: 0.88rem; line-height: 1.85; max-width: 660px; }
+  .body-text + .body-text { margin-top: 0.9rem; }
+
+  ul.list, ol.list { padding-left: 1.4rem; font-size: 0.88rem; line-height: 1.9; max-width: 660px; }
+  ul.list li, ol.list li { margin-bottom: 0.35rem; }
+
+  .quote {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    font-weight: 700;
+    border-left: 4px solid var(--primary);
+    padding: 0.2rem 0 0.2rem 1.1rem;
+    margin: 1.5rem 0;
+    max-width: 620px;
+    line-height: 1.55;
+  }
+  .quote.accent { border-left-color: var(--accent); }
+  .cite {
+    font-size: 0.7rem;
+    color: var(--muted-fg);
+    margin-top: 0.4rem;
+  }
+
+  /* ── Title slide ─────────────────────────────────────────────────── */
+  .title-slide h1 {
+    font-size: clamp(2rem, 7vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .title-slide h1 em { font-style: normal; color: var(--primary); }
+  .title-meta {
+    margin-top: 2.5rem;
+    font-size: 0.78rem;
+    color: var(--muted-fg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  /* ── Reusable card components (matches Planck docs) ─────────────── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.1rem;
+    margin-top: 1.5rem;
+  }
+  .step {
+    border: 2px solid var(--border);
+    background: var(--card);
+    padding: 1.1rem 1rem;
+    box-shadow: 4px 4px 0 var(--shadow);
+  }
+  .step-num {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .step h3 { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .step p { font-size: 0.74rem; color: var(--muted-fg); line-height: 1.7; }
+
+  .diagram-card {
+    border: 2px solid var(--border);
+    background: var(--card);
+    box-shadow: 4px 4px 0 var(--shadow);
+    padding: 1.25rem;
+    margin-top: 1rem;
+    max-width: 720px;
+  }
+  .diagram-caption {
+    font-size: 0.74rem;
+    color: var(--muted-fg);
+    margin-top: 0.9rem;
+    line-height: 1.6;
+  }
+  table.data {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 700px;
+    font-size: 0.8rem;
+    margin-top: 1.25rem;
+    box-shadow: 4px 4px 0 var(--shadow);
+  }
+  table.data th, table.data td {
+    border: 2px solid var(--border);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  table.data th { background: var(--muted); font-weight: 700; }
+  table.data td.role-specialist { color: var(--primary); font-weight: 700; }
+
+  .code-block {
+    border: 2px solid var(--border);
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 1rem 1.25rem;
+    font-size: 0.76rem;
+    line-height: 1.8;
+    box-shadow: 4px 4px 0 var(--shadow);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    max-width: 620px;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+    max-width: 760px;
+  }
+  .split-card {
+    border: 2px solid var(--border);
+    background: var(--card);
+    padding: 1.1rem;
+    box-shadow: 4px 4px 0 var(--shadow);
+  }
+  .split-card.bad { box-shadow: 4px 4px 0 #d24d4d; border-color: #d24d4d; }
+  .split-card.good { box-shadow: 4px 4px 0 var(--primary); border-color: var(--primary); }
+  .split-tag {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-fg);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .split-card.bad .split-tag { color: #d24d4d; }
+  .split-card.good .split-tag { color: var(--primary); }
+  .split-card p { font-size: 0.8rem; line-height: 1.7; }
+  .split-card p.mono { font-family: 'Space Mono', monospace; font-weight: 700; margin-top: 0.5rem; }
+
+  /* ── Chrome: bottom bar ──────────────────────────────────────────── */
+  .chrome-bottom {
+    flex: 0 0 auto;
+    border-top: 2px solid var(--border);
+    background: var(--card);
+    padding: 0.65rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .nav-btn {
+    border: 2px solid var(--border);
+    background: var(--card);
+    color: var(--fg);
+    padding: 0.4rem 0.9rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--shadow);
+    transition: box-shadow 0.1s, transform 0.1s;
+  }
+  .nav-btn:hover:not(:disabled) { box-shadow: 1px 1px 0 var(--shadow); transform: translate(2px, 2px); }
+  .nav-btn:disabled { opacity: 0.35; cursor: default; }
+  .hint { font-size: 0.66rem; color: var(--muted-fg); white-space: nowrap; }
+
+  @media (max-width: 480px) {
+    .hint { display: none; }
+    .slide-inner { padding: 1.75rem 1.1rem; }
+  }
+
+  .refs { font-size: 0.76rem; color: var(--muted-fg); line-height: 2; max-width: 700px; }
+  .refs a { color: var(--primary); }
+</style>
+
+<div class="app">
+  <div class="chrome-top">
+    <span class="logo">CTX<span class="cursor"></span></span>
+    <div class="chrome-right">
+      <span class="deck-counter"><span id="slideNum">01</span> / <span id="slideTotal">26</span></span>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle light / dark">◑</button>
+    </div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <main class="deck" id="deck">
+
+    <!-- 00 — Title -->
+    <section class="slide title-slide" id="slide-0">
+      <div class="slide-inner">
+        <span class="eyebrow">WORKSHOP</span>
+        <h1>Context<br><em>Engineering</em></h1>
+        <p class="lede" style="font-size:0.95rem;max-width:520px;">How the context window actually works — and how to spend it like it costs money. Because it does.</p>
+        <div class="title-meta">
+          <span>Alex de Sousa</span>
+          <span>Based on the <em style="font-style:normal;color:var(--primary);">Building Planck</em> series</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 — Agenda -->
+    <section class="slide" id="slide-1">
+      <div class="slide-inner">
+        <span class="eyebrow">AGENDA</span>
+        <h2 class="headline">What we'll cover</h2>
+        <div class="steps">
+          <div class="step"><span class="step-num">I</span><h3>The context window</h3><p>What's actually in the payload every time we hit "send."</p></div>
+          <div class="step"><span class="step-num">II</span><h3>Attention &amp; the KV-cache</h3><p>Why more tokens is quadratically expensive, not linearly.</p></div>
+          <div class="step"><span class="step-num">III</span><h3>The prefix cache</h3><p>The single biggest lever most teams aren't pulling.</p></div>
+          <div class="step"><span class="step-num">IV</span><h3>Specialist teams</h3><p>Why one agent trying to do everything is the actual problem.</p></div>
+          <div class="step"><span class="step-num">V</span><h3>The 20/80 split</h3><p>Routing "deciding what to do" and "doing it" to different models.</p></div>
+          <div class="step"><span class="step-num">VI</span><h3>Takeaways</h3><p>What to change this week, and one to bring to the group.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — Hook -->
+    <section class="slide" id="slide-2">
+      <div class="slide-inner">
+        <span class="eyebrow">THE SYMPTOM</span>
+        <h2 class="headline">Your agent is inconsistent.</h2>
+        <p class="body-text">You've swapped models back and forth. Added more instructions. Added more skills, more tools. The results stay inconsistent — sometimes brilliant, sometimes mediocre.</p>
+        <p class="body-text">Every new model release generates the same hopeful thought:</p>
+        <p class="quote">&ldquo;This one will fix my workflow!&rdquo;</p>
+        <p class="body-text">After burning millions of tokens: things improved. It's not fixed. It's more expensive though.</p>
+      </div>
+    </section>
+
+    <!-- 03 — Thesis -->
+    <section class="slide" id="slide-3">
+      <div class="slide-inner">
+        <span class="eyebrow">THE CLAIM</span>
+        <h2 class="headline">Almost every quality problem in AI agents traces back to <em>poor context decisions</em> — not model capability.</h2>
+        <p class="lede">If that resonates, you don't have a model problem. You have a context problem.</p>
+      </div>
+    </section>
+
+    <!-- 04 — What context is -->
+    <section class="slide" id="slide-4">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT I · THE CONTEXT WINDOW · 01</span>
+        <h2 class="headline">There is no conversation. There's an HTTP request.</h2>
+        <p class="body-text">The model has no memory between calls. Everything it knows comes from what's in the payload right now — the <strong>context window</strong>. It holds four things:</p>
+        <div class="steps">
+          <div class="step"><span class="step-num">SYSTEM</span><h3>System prompt</h3><p>Instructions defining the agent's role, behavior, and rules.</p></div>
+          <div class="step"><span class="step-num">TOOLS</span><h3>Tool definitions</h3><p>Descriptions of every tool the agent can call — params and return shape included.</p></div>
+          <div class="step"><span class="step-num">HISTORY</span><h3>Conversation history</h3><p>Every prior user message and assistant response in the current session.</p></div>
+          <div class="step"><span class="step-num">INJECTED</span><h3>Injected knowledge</h3><p>Search results, file contents, retrieved memories and skills — anything added dynamically.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — Diagram: context window -->
+    <section class="slide" id="slide-5">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT I · THE CONTEXT WINDOW · 02</span>
+        <h2 class="headline">Every turn, the whole thing goes over the wire</h2>
+        <div class="diagram-card">
+          <svg viewBox="0 0 620 300" role="img" aria-label="Diagram: the context window, containing the system prompt, tool definitions, conversation history, and injected knowledge, is sent via API call to the LLM provider" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <rect x="20" y="15" width="300" height="270" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="35" y="38" font-size="11" fill="var(--muted-fg)" style="letter-spacing:0.05em;">CONTEXT WINDOW</text>
+            <rect x="40" y="55" width="260" height="42" rx="2" fill="var(--bg)" stroke="var(--border)" stroke-width="2"/>
+            <text x="170" y="81" font-size="12" fill="var(--fg)" text-anchor="middle">System Prompt</text>
+            <rect x="40" y="107" width="260" height="42" rx="2" fill="var(--bg)" stroke="var(--border)" stroke-width="2"/>
+            <text x="170" y="133" font-size="12" fill="var(--fg)" text-anchor="middle">Tool Definitions</text>
+            <rect x="40" y="159" width="260" height="42" rx="2" fill="var(--bg)" stroke="var(--border)" stroke-width="2"/>
+            <text x="170" y="185" font-size="12" fill="var(--fg)" text-anchor="middle">Conversation History</text>
+            <rect x="40" y="211" width="260" height="42" rx="2" fill="var(--bg)" stroke="var(--border)" stroke-width="2"/>
+            <text x="170" y="237" font-size="12" fill="var(--fg)" text-anchor="middle">Injected Knowledge</text>
+            <defs>
+              <marker id="ctxArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0L10,5L0,10z" fill="var(--fg)"/>
+              </marker>
+            </defs>
+            <line x1="320" y1="150" x2="424" y2="150" stroke="var(--fg)" stroke-width="2" marker-end="url(#ctxArrow)"/>
+            <text x="372" y="140" font-size="11" fill="var(--muted-fg)" text-anchor="middle">API call</text>
+            <rect x="430" y="125" width="150" height="50" rx="25" fill="var(--card)" stroke="var(--primary)" stroke-width="2"/>
+            <text x="505" y="155" font-size="12" fill="var(--fg)" text-anchor="middle">LLM Provider</text>
+          </svg>
+          <p class="diagram-caption">Every turn sends the full context window to the provider — cloud or local.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — bridge -->
+    <section class="slide" id="slide-6">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT I · THE CONTEXT WINDOW · 03</span>
+        <h2 class="headline">A bigger context window doesn't mean it's free to fill</h2>
+        <ul class="list">
+          <li>Every token included costs money.</li>
+          <li>Every token included is a token the model must <strong>attend to</strong>.</li>
+        </ul>
+        <p class="body-text" style="margin-top:1.25rem;">So what does "attends to" actually mean?</p>
+      </div>
+    </section>
+
+    <!-- 07 — Attention -->
+    <section class="slide" id="slide-7">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT II · ATTENTION &amp; THE KV-CACHE · 04</span>
+        <h2 class="headline">Attention scores every pair of tokens</h2>
+        <p class="body-text">For each token, the model computes a score against every other token in the context — how much each one should influence the next token generated.</p>
+        <p class="body-text">Completing <em style="font-style:normal;color:var(--primary);">"Caracas is the capital of"</em>, the model attends more strongly to <strong>"capital"</strong> and <strong>"Caracas"</strong> than to <strong>"is"</strong> and <strong>"the."</strong> The scores reflect relevance.</p>
+        <p class="body-text">1,000 tokens → 1,000,000 pairs to score. Double the context to 2,000 and it's 4,000,000 pairs. Four times the compute for twice the tokens.</p>
+        <p class="quote">Attention is quadratic in context length.</p>
+      </div>
+    </section>
+
+    <!-- 08 — Attention chart -->
+    <section class="slide" id="slide-8">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT II · ATTENTION &amp; THE KV-CACHE · 05</span>
+        <h2 class="headline">Quadratic, not linear</h2>
+        <div class="diagram-card">
+          <svg viewBox="0 0 640 340" role="img" aria-label="Line chart showing attention pairs growing quadratically from 1M at 1k tokens to 1024M at 32k tokens" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <text x="50" y="12" font-size="11" fill="var(--muted-fg)">Attention pairs (M)</text>
+            <line x1="50" y1="20" x2="50" y2="270" stroke="var(--muted-fg)" stroke-width="2"/>
+            <line x1="50" y1="270" x2="620" y2="270" stroke="var(--muted-fg)" stroke-width="2"/>
+            <text x="40" y="273" font-size="10" fill="var(--muted-fg)" text-anchor="end">0</text>
+            <text x="40" y="24" font-size="10" fill="var(--muted-fg)" text-anchor="end">1100</text>
+            <polyline points="50,270 164,269 278,266 392,256 506,212 620,37" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="50" cy="270" r="4" fill="var(--primary)"/>
+            <circle cx="164" cy="269" r="4" fill="var(--primary)"/>
+            <circle cx="278" cy="266" r="4" fill="var(--primary)"/>
+            <circle cx="392" cy="256" r="4" fill="var(--primary)"/>
+            <circle cx="506" cy="212" r="4" fill="var(--primary)"/>
+            <circle cx="620" cy="37" r="4" fill="var(--primary)"/>
+            <text x="50" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">1k</text>
+            <text x="164" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">2k</text>
+            <text x="278" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">4k</text>
+            <text x="392" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">8k</text>
+            <text x="506" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">16k</text>
+            <text x="620" y="290" font-size="11" fill="var(--muted-fg)" text-anchor="middle">32k</text>
+            <text x="335" y="318" font-size="11" fill="var(--muted-fg)" text-anchor="middle">Amount of tokens</text>
+          </svg>
+          <p class="diagram-caption">Doubling context length quadruples the number of attention pairs the model must score.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 — Relevance degrades -->
+    <section class="slide" id="slide-9">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT II · ATTENTION &amp; THE KV-CACHE · 06</span>
+        <h2 class="headline">The second cost: relevance degrades</h2>
+        <p class="body-text">The model doesn't skip tokens that aren't relevant. They're there, and they still affect the quality of the result.</p>
+        <p class="body-text">If half the context is boilerplate that doesn't apply to this specific task, those tokens still compete with the ones that do.</p>
+        <p class="quote accent">It costs us more money and it compromises quality.</p>
+      </div>
+    </section>
+
+    <!-- 10 — KV cache diagram -->
+    <section class="slide" id="slide-10">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT II · ATTENTION &amp; THE KV-CACHE · 07</span>
+        <h2 class="headline">Where those scores live: the KV-cache</h2>
+        <div class="diagram-card">
+          <svg viewBox="0 0 600 320" role="img" aria-label="Diagram: the tokens The, quick, brown, fox each attend back to earlier tokens, reusing the cached key/value pair for The three times" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <defs>
+              <marker id="kvArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0L10,5L0,10z" fill="var(--muted-fg)"/>
+              </marker>
+            </defs>
+            <path d="M230,230 Q160,190 90,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="160" y="182" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.23, v=0.87</text>
+            <path d="M370,230 Q300,190 230,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="300" y="182" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.45, v=0.32</text>
+            <path d="M510,230 Q440,190 370,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="440" y="182" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.71, v=0.56</text>
+            <path d="M510,230 Q370,145 230,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="370" y="135" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.45, v=0.32</text>
+            <path d="M370,230 Q230,105 90,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="230" y="97" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.23, v=0.87</text>
+            <path d="M510,230 Q300,60 90,230" fill="none" stroke="var(--muted-fg)" stroke-width="1.5" marker-end="url(#kvArrow)"/>
+            <text x="300" y="52" font-size="9" fill="var(--muted-fg)" text-anchor="middle">k=0.23, v=0.87</text>
+            <rect x="30" y="230" width="120" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="90" y="260" font-size="13" fill="var(--fg)" text-anchor="middle">The</text>
+            <rect x="170" y="230" width="120" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="230" y="260" font-size="13" fill="var(--fg)" text-anchor="middle">quick</text>
+            <rect x="310" y="230" width="120" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="370" y="260" font-size="13" fill="var(--fg)" text-anchor="middle">brown</text>
+            <rect x="450" y="230" width="120" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="510" y="260" font-size="13" fill="var(--fg)" text-anchor="middle">fox</text>
+            <text x="90" y="302" font-size="10" fill="var(--primary)" text-anchor="middle" font-weight="700">cached &#215; 3</text>
+          </svg>
+          <p class="diagram-caption">Each arrow carries the cached key/value pair of the target token. "The" is looked up three times — its stored pair is reused, never recomputed.</p>
+        </div>
+        <p class="body-text" style="margin-top:1.25rem;">Double the context length, quadruple the KV-cache memory.</p>
+      </div>
+    </section>
+
+    <!-- 11 — Real world cost -->
+    <section class="slide" id="slide-11">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT II · ATTENTION &amp; THE KV-CACHE · 08</span>
+        <h2 class="headline">Why the model "feels dumber" in long sessions</h2>
+        <p class="body-text">GPU memory is one of the most contested resources on the planet. DRAM prices roughly tripled by late 2025 as producers shift capacity toward AI. KV-cache memory is one of the largest costs for cloud providers.</p>
+        <p class="body-text">At very long context lengths, providers fall back to <strong>compressed context representations</strong> to keep serving requests. Compression is usually lossy — pushed aggressively, output quality degrades.</p>
+        <p class="body-text">It's not your imagination, and it's probably not the model. The model is the same. The context isn't.</p>
+        <p class="quote">An agent that runs long sessions without managing its context doesn't just get expensive. It gets unreliable.</p>
+      </div>
+    </section>
+
+    <!-- 12 — Prefix cache intro -->
+    <section class="slide" id="slide-12">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT III · THE PREFIX CACHE · 09</span>
+        <h2 class="headline">Not all tokens are equally expensive</h2>
+        <p class="body-text">Providers cache the KV-cache of each request for a limited time. If the beginning of your next request is identical to the previous one — everything the same except the last message — the provider reuses the cached KV-cache and only computes the new tokens.</p>
+        <p class="body-text">As long as the cached prefix hasn't expired, you pay to compute it <strong>once</strong>, then reuse it across every subsequent turn for a fraction of the cost.</p>
+        <div class="step" style="margin-top:1rem;max-width:640px;">
+          <span class="step-num">NOTE</span>
+          <p style="font-size:0.78rem;color:var(--muted-fg);line-height:1.75;">Local models get this too. There the "payment" is waiting for the whole conversation's KV-cache to be computed before the response starts — the hardware is just slower than a provider's.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 — Prefix cache diagram -->
+    <section class="slide" id="slide-13">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT III · THE PREFIX CACHE · 10</span>
+        <h2 class="headline">One matching prefix = pay once, reuse every turn</h2>
+        <div class="diagram-card">
+          <svg viewBox="0 0 640 350" role="img" aria-label="Decision tree: a new message either matches the cached conversation prefix, giving a cache hit that only recomputes the last tokens, or invalidates the cache, forcing a recompute of the entire context" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <defs>
+              <marker id="pcArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0L10,5L0,10z" fill="var(--fg)"/>
+              </marker>
+            </defs>
+            <rect x="230" y="8" width="180" height="44" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="320" y="35" font-size="12" fill="var(--fg)" text-anchor="middle">New message</text>
+            <line x1="320" y1="52" x2="320" y2="61" stroke="var(--fg)" stroke-width="2" marker-end="url(#pcArrow)"/>
+            <polygon points="320,65 410,110 320,155 230,110" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="320" y="105" font-size="10" fill="var(--fg)" text-anchor="middle">Conversation</text>
+            <text x="320" y="119" font-size="10" fill="var(--fg)" text-anchor="middle">history matches?</text>
+            <path d="M230,110 L140,110 L140,180" fill="none" stroke="var(--fg)" stroke-width="2" marker-end="url(#pcArrow)"/>
+            <text x="195" y="100" font-size="10" fill="var(--muted-fg)" text-anchor="middle">No</text>
+            <path d="M410,110 L500,110 L500,180" fill="none" stroke="var(--fg)" stroke-width="2" marker-end="url(#pcArrow)"/>
+            <text x="445" y="100" font-size="10" fill="var(--muted-fg)" text-anchor="middle">Yes</text>
+            <rect x="50" y="188" width="180" height="44" rx="2" fill="var(--card)" stroke="#d24d4d" stroke-width="2"/>
+            <text x="140" y="215" font-size="12" fill="var(--fg)" text-anchor="middle">Cache invalidated</text>
+            <rect x="410" y="188" width="180" height="44" rx="2" fill="var(--card)" stroke="var(--primary)" stroke-width="2"/>
+            <text x="500" y="215" font-size="12" fill="var(--fg)" text-anchor="middle">Cache hit</text>
+            <line x1="140" y1="232" x2="140" y2="271" stroke="var(--fg)" stroke-width="2" marker-end="url(#pcArrow)"/>
+            <line x1="500" y1="232" x2="500" y2="271" stroke="var(--fg)" stroke-width="2" marker-end="url(#pcArrow)"/>
+            <rect x="30" y="278" width="220" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="140" y="298" font-size="11" fill="var(--fg)" text-anchor="middle">Recompute KV-cache</text>
+            <text x="140" y="314" font-size="11" fill="var(--fg)" text-anchor="middle">for all the context</text>
+            <rect x="390" y="278" width="220" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="500" y="298" font-size="11" fill="var(--fg)" text-anchor="middle">Recompute KV-cache</text>
+            <text x="500" y="314" font-size="11" fill="var(--fg)" text-anchor="middle">for the last tokens</text>
+          </svg>
+          <p class="diagram-caption">A matching conversation prefix is a cache hit. Only the new tokens need to be computed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13b — Cost of invalidation -->
+    <section class="slide" id="slide-13b">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT III · THE PREFIX CACHE · 11</span>
+        <h2 class="headline">What an invalidated cache actually costs you</h2>
+        <ul class="list">
+          <li>The whole prefix gets recomputed — you pay full price for every token, not just the new ones.</li>
+          <li>Time-to-first-token jumps back to the cold-start number. Every turn feels like the first turn.</li>
+          <li>If something in the prefix changes on <em style="font-style:normal;">every</em> turn — a timestamp, a reordered tool list, a reshuffled system prompt — the cache never builds at all. Every single turn pays the uncached price, and that price keeps growing as the conversation grows.</li>
+        </ul>
+        <p class="quote accent">A cache that never hits isn't just slower. It's the expensive path — on every single turn.</p>
+      </div>
+    </section>
+
+    <!-- 14 — Two rules -->
+    <section class="slide" id="slide-14">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT III · THE PREFIX CACHE · 12</span>
+        <h2 class="headline">Two rules that follow directly</h2>
+        <ol class="list">
+          <li>Use a reasonable prefix-cache expiration time.</li>
+          <li>Never inject dynamic content into the system prompt of an active conversation — no <code>Current date: &lt;date&gt;</code> at the top.</li>
+        </ol>
+        <p class="quote">Keep static instructions in the system prompt. Put dynamic state in the conversation messages.</p>
+      </div>
+    </section>
+
+    <!-- 15 — Generalist trap -->
+    <section class="slide" id="slide-15">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT IV · SPECIALIST TEAMS · 13</span>
+        <h2 class="headline">The generalist trap</h2>
+        <p class="body-text">A broad system prompt feels productive. Cover every case, add 30 tools, the agent can "do anything." Then it does everything... average. Same problem: irrelevant instructions and tool definitions are still read, and still scored, on every turn.</p>
+        <p class="quote">A specialist agent with a 100-token system prompt and 2 relevant tools consistently outperforms a generalist with a 100,000-token prompt and 10 tools — on the tasks the specialist is built for.</p>
+        <p class="cite">Context length alone degrades performance 13–85%, even with perfect retrieval. — arXiv:2510.05381</p>
+      </div>
+    </section>
+
+    <!-- 16 — Table -->
+    <section class="slide" id="slide-16">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT IV · SPECIALIST TEAMS · 14</span>
+        <h2 class="headline">System prompt size, in the wild</h2>
+        <table class="data">
+          <thead><tr><th>Tool</th><th>System prompt</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Code</td><td>~100K+ tokens</td><td>Generalist</td></tr>
+            <tr><td>Codex CLI</td><td>~100K tokens</td><td>Generalist</td></tr>
+            <tr><td>Antigravity</td><td>~8–10K tokens</td><td>Generalist</td></tr>
+            <tr><td>Pi agent</td><td>&lt;1K tokens</td><td class="role-specialist">Specialist harness</td></tr>
+            <tr><td>Planck orchestrator</td><td>~1K tokens</td><td class="role-specialist">Specialist harness</td></tr>
+            <tr><td>Planck worker</td><td>~100–300 tokens</td><td class="role-specialist">Specialist harness</td></tr>
+          </tbody>
+        </table>
+        <p class="body-text" style="margin-top:1.5rem;">"This agent isn't good enough" rarely means <em style="font-style:normal;">add more instructions</em>. It usually means <strong>reduce what it sees</strong>.</p>
+      </div>
+    </section>
+
+    <!-- 17 — Team model diagram -->
+    <section class="slide" id="slide-17">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT IV · SPECIALIST TEAMS · 15</span>
+        <h2 class="headline">The fix isn't a smarter agent. It's several smaller ones.</h2>
+        <p class="body-text">An orchestrator that reasons about the task, breaks it down, and delegates. Workers that execute each step with minimal, focused context.</p>
+        <div class="diagram-card">
+          <svg viewBox="0 0 720 590" role="img" aria-label="Sequence diagram: the user asks the orchestrator, which delegates to the planner, which coordinates the developer and reviewer directly through two revision rounds, then reports completion back up to the orchestrator and the user" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <defs>
+              <marker id="teamArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0L10,5L0,10z" fill="var(--fg)"/>
+              </marker>
+            </defs>
+            <line x1="70" y1="36" x2="70" y2="560" stroke="var(--muted-fg)" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="210" y1="36" x2="210" y2="560" stroke="var(--muted-fg)" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="350" y1="36" x2="350" y2="560" stroke="var(--muted-fg)" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="490" y1="36" x2="490" y2="560" stroke="var(--muted-fg)" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <line x1="630" y1="36" x2="630" y2="560" stroke="var(--muted-fg)" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <rect x="10" y="8" width="120" height="28" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="70" y="27" font-size="10" fill="var(--fg)" text-anchor="middle">User</text>
+            <rect x="150" y="8" width="120" height="28" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="210" y="27" font-size="10" fill="var(--fg)" text-anchor="middle">Orchestrator</text>
+            <rect x="290" y="8" width="120" height="28" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="350" y="27" font-size="10" fill="var(--fg)" text-anchor="middle">Planner</text>
+            <rect x="430" y="8" width="120" height="28" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="490" y="27" font-size="10" fill="var(--fg)" text-anchor="middle">Developer</text>
+            <rect x="570" y="8" width="120" height="28" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="630" y="27" font-size="10" fill="var(--fg)" text-anchor="middle">Reviewer</text>
+
+            <line x1="70" y1="70" x2="205" y2="70" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="140" y="63" font-size="9" fill="var(--fg)" text-anchor="middle">"Add input validation to the login form"</text>
+
+            <line x1="210" y1="110" x2="345" y2="110" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="280" y="103" font-size="9" fill="var(--fg)" text-anchor="middle">Plan and execute this task</text>
+
+            <line x1="350" y1="150" x2="485" y2="150" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="420" y="143" font-size="9" fill="var(--fg)" text-anchor="middle">Implement step 1 [spec]</text>
+
+            <line x1="490" y1="190" x2="625" y2="190" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="560" y="183" font-size="9" fill="var(--fg)" text-anchor="middle">[code]</text>
+
+            <line x1="630" y1="230" x2="495" y2="230" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="560" y="223" font-size="9" fill="var(--fg)" text-anchor="middle">[feedback]</text>
+
+            <line x1="490" y1="270" x2="625" y2="270" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="560" y="263" font-size="9" fill="var(--fg)" text-anchor="middle">[revised code]</text>
+
+            <line x1="630" y1="310" x2="355" y2="310" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="490" y="303" font-size="9" fill="var(--fg)" text-anchor="middle">Step 1 done</text>
+
+            <line x1="350" y1="350" x2="485" y2="350" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="420" y="343" font-size="9" fill="var(--fg)" text-anchor="middle">Implement step 2 [spec]</text>
+
+            <line x1="490" y1="390" x2="625" y2="390" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="560" y="383" font-size="9" fill="var(--fg)" text-anchor="middle">[code]</text>
+
+            <line x1="630" y1="430" x2="355" y2="430" stroke="var(--fg)" stroke-width="1.5" marker-end="url(#teamArrow)"/>
+            <text x="490" y="423" font-size="9" fill="var(--fg)" text-anchor="middle">Step 2 done</text>
+
+            <line x1="350" y1="470" x2="215" y2="470" stroke="var(--fg)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#teamArrow)"/>
+            <text x="280" y="463" font-size="9" fill="var(--fg)" text-anchor="middle">Task complete</text>
+
+            <line x1="210" y1="510" x2="75" y2="510" stroke="var(--fg)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#teamArrow)"/>
+            <text x="140" y="503" font-size="9" fill="var(--fg)" text-anchor="middle">Response</text>
+          </svg>
+          <p class="diagram-caption">The planner coordinates steps. Developer and reviewer talk directly. The orchestrator only sees the result.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 18 — Roles + compound effect -->
+    <section class="slide" id="slide-18">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT IV · SPECIALIST TEAMS · 16</span>
+        <h2 class="headline">Two things define a role: system prompt + tool list</h2>
+        <p class="body-text">A developer without delegation tools simply cannot delegate — not because it's told not to. The capability isn't there.</p>
+        <p class="quote">We can't prompt our way out of a missing tool.</p>
+        <div class="steps" style="margin-top:1.5rem;">
+          <div class="step"><span class="step-num">01</span><h3>Stable system prompts</h3><p>Each agent's prompt doesn't grow as other agents gain capabilities. The prefix cache actually works — pay to compute it once, reuse it every turn.</p></div>
+          <div class="step"><span class="step-num">02</span><h3>Higher quality per step</h3><p>A worker that only knows how to search is very good at searching. Narrow scope produces better outputs, not worse.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19 — 20/80 intro -->
+    <section class="slide" id="slide-19">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT V · THE 20/80 SPLIT · 17</span>
+        <h2 class="headline">We fixed context. Now look at the bill.</h2>
+        <p class="body-text">Teams of specialists work. Quality is good. But it's getting expensive fast. The instinct is to drop to a cheaper frontier model at the cost of quality. Wrong move.</p>
+        <p class="quote accent">The question isn't which frontier model to use. It's: which steps actually need one? Most of them don't.</p>
+      </div>
+    </section>
+
+    <!-- 20 — Spec problem + diagram -->
+    <section class="slide" id="slide-20">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT V · THE 20/80 SPLIT · 18</span>
+        <h2 class="headline">Frontier models are exceptional at one thing: turning ambiguous intent into a precise spec</h2>
+        <p class="body-text">"Clean up the auth module" is underspecified — it takes judgment to get to a real plan. Once the spec is precise, execution is mostly mechanical.</p>
+        <p class="quote">The expensive part of a workflow is knowing what to do. Doing it is mostly mechanical.</p>
+        <div class="diagram-card">
+          <svg viewBox="0 0 480 480" role="img" aria-label="Diagram: a user request goes to the orchestrator in the frontier tier, which sends a precise spec down to workers in the local tier and receives results back, then responds to the user" style="width:100%;height:auto;font-family:'Space Mono',monospace;">
+            <defs>
+              <marker id="splitArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0L10,5L0,10z" fill="var(--fg)"/>
+              </marker>
+            </defs>
+            <rect x="160" y="10" width="180" height="44" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="250" y="37" font-size="12" fill="var(--fg)" text-anchor="middle">User request</text>
+            <line x1="250" y1="54" x2="250" y2="83" stroke="var(--fg)" stroke-width="2" marker-end="url(#splitArrow)"/>
+
+            <rect x="140" y="90" width="220" height="100" rx="2" fill="none" stroke="var(--primary)" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="150" y="108" font-size="10" fill="var(--primary)" font-weight="700" style="letter-spacing:0.05em;">FRONTIER &#183; 20%</text>
+            <rect x="170" y="120" width="160" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="250" y="150" font-size="12" fill="var(--fg)" text-anchor="middle">Orchestrator</text>
+
+            <line x1="210" y1="190" x2="210" y2="283" stroke="var(--fg)" stroke-width="2" marker-end="url(#splitArrow)"/>
+            <line x1="290" y1="283" x2="290" y2="190" stroke="var(--fg)" stroke-width="2" marker-end="url(#splitArrow)"/>
+            <text x="250" y="232" font-size="10" fill="var(--muted-fg)" text-anchor="middle">precise spec &#8595;</text>
+            <text x="250" y="250" font-size="10" fill="var(--muted-fg)" text-anchor="middle">&#8593; results</text>
+
+            <rect x="120" y="290" width="260" height="100" rx="2" fill="none" stroke="var(--muted-fg)" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="130" y="308" font-size="10" fill="var(--muted-fg)" font-weight="700" style="letter-spacing:0.05em;">LOCAL &#183; 80%</text>
+            <rect x="170" y="320" width="160" height="50" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="250" y="342" font-size="12" fill="var(--fg)" text-anchor="middle">Worker</text>
+            <text x="250" y="358" font-size="9" fill="var(--muted-fg)" text-anchor="middle">&#215; 3, cheap/fast model</text>
+
+            <path d="M360,140 L430,140 L430,432 L346,432" fill="none" stroke="var(--fg)" stroke-width="2" marker-end="url(#splitArrow)"/>
+
+            <rect x="160" y="410" width="180" height="44" rx="2" fill="var(--card)" stroke="var(--border)" stroke-width="2"/>
+            <text x="250" y="437" font-size="12" fill="var(--fg)" text-anchor="middle">Response</text>
+          </svg>
+          <p class="diagram-caption">The orchestrator runs once to reason and specify. Workers run constantly to execute. Cost follows the split.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 21 — Vague vs precise -->
+    <section class="slide" id="slide-21">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT V · THE 20/80 SPLIT · 19</span>
+        <h2 class="headline">The model didn't get smarter. The input did.</h2>
+        <p class="body-text">The same model produces mediocre results on a vague ask, and reliably handles a precise one.</p>
+        <div class="split">
+          <div class="split-card bad">
+            <span class="split-tag">Ambiguous</span>
+            <p class="mono">"Refactor the auth module."</p>
+            <p>Needs brainstorming, follow-up questions, and judgment. Even a strong model guesses at scope.</p>
+          </div>
+          <div class="split-card good">
+            <span class="split-tag">Precise spec</span>
+            <p class="mono">"Extract the session handling from <code>user_controller.ex</code> into a new <code>Session</code> module, preserving the existing public interface."</p>
+            <p>A small, cheap, local model follows this almost flawlessly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 22 — Owning the loop -->
+    <section class="slide" id="slide-22">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT V · THE 20/80 SPLIT · 20</span>
+        <h2 class="headline">Cost isn't the only reason to route to local</h2>
+        <ul class="list">
+          <li>Data stays on your own hardware — code, context, history never leaves.</li>
+          <li>Pricing is predictable; electricity is the main cost.</li>
+          <li>Models don't change under you unless you update them.</li>
+          <li>Throughput is bounded by your machine, not a provider's queue.</li>
+        </ul>
+        <p class="quote">Frontier for thinking. Local for doing.</p>
+      </div>
+    </section>
+
+    <!-- 23 — Takeaways -->
+    <section class="slide" id="slide-23">
+      <div class="slide-inner">
+        <span class="eyebrow">ACT VI · TAKEAWAYS</span>
+        <h2 class="headline">What to change this week</h2>
+        <div class="steps">
+          <div class="step"><span class="step-num">01</span><h3>Audit one system prompt</h3><p>How much of it applies to the task the agent is actually doing right now?</p></div>
+          <div class="step"><span class="step-num">02</span><h3>Kill dynamic system prompts</h3><p>Move dates and live state out of the system prompt and into the messages, so the prefix cache can do its job.</p></div>
+          <div class="step"><span class="step-num">03</span><h3>Split one generalist agent</h3><p>Turn one "does everything" agent into an orchestrator plus one or two narrow workers.</p></div>
+          <div class="step"><span class="step-num">04</span><h3>Separate spec from execution</h3><p>For one workflow, route "deciding what to do" and "doing it" to the model each actually needs.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24 — Discussion -->
+    <section class="slide" id="slide-24">
+      <div class="slide-inner">
+        <span class="eyebrow">DISCUSSION</span>
+        <h2 class="headline">Bring one example</h2>
+        <p class="body-text">Pick an agent or prompt you maintain. Answer, out loud, for the group:</p>
+        <ul class="list">
+          <li>What's actually in its context window right now — system prompt, tools, history, injected knowledge?</li>
+          <li>What in there is dead weight on a typical turn?</li>
+          <li>Is anything dynamic sitting in the system prompt where it can break the prefix cache?</li>
+        </ul>
+        <p class="quote" style="margin-top:2rem;">The model wasn't the problem. It never was.</p>
+      </div>
+    </section>
+
+    <!-- 25 — Sources -->
+    <section class="slide" id="slide-25">
+      <div class="slide-inner">
+        <span class="eyebrow">SOURCES</span>
+        <h2 class="headline">Further reading</h2>
+        <p class="body-text" style="margin-bottom:1rem;">This deck is built from the <em style="font-style:normal;color:var(--primary);">Building Planck</em> series:</p>
+        <div class="refs">
+          <div>#1 — Context Is the Real Problem</div>
+          <div>#2 — Specialized Teams vs General Agents</div>
+          <div>#3 — The 20/80 Split: Why the Future Is Mostly Local</div>
+        </div>
+        <p class="body-text" style="margin-top:1.5rem;margin-bottom:0.5rem;">Cited research and reporting:</p>
+        <div class="refs">
+          <div>Context Length Alone Hurts LLM Performance Despite Perfect Retrieval — arXiv:2510.05381</div>
+          <div>How Many Tools Should an LLM Agent See? A Chance-Corrected Answer — arXiv:2605.24660</div>
+          <div>RAM Shortage 2025: How AI Demand is Raising DRAM Prices — intuitionlabs.ai</div>
+          <div>AI Boom Fuels DRAM Shortage and Price Surge — IEEE Spectrum</div>
+          <div>Pareto Principle — Wikipedia</div>
+        </div>
+        <p class="body-text" style="margin-top:2rem;font-size:0.78rem;color:var(--muted-fg);">Alex de Sousa · thebroken.link/planck</p>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="chrome-bottom">
+    <button class="nav-btn" id="prevBtn" onclick="goTo(current - 1)">&larr; Prev</button>
+    <span class="hint">Use &larr; &rarr; or space to navigate</span>
+    <button class="nav-btn" id="nextBtn" onclick="goTo(current + 1)">Next &rarr;</button>
+  </div>
+</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  document.getElementById('slideTotal').textContent = String(total).padStart(2, '0');
+  var current = 0;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    slides.forEach(function (s, i) { s.classList.toggle('active', i === current); });
+    document.getElementById('slideNum').textContent = pad(current + 1);
+    document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === total - 1;
+    try { history.replaceState(null, '', '#slide-' + current); } catch (e) {}
+    slides[current].scrollTop = 0;
+  }
+
+  function goTo(i) {
+    if (i < 0 || i >= total) return;
+    current = i;
+    render();
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  });
+
+  var touchStartX = null;
+  document.getElementById('deck').addEventListener('touchstart', function (e) {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  document.getElementById('deck').addEventListener('touchend', function (e) {
+    if (touchStartX === null) return;
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goTo(current + 1) : goTo(current - 1); }
+    touchStartX = null;
+  }, { passive: true });
+
+  function toggleTheme() {
+    var html = document.documentElement;
+    var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('ctx-workshop-theme', next); } catch (e) {}
+  }
+
+  (function () {
+    try {
+      var saved = localStorage.getItem('ctx-workshop-theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) {}
+    var m = location.hash.match(/^#slide-(\d+)$/);
+    if (m) {
+      var idx = parseInt(m[1], 10);
+      if (idx >= 0 && idx < total) current = idx;
+    }
+    render();
+  })();
+</script>

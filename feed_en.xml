@@ -18,6 +18,17 @@
       <category>transformers</category>
     </item>
     <item>
+      <title>Building Planck #5: The Opinionated Harness</title>
+      <description>planck_cli is a toolkit. The Docker stack is a product: memory, private search, credential safety, and shared task tracking, bundled and running in one command. Here&apos;s what&apos;s inside and why each piece exists.</description>
+      <link>https://thebroken.link/building-planck-opinionated-harness/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-opinionated-harness/</guid>
+      <pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate>
+      <category>ai</category>
+      <category>agents</category>
+      <category>docker</category>
+      <category>self-hosted</category>
+    </item>
+    <item>
       <title>Building Planck #4: Introducing Planck, an Agent Harness in Elixir</title>
       <description>Three constraints shaped Planck: context, specialization, and model cost. Here is what an AI agent framework looks like when you build on OTP.</description>
       <link>https://thebroken.link/building-planck-introducing-planck/</link>
