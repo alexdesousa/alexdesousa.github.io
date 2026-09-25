@@ -21,7 +21,7 @@ built around three principles:
 - Focused roles
 - The right model for every step
 
-With [Planck](/planck) basic tooling, our agents can already:
+With [Planck](https://thebroken.link/planck) basic tooling, our agents can already:
 
 - **Read**, **write**, and **edit** plain text files
 - **Run** arbitrary commands
