@@ -16,6 +16,7 @@ module.exports = {
         accent: 'var(--accent)',
         brdr:   'var(--border)',
         muted:  'var(--muted-fg)',
+        hl:     'var(--highlight-bg)',
       },
       boxShadow: {
         'neo-sm':   '2px 2px 0 var(--shadow)',

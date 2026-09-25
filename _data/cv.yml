@@ -1,10 +1,41 @@
+wardn:
+  cover:
+    icon: "project"
+  job:
+    type: "Remote"
+    beginning: "October 2026"
+    ending: "Present"
+    title: "Co-founder & CTO"
+    website: "https://wardn.com"
+    name: "Wardn ApS"
+  description: "Co-founded Wardn and built, single-handedly, the ESG reporting platform the company runs on. Still actively developing it as the sole engineer."
+  stack:
+    - "elixir"
+    - "phoenix"
+    - "postgresql"
+
+broken_link_ou:
+  cover:
+    icon: "project"
+  job:
+    type: "Remote"
+    beginning: "November 2022"
+    ending: "Present"
+    title: "Co-founder"
+    website: ""
+    name: "The Broken Link OÜ"
+  description: "Contracting company used to take on freelance software development work, mostly in Elixir."
+  stack:
+    - "elixir"
+    - "consulting"
+
 sona:
   cover:
     icon: "job"
   job:
     type: "Remote"
     beginning: "September 2024"
-    ending: "Present"
+    ending: "September 2026"
     title: "Senior Software Developer"
     website: "https://sona.ai"
     name: "Sona Technologies Ltd"
@@ -253,6 +284,7 @@ barcelona:
     - "cellphone"
 
 gmtprime_onsite:
+  print_page_break: true
   cover:
     icon: "job"
   job:
