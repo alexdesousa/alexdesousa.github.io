@@ -18,6 +18,17 @@
       <category>transformers</category>
     </item>
     <item>
+      <title>Building Planck #6: Just the Agent</title>
+      <description>planck_agent already runs the loop, streams every step, catches tool-call errors, compacts context, and tracks usage. What&apos;s left for you to write is your own tools and a system prompt.</description>
+      <link>https://thebroken.link/building-planck-just-the-agent/</link>
+      <guid isPermaLink="true">https://thebroken.link/building-planck-just-the-agent/</guid>
+      <pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+      <category>elixir</category>
+      <category>ai</category>
+      <category>agents</category>
+      <category>planck_agent</category>
+    </item>
+    <item>
       <title>Building Planck #5: The Opinionated Harness</title>
       <description>planck_cli is a toolkit. The Docker stack is a product: memory, private search, credential safety, and shared task tracking, bundled and running in one command. Here&apos;s what&apos;s inside and why each piece exists.</description>
       <link>https://thebroken.link/building-planck-opinionated-harness/</link>

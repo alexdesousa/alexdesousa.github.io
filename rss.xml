@@ -14,7 +14,7 @@
       <title>The Broken Link</title>
       <link>https://thebroken.link</link>
     </image>
-    <lastBuildDate>Fri, 25 Sep 2026 15:24:30 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 28 Sep 2026 16:32:38 +0000</lastBuildDate>
     <atom:link href="https://thebroken.link/rss.xml" rel="self" type="application/rss+xml"/>
         <item>
           <title>J-Space: Where AI Thoughts Live</title>
@@ -195,6 +195,247 @@ completely opaque. That is new.</p>
     <a href="https://www.neuronpedia.org/qwen3.6-27b/jlens" target="_blank" rel="noopener noreferrer">Neuronpedia J-lens demo with Qwen 3.6 27B</a>
     <a href="#cite-3" aria-label="Back to citation 3">↩</a>
   </li></ol>
+<!--kg-card-end: markdown-->]]>
+          </content:encoded>
+        </item>
+        <item>
+          <title>Building Planck #6: Just the Agent</title>
+          <description>planck_agent already runs the loop, streams every step, catches tool-call errors, compacts context, and tracks usage. What's left for you to write is your own tools and a system prompt.</description>
+          <guid>https://thebroken.link/building-planck-just-the-agent/</guid>
+          <dc:creator>Alex de Sousa</dc:creator>
+          <pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+          <link>https://thebroken.link/building-planck-just-the-agent/</link>
+          <content:encoded>
+            <![CDATA[<!--kg-card-begin: markdown--><p>Every post so far has been about <a href="https://thebroken.link/planck">Planck</a> as a product:</p>
+
+<ul>
+  <li>Context management, team specialization, and model routing,</li>
+  <li>A basic harness,</li>
+  <li>An opinionated stack you install with one <code class="language-plaintext highlighter-rouge">curl</code>.</li>
+</ul>
+
+<p>This one is about the part underneath all of it: <code class="language-plaintext highlighter-rouge">planck_agent</code>, the library every one of those
+posts has been running on without naming it directly.</p>
+
+<p>Say you don’t want a coding harness. You want an agent, with its own tools, inside an app
+you already have. Here’s what that actually takes.</p>
+
+<h2 id="what-planck_agent-already-does">What <code class="language-plaintext highlighter-rouge">planck_agent</code> Already Does</h2>
+
+<p>A <code class="language-plaintext highlighter-rouge">planck_agent</code> is a <code class="language-plaintext highlighter-rouge">GenServer</code> that drives a loop. Specifically, once you start one,
+you already have:</p>
+
+<ul>
+  <li><strong>The agentic loop.</strong> Request a completion, notice tool calls in the response, run them,
+feed the results back for another turn.</li>
+  <li><strong>Concurrent tool calls.</strong> If one response calls more than one tool, they run at the same
+time, not one after another.</li>
+  <li><strong>Tool-call error handling.</strong> An exception inside a tool’s <code class="language-plaintext highlighter-rouge">execute_fn</code> is caught
+automatically and turned into an error string the model sees.</li>
+  <li><strong>Streaming, as events.</strong> Every step, a delta of thinking, a delta of text, a tool
+starting, a tool finishing, a turn ending, is broadcast over Phoenix <code class="language-plaintext highlighter-rouge">PubSub</code> as it
+happens. Subscribe once and you have a real-time feed.</li>
+  <li><strong>Context compaction.</strong> Once a conversation grows past the model’s context window, a
+built-in LLM-based compactor summarizes older turns on its own.</li>
+  <li><strong>Usage and cost tracking.</strong> Token counts and cost per turn are tracked in the agent’s
+own state and included in every event.</li>
+  <li><strong>Conversation history.</strong> Every message lives in the agent’s own state for as long as the
+process is alive. If the agent has a <code class="language-plaintext highlighter-rouge">session_id</code>, the session will be persisted in
+a SQLite-backed store.</li>
+</ul>
+
+<p>You provide tools, a system prompt, and a model. For more customization you can
+implement any of the supported hooks, each just another <code class="language-plaintext highlighter-rouge">start_link</code> option, a module
+you pass in, <code class="language-plaintext highlighter-rouge">nil</code> by default:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">compactor:</code> — replace the built-in LLM-based compaction strategy with your own</li>
+  <li><code class="language-plaintext highlighter-rouge">prompt_hook:</code> — inject dynamic content into the system prompt before every turn</li>
+  <li><code class="language-plaintext highlighter-rouge">turn_end_hook:</code> — react to a completed turn in the background, e.g. to write a skill</li>
+  <li><code class="language-plaintext highlighter-rouge">persistence:</code> — replace the built-in SQLite-backed store with your own</li>
+</ul>
+
+<h2 id="travel-agent-demo">Travel <em>Agent</em> Demo</h2>
+
+<blockquote>
+  <p>Yeah, pun intended!</p>
+</blockquote>
+
+<p>What we’re building:</p>
+
+<ul>
+  <li>A single script with a Phoenix LiveView app,</li>
+  <li>Lets you set the model config, then your budget, desired date range, and number of travelers.</li>
+</ul>
+
+<p>After all that, a travel agent that interviews a visitor, checks real weather and
+country data for a couple of candidate destinations, searches flights, and books one.</p>
+
+<p>
+  <figure class="flex flex-col items-center w-full h-auto mx-auto">
+    <img src="/building-planck-just-the-agent/travel-agent-demo.gif" alt="The travel agent demo interviewing a visitor, checking weather and country facts for a couple of candidate destinations, then searching flights" />
+    <figcaption class="text-center">
+      <p>One agent, four tools: interview, check weather and country facts, search flights, reserve one.</p>
+
+    </figcaption>
+  </figure>
+</p>
+
+<h3 id="four-tools">Four Tools</h3>
+
+<p>An agent doesn’t have any tools unless we define them. The four tools implemented in this demo
+are:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">get_weather</code> — current conditions for a city, via <a href="https://open-meteo.com/">Open-Meteo</a>, a
+free, keyless API.</li>
+  <li><code class="language-plaintext highlighter-rouge">get_country_facts</code> — currency, languages, and region for a country, via
+<a href="https://restcountries.com/">REST Countries</a>, also free and keyless.</li>
+  <li><code class="language-plaintext highlighter-rouge">search_flights</code> — simulated: no free flight-pricing API exists, so results are
+deterministically generated from the route, dates, and budget. The same inputs always
+return the same flights, so a flight ID the model quotes in one turn still resolves if it
+searches again later.</li>
+  <li><code class="language-plaintext highlighter-rouge">reserve_flight</code> — reserves one of the flights <code class="language-plaintext highlighter-rouge">search_flights</code> returned, by <code class="language-plaintext highlighter-rouge">flight_id</code>.</li>
+</ul>
+
+<p>And this is what the tool <code class="language-plaintext highlighter-rouge">get_weather</code> looks like:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">alias</span> <span class="no">Planck</span><span class="o">.</span><span class="no">Agent</span><span class="o">.</span><span class="no">Tool</span>
+
+<span class="no">Tool</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+  <span class="ss">name:</span> <span class="s2">"get_weather"</span><span class="p">,</span>
+  <span class="ss">description:</span>
+    <span class="s2">"Get current weather conditions for a city, to check whether it matches the "</span> <span class="o">&lt;&gt;</span>
+      <span class="s2">"traveler's desired climate right now."</span><span class="p">,</span>
+  <span class="ss">parameters:</span> <span class="p">%{</span>
+    <span class="s2">"type"</span> <span class="o">=&gt;</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"properties"</span> <span class="o">=&gt;</span> <span class="p">%{</span>
+      <span class="s2">"location"</span> <span class="o">=&gt;</span> <span class="p">%{</span><span class="s2">"type"</span> <span class="o">=&gt;</span> <span class="s2">"string"</span><span class="p">,</span> <span class="s2">"description"</span> <span class="o">=&gt;</span> <span class="s2">"City name, e.g. </span><span class="se">\"</span><span class="s2">Lisbon</span><span class="se">\"</span><span class="s2">"</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">"required"</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"location"</span><span class="p">]</span>
+  <span class="p">},</span>
+  <span class="ss">execute_fn:</span> <span class="k">fn</span> <span class="n">_agent_id</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="p">%{</span><span class="s2">"location"</span> <span class="o">=&gt;</span> <span class="n">location</span><span class="p">}</span> <span class="o">-&gt;</span>
+    <span class="n">with</span> <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">geo</span><span class="p">}</span> <span class="o">&lt;-</span> <span class="no">TravelAgent</span><span class="o">.</span><span class="no">OpenMeteo</span><span class="o">.</span><span class="n">geocode</span><span class="p">(</span><span class="n">location</span><span class="p">),</span>
+         <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="n">summary</span><span class="p">}</span> <span class="o">&lt;-</span> <span class="no">TravelAgent</span><span class="o">.</span><span class="no">OpenMeteo</span><span class="o">.</span><span class="n">forecast</span><span class="p">(</span><span class="n">geo</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">geo</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span> <span class="k">do</span>
+      <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span> <span class="s2">"</span><span class="si">#{</span><span class="n">geo</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">geo</span><span class="o">.</span><span class="n">country</span><span class="si">}</span><span class="s2">: </span><span class="si">#{</span><span class="n">summary</span><span class="si">}</span><span class="s2">"</span><span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="building-the-model-yourself">Building the Model Yourself</h3>
+
+<p>A model is a plain struct. Build it from whatever configuration your own app already has:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">alias</span> <span class="no">Planck</span><span class="o">.</span><span class="no">AI</span><span class="o">.</span><span class="no">Model</span>
+
+<span class="k">case</span> <span class="n">params</span><span class="p">[</span><span class="s2">"provider"</span><span class="p">]</span> <span class="k">do</span>
+  <span class="n">p</span> <span class="ow">when</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"anthropic"</span><span class="p">,</span> <span class="s2">"openai"</span><span class="p">,</span> <span class="s2">"google"</span><span class="p">]</span> <span class="o">-&gt;</span>
+    <span class="n">set_api_key_env</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">"api_key"</span><span class="p">])</span>
+
+    <span class="p">{</span><span class="ss">:ok</span><span class="p">,</span>
+     <span class="p">%</span><span class="no">Model</span><span class="p">{</span>
+       <span class="ss">id:</span> <span class="n">params</span><span class="p">[</span><span class="s2">"model"</span><span class="p">],</span>
+       <span class="ss">model:</span> <span class="n">params</span><span class="p">[</span><span class="s2">"model"</span><span class="p">],</span>
+       <span class="ss">name:</span> <span class="n">params</span><span class="p">[</span><span class="s2">"model"</span><span class="p">],</span>
+       <span class="ss">provider:</span> <span class="no">String</span><span class="o">.</span><span class="n">to_existing_atom</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+       <span class="ss">context_window:</span> <span class="mi">128_000</span><span class="p">,</span>
+       <span class="ss">max_tokens:</span> <span class="mi">8_192</span>
+     <span class="p">}}</span>
+<span class="k">end</span>
+
+<span class="k">defp</span> <span class="n">set_api_key_env</span><span class="p">(</span><span class="s2">"anthropic"</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="no">System</span><span class="o">.</span><span class="n">put_env</span><span class="p">(</span><span class="s2">"ANTHROPIC_API_KEY"</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="k">defp</span> <span class="n">set_api_key_env</span><span class="p">(</span><span class="s2">"openai"</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="no">System</span><span class="o">.</span><span class="n">put_env</span><span class="p">(</span><span class="s2">"OPENAI_API_KEY"</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="k">defp</span> <span class="n">set_api_key_env</span><span class="p">(</span><span class="s2">"google"</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="k">do</span><span class="p">:</span> <span class="no">System</span><span class="o">.</span><span class="n">put_env</span><span class="p">(</span><span class="s2">"GOOGLE_API_KEY"</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The provider layer reads API keys straight from the OS environment on every request,
+with no caching and no reload step. Set it once, and every call after that picks it up.</p>
+
+<h3 id="starting-the-agent">Starting the Agent</h3>
+
+<p>This is the whole integration:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">defp</span> <span class="n">start_agent</span><span class="p">(</span><span class="n">socket</span><span class="p">)</span> <span class="k">do</span>
+  <span class="no">Agent</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+  <span class="no">DynamicSupervisor</span><span class="o">.</span><span class="n">start_child</span><span class="p">(</span>
+    <span class="no">Agent</span><span class="o">.</span><span class="no">AgentSupervisor</span><span class="p">,</span>
+    <span class="p">{</span><span class="no">Agent</span><span class="p">,</span>
+     <span class="ss">id:</span> <span class="n">socket</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+     <span class="ss">model:</span> <span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+     <span class="ss">system_prompt:</span> <span class="no">TravelAgent</span><span class="o">.</span><span class="no">SystemPrompt</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
+     <span class="ss">tools:</span> <span class="no">TravelAgent</span><span class="o">.</span><span class="no">Tools</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">id</span><span class="p">)}</span>
+  <span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>As the calling process is subscribed to the agent updates via the
+<code class="language-plaintext highlighter-rouge">Agent.subscribe/1</code>, we just need to <code class="language-plaintext highlighter-rouge">receive</code> the message. In our demo,
+it’s a Phoenix LiveView, so we need to listen for message in the <code class="language-plaintext highlighter-rouge">handle_info/3</code>
+callback implementation.</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="n">handle_info</span><span class="p">({</span><span class="ss">:agent_event</span><span class="p">,</span> <span class="ss">:text_delta</span><span class="p">,</span> <span class="p">%{</span><span class="ss">text:</span> <span class="n">text</span><span class="p">}},</span> <span class="n">socket</span><span class="p">)</span> <span class="k">do</span>
+  <span class="c1"># append to the message currently streaming in</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="n">handle_info</span><span class="p">({</span><span class="ss">:agent_event</span><span class="p">,</span> <span class="ss">:tool_start</span><span class="p">,</span> <span class="p">%{</span><span class="ss">name:</span> <span class="n">name</span><span class="p">}},</span> <span class="n">socket</span><span class="p">)</span> <span class="k">do</span>
+  <span class="c1"># show "using tool: get_weather"</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="n">handle_info</span><span class="p">({</span><span class="ss">:agent_event</span><span class="p">,</span> <span class="ss">:turn_end</span><span class="p">,</span> <span class="n">payload</span><span class="p">},</span> <span class="n">socket</span><span class="p">)</span> <span class="k">do</span>
+  <span class="c1"># the turn is done; payload.message is the final assistant message</span>
+<span class="k">end</span>
+
+<span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Finally, we can send user prompts with <code class="language-plaintext highlighter-rouge">Agent.prompt(pid, text)</code> from our LiveView:</p>
+
+<div class="language-elixir highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="n">handle_event</span><span class="p">(</span><span class="s2">"send"</span><span class="p">,</span> <span class="p">%{</span><span class="s2">"text"</span> <span class="o">=&gt;</span> <span class="n">text</span><span class="p">},</span> <span class="n">socket</span><span class="p">)</span> <span class="ow">when</span> <span class="n">text</span> <span class="o">!=</span> <span class="s2">""</span> <span class="k">do</span>
+  <span class="no">Agent</span><span class="o">.</span><span class="n">prompt</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">agent_pid</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+  <span class="p">{</span><span class="ss">:noreply</span><span class="p">,</span>
+    <span class="n">socket</span>
+    <span class="o">|&gt;</span> <span class="n">assign</span><span class="p">(</span><span class="ss">:messages</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">messages</span> <span class="o">++</span> <span class="p">[%{</span><span class="ss">role:</span> <span class="ss">:user</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">text</span><span class="p">}])</span>
+    <span class="o">|&gt;</span> <span class="n">assign</span><span class="p">(</span><span class="ss">generating:</span> <span class="no">true</span><span class="p">,</span> <span class="ss">input_key:</span> <span class="n">socket</span><span class="o">.</span><span class="n">assigns</span><span class="o">.</span><span class="n">input_key</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
+<span class="k">end</span>
+
+<span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<h3 id="try-it">Try It</h3>
+
+<p>The full example, all four tools, the deterministic flight simulator, and a small <a href="https://github.com/phoenixframework/phoenix_live_view">Phoenix
+LiveView</a> front end, lives in
+<a href="https://github.com/alexdesousa/planck/tree/main/planck_agent/examples/travel-agent"><code class="language-plaintext highlighter-rouge">planck_agent/examples/travel-agent</code></a>
+as a single file. <code class="language-plaintext highlighter-rouge">Mix.install/2</code> handles every dependency, LiveView’s JS comes from a CDN,
+and there’s no asset pipeline to run:</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>elixir travel_agent.exs
+</code></pre></div></div>
+
+<p>Then open <code class="language-plaintext highlighter-rouge">localhost:8000</code>, pick a provider, and describe a trip.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Streaming, concurrent tool calls, context that doesn’t blow the model’s window, errors that
+don’t crash the conversation: everything that makes an agent hard to get right already exists.
+You’re not writing an agent. You’re deciding what one is allowed to do, and giving it a voice.</p>
+
+<!--
+In the [next post](/building-planck-enter-marvin), we put all of it together: Marvin, a
+personal AI agent with its own team and persistent memory.
+-->
+
+<blockquote>
+  <p>Most of what looks like “building an agent” is just deciding what it’s allowed to do.</p>
+</blockquote>
 <!--kg-card-end: markdown-->]]>
           </content:encoded>
         </item>
@@ -498,11 +739,8 @@ human watching the chat sees the same board update in real time.</p>
 
 <p>The opinionated harness trades operational simplicity for capability you don’t have to build yourself.</p>
 
-<!-- Not posted yet
-If that trade doesn't make sense for what you're building — if you want the harness without
-the rest of the stack — that's exactly what [the next post](/building-planck-agentic-systems)
-is for.
--->
+<p>If that trade doesn’t make sense for what you’re building and you only need a working agent,
+that’s exactly what <a href="/building-planck-just-the-agent">the next post</a> is for.</p>
 
 <blockquote>
   <p>Batteries included is a choice, not a default.</p>
@@ -952,6 +1190,8 @@ opens the widget itself. It’s HTML the sidecar builds, not a fixed catalog Pla
   <li><code class="language-plaintext highlighter-rouge">prompt_hook</code>: declared per-agent; runs before each LLM turn</li>
   <li><code class="language-plaintext highlighter-rouge">turn_end_hook</code>: declared per-agent; runs after each LLM turn</li>
   <li><code class="language-plaintext highlighter-rouge">compactor</code>: runs for all agents automatically; can be overridden per-agent in <code class="language-plaintext highlighter-rouge">TEAM.json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">persistence</code>: runs for all agents automatically; can be overridden per-agent in <code class="language-plaintext highlighter-rouge">TEAM.json</code>
+to swap the built-in SQLite-backed conversation store for your own</li>
 </ul>
 
 <h3 id="ui-extension">UI Extension</h3>

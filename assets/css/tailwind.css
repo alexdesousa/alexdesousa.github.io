@@ -504,15 +504,17 @@ video {
   --bg: #f5f5f5; --fg: #1a1a1a; --card: #ffffff;
   --primary: #5F4FE6; --accent: #FED13B;
   --border: #1a1a1a; --shadow: #1a1a1a; --muted-fg: #5a5580;
+  --highlight-bg: #ECE9FB;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0f0f12; --fg: #f0f0f0; --card: #18181c;
     --primary: #7b6df5; --border: #d8d8e8; --shadow: #d8d8e8; --muted-fg: #9090b0;
+    --highlight-bg: #201c3a;
   }
 }
-:root[data-theme="dark"]  { --bg: #0f0f12; --fg: #f0f0f0; --card: #18181c; --primary: #7b6df5; --border: #d8d8e8; --shadow: #d8d8e8; --muted-fg: #9090b0; }
-:root[data-theme="light"] { --bg: #f5f5f5; --fg: #1a1a1a; --card: #ffffff; --primary: #5F4FE6; --accent: #FED13B; --border: #1a1a1a; --shadow: #1a1a1a; --muted-fg: #5a5580; }
+:root[data-theme="dark"]  { --bg: #0f0f12; --fg: #f0f0f0; --card: #18181c; --primary: #7b6df5; --border: #d8d8e8; --shadow: #d8d8e8; --muted-fg: #9090b0; --highlight-bg: #201c3a; }
+:root[data-theme="light"] { --bg: #f5f5f5; --fg: #1a1a1a; --card: #ffffff; --primary: #5F4FE6; --accent: #FED13B; --border: #1a1a1a; --shadow: #1a1a1a; --muted-fg: #5a5580; --highlight-bg: #ECE9FB; }
 html { font-size: 14px; }
 /* ── Cursor blink ── */
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -757,7 +759,7 @@ html { font-size: 14px; }
   .cv-tags span:last-child::after { content: ''; }
   .cv-year { margin-top: 0.5rem !important; margin-bottom: 0.05rem !important; }
 
-  .cv-projects-section { -moz-column-break-before: page !important; break-before: page !important; padding-top: 1.2cm !important; }
+  .cv-print-break { -moz-column-break-before: page !important; break-before: page !important; padding-top: 1.2cm !important; }
   .cv-projects-grid { display: block !important; }
   .cv-proj {
     display: block !important; border: none !important; box-shadow: none !important;
@@ -1118,6 +1120,9 @@ html { font-size: 14px; }
 }
 .bg-card {
   background-color: var(--card);
+}
+.bg-hl {
+  background-color: var(--highlight-bg);
 }
 .bg-pri {
   background-color: var(--primary);
