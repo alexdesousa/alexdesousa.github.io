@@ -378,6 +378,8 @@ The sidecar also provides hooks: lifecycle callbacks implemented in the sidecar.
 - `prompt_hook`: declared per-agent; runs before each LLM turn
 - `turn_end_hook`: declared per-agent; runs after each LLM turn
 - `compactor`: runs for all agents automatically; can be overridden per-agent in `TEAM.json`
+- `persistence`: runs for all agents automatically; can be overridden per-agent in `TEAM.json`
+  to swap the built-in SQLite-backed conversation store for your own
 
 ### UI Extension
 

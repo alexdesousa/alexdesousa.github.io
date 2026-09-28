@@ -257,10 +257,7 @@ human watching the chat sees the same board update in real time.
 
 The opinionated harness trades operational simplicity for capability you don't have to build yourself.
 
-<!-- Not posted yet
-If that trade doesn't make sense for what you're building — if you want the harness without
-the rest of the stack — that's exactly what [the next post](/building-planck-agentic-systems)
-is for.
--->
+If that trade doesn't make sense for what you're building and you only need a working agent,
+that's exactly what [the next post](/building-planck-just-the-agent) is for.
 
 > Batteries included is a choice, not a default.
