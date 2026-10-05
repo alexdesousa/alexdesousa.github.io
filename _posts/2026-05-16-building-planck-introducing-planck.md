@@ -93,7 +93,7 @@ flowchart TB
   it provides typed structs, a streaming event protocol, and a provider-agnostic API that
   speaks to Anthropic, Google, any OpenAI-compatible endpoint, and Typesafe
   (whose RLCD models answer typed questions with calibrated probabilities
-  instead of chatting — see `classify` below).
+  instead of chatting).
 - [`planck_agent`](https://github.com/alexdesousa/planck/tree/main/planck_agent) is the agent
   core. Each agent is a `GenServer` that manages its own conversation history,
   handles tool calls, and publishes events over Phoenix `PubSub`.
