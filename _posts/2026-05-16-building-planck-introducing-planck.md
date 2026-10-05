@@ -91,14 +91,17 @@ flowchart TB
 - [`planck_ai`](https://github.com/alexdesousa/planck/tree/main/planck_ai) is the LLM abstraction
   layer. Built on top of [`req_llm`](https://github.com/agentjido/req_llm),
   it provides typed structs, a streaming event protocol, and a provider-agnostic API that
-  speaks to Anthropic, Google and any OpenAI-compatible endpoint.
+  speaks to Anthropic, Google, any OpenAI-compatible endpoint, and Typesafe
+  (whose RLCD models answer typed questions with calibrated probabilities
+  instead of chatting — see `classify` below).
 - [`planck_agent`](https://github.com/alexdesousa/planck/tree/main/planck_agent) is the agent
   core. Each agent is a `GenServer` that manages its own conversation history,
   handles tool calls, and publishes events over Phoenix `PubSub`.
 - [`planck_headless`](https://github.com/alexdesousa/planck/tree/main/planck_headless) is
   the application layer. It owns configuration (from JSON files,
   environment variables, or application config), loads resources at startup
-  (teams, skills, models), manages session lifecycles, and handles the
+  (teams, skills, models, custom slash commands), manages session lifecycles
+  (including the `/clear` and `/compact` commands), and handles the
   optional sidecar connection.
 
 `planck_headless` also supports the sidecar: an optional app that adds custom tools without
@@ -269,8 +272,9 @@ end
 
 The subscriber never reaches into agent internals. It sends a prompt and listens for
 events: `:text_delta`, `:thinking_delta`, `:turn_start`, `:turn_end`, `:tool_start`,
-`:tool_end`, `:usage_delta`, `:worker_spawned`, `:worker_exit`, `:rewind`, `:error`,
-`:compacting`, `:compacted`.
+`:tool_end`, `:usage_delta`, `:worker_spawned`, `:worker_exit`, `:error`,
+`:compacting`, `:compacted`, plus the queue lifecycle (`:message_queued`,
+`:messages_flushed`, `:message_cancelled`) and `:cleared` when history is wiped.
 
 ## The Sidecar
 
@@ -439,8 +443,9 @@ API keys go in `.planck/.env` (project-local) or `~/.planck/.env` (global):
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Teams live under `.planck/teams/`, skills under `.planck/skills/`, the sidecar under
-`.planck/sidecar/`. Planck loads them all at startup.
+Teams live under `.planck/teams/`, skills under `.planck/skills/`, custom slash
+commands under `.planck/commands/`, and the sidecar under `.planck/sidecar/`.
+Planck loads them all at startup.
 
 The [`planck_setup`](https://github.com/alexdesousa/planck/tree/main/skills/planck_setup)
 skill is available as a standalone download and is included in the Docker bundle (more
