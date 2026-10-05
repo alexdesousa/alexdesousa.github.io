@@ -40,7 +40,7 @@
   "headline": "Building Planck #4: Introducing Planck, an Agent Harness in Elixir",
   "image": ["https://thebroken.link/building-planck-introducing-planck/distance.jpg"],
   "datePublished": "2026-05-16T00:00:00+00:00",
-  "dateModified": "2026-10-05T17:54:21+00:00",
+  "dateModified": "2026-10-05T18:00:03+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa",
@@ -254,7 +254,7 @@ layer. Built on top of <a href="https://github.com/agentjido/req_llm"><code clas
 it provides typed structs, a streaming event protocol, and a provider-agnostic API that
 speaks to Anthropic, Google, any OpenAI-compatible endpoint, and Typesafe
 (whose RLCD models answer typed questions with calibrated probabilities
-instead of chatting — see <code class="language-plaintext highlighter-rouge">classify</code> below).</li>
+instead of chatting).</li>
   <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_agent"><code class="language-plaintext highlighter-rouge">planck_agent</code></a> is the agent
 core. Each agent is a <code class="language-plaintext highlighter-rouge">GenServer</code> that manages its own conversation history,
 handles tool calls, and publishes events over Phoenix <code class="language-plaintext highlighter-rouge">PubSub</code>.</li>
