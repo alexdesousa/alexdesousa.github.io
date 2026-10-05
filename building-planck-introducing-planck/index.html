@@ -40,7 +40,7 @@
   "headline": "Building Planck #4: Introducing Planck, an Agent Harness in Elixir",
   "image": ["https://thebroken.link/building-planck-introducing-planck/distance.jpg"],
   "datePublished": "2026-05-16T00:00:00+00:00",
-  "dateModified": "2026-09-28T16:32:38+00:00",
+  "dateModified": "2026-10-05T17:54:21+00:00",
   "author": {
     "@type": "Person",
     "name": "Alex de Sousa",
@@ -252,14 +252,17 @@ flowchart TB
   <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_ai"><code class="language-plaintext highlighter-rouge">planck_ai</code></a> is the LLM abstraction
 layer. Built on top of <a href="https://github.com/agentjido/req_llm"><code class="language-plaintext highlighter-rouge">req_llm</code></a>,
 it provides typed structs, a streaming event protocol, and a provider-agnostic API that
-speaks to Anthropic, Google and any OpenAI-compatible endpoint.</li>
+speaks to Anthropic, Google, any OpenAI-compatible endpoint, and Typesafe
+(whose RLCD models answer typed questions with calibrated probabilities
+instead of chatting — see <code class="language-plaintext highlighter-rouge">classify</code> below).</li>
   <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_agent"><code class="language-plaintext highlighter-rouge">planck_agent</code></a> is the agent
 core. Each agent is a <code class="language-plaintext highlighter-rouge">GenServer</code> that manages its own conversation history,
 handles tool calls, and publishes events over Phoenix <code class="language-plaintext highlighter-rouge">PubSub</code>.</li>
   <li><a href="https://github.com/alexdesousa/planck/tree/main/planck_headless"><code class="language-plaintext highlighter-rouge">planck_headless</code></a> is
 the application layer. It owns configuration (from JSON files,
 environment variables, or application config), loads resources at startup
-(teams, skills, models), manages session lifecycles, and handles the
+(teams, skills, models, custom slash commands), manages session lifecycles
+(including the <code class="language-plaintext highlighter-rouge">/clear</code> and <code class="language-plaintext highlighter-rouge">/compact</code> commands), and handles the
 optional sidecar connection.</li>
 </ul>
 
@@ -449,8 +452,9 @@ publishes to a PubSub topic. Any process that subscribes gets a real-time stream
 
 <p>The subscriber never reaches into agent internals. It sends a prompt and listens for
 events: <code class="language-plaintext highlighter-rouge">:text_delta</code>, <code class="language-plaintext highlighter-rouge">:thinking_delta</code>, <code class="language-plaintext highlighter-rouge">:turn_start</code>, <code class="language-plaintext highlighter-rouge">:turn_end</code>, <code class="language-plaintext highlighter-rouge">:tool_start</code>,
-<code class="language-plaintext highlighter-rouge">:tool_end</code>, <code class="language-plaintext highlighter-rouge">:usage_delta</code>, <code class="language-plaintext highlighter-rouge">:worker_spawned</code>, <code class="language-plaintext highlighter-rouge">:worker_exit</code>, <code class="language-plaintext highlighter-rouge">:rewind</code>, <code class="language-plaintext highlighter-rouge">:error</code>,
-<code class="language-plaintext highlighter-rouge">:compacting</code>, <code class="language-plaintext highlighter-rouge">:compacted</code>.</p>
+<code class="language-plaintext highlighter-rouge">:tool_end</code>, <code class="language-plaintext highlighter-rouge">:usage_delta</code>, <code class="language-plaintext highlighter-rouge">:worker_spawned</code>, <code class="language-plaintext highlighter-rouge">:worker_exit</code>, <code class="language-plaintext highlighter-rouge">:error</code>,
+<code class="language-plaintext highlighter-rouge">:compacting</code>, <code class="language-plaintext highlighter-rouge">:compacted</code>, plus the queue lifecycle (<code class="language-plaintext highlighter-rouge">:message_queued</code>,
+<code class="language-plaintext highlighter-rouge">:messages_flushed</code>, <code class="language-plaintext highlighter-rouge">:message_cancelled</code>) and <code class="language-plaintext highlighter-rouge">:cleared</code> when history is wiped.</p>
 
 <h2 id="the-sidecar">The Sidecar</h2>
 
@@ -634,8 +638,9 @@ provider and at least one model alias:</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span>sk-ant-...
 </code></pre></div></div>
 
-<p>Teams live under <code class="language-plaintext highlighter-rouge">.planck/teams/</code>, skills under <code class="language-plaintext highlighter-rouge">.planck/skills/</code>, the sidecar under
-<code class="language-plaintext highlighter-rouge">.planck/sidecar/</code>. Planck loads them all at startup.</p>
+<p>Teams live under <code class="language-plaintext highlighter-rouge">.planck/teams/</code>, skills under <code class="language-plaintext highlighter-rouge">.planck/skills/</code>, custom slash
+commands under <code class="language-plaintext highlighter-rouge">.planck/commands/</code>, and the sidecar under <code class="language-plaintext highlighter-rouge">.planck/sidecar/</code>.
+Planck loads them all at startup.</p>
 
 <p>The <a href="https://github.com/alexdesousa/planck/tree/main/skills/planck_setup"><code class="language-plaintext highlighter-rouge">planck_setup</code></a>
 skill is available as a standalone download and is included in the Docker bundle (more
